@@ -25,5 +25,5 @@
     }
   ],
   "host_permissions": ["https://donderhiroba.jp/*", "http://taikowiki.com/*"],
-  "permissions": ["storage", "activeTab", "scripting"]
+  "permissions": ["storage", "scripting"]
 }
