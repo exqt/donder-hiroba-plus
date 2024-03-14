@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+
+  font: 14px / 1.5 ArialMT, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", メイリオ, sans-serif;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  --color1: #cf4844;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

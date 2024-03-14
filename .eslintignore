@@ -1,0 +1,5 @@
+vite.config.js
+tsconfig.*.json
+.eslintrc.cjs
+svelte.config.js
+temp/*

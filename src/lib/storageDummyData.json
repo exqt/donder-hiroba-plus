@@ -1,0 +1,21 @@
+{
+  "scoresByNo": {
+    "73": {
+      "title": "Black Rose Apostle",
+      "songNo": "73",
+      "details": {
+        "oni": {
+          "link": "https://donderhiroba.jp/score_detail.php?song_no=73&level=4&genre=6",
+          "crown": "gold",
+          "badge": 7
+        }
+      }
+    }
+  },
+  "playlists": [
+    {
+      "title": "for donforce 10",
+      "songNoList": [73, 12]
+    }
+  ]
+}
