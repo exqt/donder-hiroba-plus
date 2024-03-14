@@ -1,7 +1,9 @@
 # Donder Hiroba Plus
 [한국어](/README_ko.md)
 
-This Chrome extension adds useful features to [Donder Hiroba](https://donderhiroba.jp/index.php)
+[Screenshots](/SCREENSHOTS.md)
+
+The Chrome extension that adds useful features to [Donder Hiroba](https://donderhiroba.jp/index.php)
 
 Song data are provided by [Team LAGOS](https://twitter.com/KOREA_TAIKO), Thanks!
 
