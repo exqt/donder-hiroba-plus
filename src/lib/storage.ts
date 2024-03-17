@@ -11,7 +11,11 @@ export class ExtensionStorage implements StorageData {
   donderInfo: DonderInfo = {}
   scoresByNo: Record<string, SongScore> = {}
   playlists: Playlist[] = []
-  settings: ExtensionSetting = {}
+  settings: ExtensionSetting = {
+    preferringDifficulty: 'oni',
+    language: 'en',
+    lastTabIndex: 0
+  }
 
   isLoaded: boolean = false
 
@@ -43,7 +47,7 @@ export class ExtensionStorage implements StorageData {
     this.donderInfo = data.donderInfo ?? this.donderInfo
     this.scoresByNo = data.scoresByNo ?? this.scoresByNo
     this.playlists = data.playlists ?? this.playlists
-    this.settings = data.settings ?? this.settings
+    this.settings = { ...this.settings, ...data.settings }
 
     this.isLoaded = true
   }
@@ -100,7 +104,7 @@ export class ExtensionStorage implements StorageData {
     const diffs = filterDiffs ?? DIFFICULTIES
 
     const badges: Record<BadgeType, number> = {
-      1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0
+      0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0
     }
 
     const crowns: Record<CrownType, number> = {

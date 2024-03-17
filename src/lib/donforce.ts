@@ -1,4 +1,3 @@
-import { DIFFICULTIES } from '../constants'
 import type { BadgeType, CrownType, DifficultyType, DonforceItem, SongData, SongScore } from '../types'
 import { type SongDB } from './songDB'
 
@@ -27,11 +26,11 @@ export const calculateDonforce = (badge: BadgeType, crown: CrownType, level: num
   return 6.0 * Math.pow(1.3, level - 6.0) * badgeCoefficient * crownCoefficient
 }
 
-export const getDonforceTopK = (scores: SongScore[], songDB: SongDB, k: number): DonforceItem[] => {
+export const getDonforceTopK = (scores: SongScore[], songDB: SongDB, diffs: DifficultyType[], k: number): DonforceItem[] => {
   const items: DonforceItem[] = []
 
   scores.forEach((s) => {
-    for (const diff of DIFFICULTIES) {
+    for (const diff of diffs) {
       const detail = s.details[diff]
       if (detail === undefined) continue
 

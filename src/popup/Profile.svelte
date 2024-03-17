@@ -11,12 +11,22 @@
   let donderInfo: DonderInfo = {}
   let byBadges: Record<BadgeType, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 }
   let byCrowns: Record<CrownType, number> = { none: 0, silver: 0, gold: 0, donderfull: 0 }
+  let scorePanel = images.totalScorePanelOniImage
 
   onMount(async () => {
     donderInfo = storage.donderInfo
     const r = storage.countBadgesAndCrowns(['oni', 'oni_ura'])
     byBadges = r.badges
     byCrowns = r.crowns
+
+    const diff = storage.settings.preferringDifficulty ?? 'oni'
+    scorePanel = {
+      easy: images.totalScorePanelKantanImage,
+      normal: images.totalScorePanelFutsuuImage,
+      hard: images.totalScorePanelMuzukashiiImage,
+      oni: images.totalScorePanelOniImage,
+      oni_ura: images.totalScorePanelOniImage
+    }[diff]
   })
 </script>
 
@@ -37,7 +47,7 @@
 
   <img class="avatar-image" src={getDonderAvatarURL(donderInfo.id)} alt="avatar" />
 
-  <div class="total-score" style={`background-image: url(${images.totalScorePanel})`}>
+  <div class="total-score" style={`background-image: url(${scorePanel})`}>
     <span class="total-score-text" style="transform: translate(220px, 18px);">{byBadges[8]}</span>
 
     <span class="total-score-text" style="transform: translate(56px,  52px);">{byBadges[5]}</span>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { type ExtensionStorage } from '../lib/storage'
-  import type { Language } from '../types'
+  import type { DifficultyType, Language } from '../types'
   import { icons } from '../assets'
   import { parseScores } from '../lib/songs'
 
@@ -13,10 +13,6 @@
   }
 
   let language = ''
-
-  onMount(() => {
-    language = storage.settings.language ?? 'en'
-  })
 
   const onLanguageChange = async (ev: Event): Promise<void> => {
     const language = (ev.target as HTMLSelectElement).value as Language
@@ -92,6 +88,18 @@
     }
   }
 
+  let preferringDifficulty: DifficultyType
+  const updatepreferringDifficulty = async (ev: Event): Promise<void> => {
+    const preferringDifficulty = (ev.target as HTMLSelectElement).value as DifficultyType
+    storage.settings.preferringDifficulty = preferringDifficulty
+    await storage.save()
+  }
+
+  onMount(() => {
+    language = storage.settings.language ?? 'en'
+    preferringDifficulty = storage.settings.preferringDifficulty ?? 'oni'
+  })
+
 </script>
 
 <div class="wrapper">
@@ -122,6 +130,17 @@
     {/if}
   </div>
   <button class="warning" on:click={reset}>Reset</button>
+
+  <!-- preferring Difficulty -->
+  <div>
+    <label for="preferring-difficulty">Preferring Difficulty</label>
+    <select id="preferring-difficulty" bind:value={preferringDifficulty} on:change={updatepreferringDifficulty}>
+      <option value="easy">Kantan</option>
+      <option value="normal">Futsuu</option>
+      <option value="hard">Muzukashii</option>
+      <option value="oni">Oni</option>
+    </select>
+  </div>
 
   <a class="github-link" href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
     <img class="icon" src={icons.github} alt="github"/>

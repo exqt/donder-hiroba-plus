@@ -19,7 +19,11 @@
   onMount(async () => {
     songDB = await SongDB.getInstance()
     scores = storage.getAllScores()
-    items = getDonforceTopK(scores, songDB, DONFORCE_NUMBER_OF_RECORDS)
+
+    const diffs = [storage.settings.preferringDifficulty ?? 'oni']
+    if (diffs[0] === 'oni') diffs.push('oni_ura')
+
+    items = getDonforceTopK(scores, songDB, diffs, DONFORCE_NUMBER_OF_RECORDS)
     totalDonforce = items.reduce((acc, item) => acc + item.donforce, 0) / DONFORCE_NUMBER_OF_RECORDS
   })
 

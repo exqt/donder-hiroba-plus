@@ -71,6 +71,7 @@ export interface Playlist {
 export interface ExtensionSetting {
   lastTabIndex?: number
   language?: Language
+  preferringDifficulty?: DifficultyType
 }
 
 export interface StorageData {

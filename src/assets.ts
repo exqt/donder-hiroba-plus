@@ -32,7 +32,11 @@ import cogIcon from './assets/icons/cog.svg'
 import tableIcon from './assets/icons/table.svg'
 import informationCircleIcon from './assets/icons/information-circle.svg'
 
-import totalScorePanelImage from './assets/images/total_score_image_5.png'
+import totalScorePanelKantanImage from './assets/images/total_score_image_1.png'
+import totalScorePanelFutsuuImage from './assets/images/total_score_image_2.png'
+import totalScorePanelMuzukashiiImage from './assets/images/total_score_image_3.png'
+import totalScorePanelOniImage from './assets/images/total_score_image_5.png'
+
 import mydonPlaceholderImage from './assets/images/mydon_placeholder.png'
 import titlePlate from './assets/images/titleplate.png'
 import danPlaceholderImage from './assets/images/dan_placeholder.png'
@@ -80,7 +84,10 @@ export const icons = {
 }
 
 export const images = {
-  totalScorePanel: processAssetPath(totalScorePanelImage),
+  totalScorePanelKantanImage: processAssetPath(totalScorePanelKantanImage),
+  totalScorePanelFutsuuImage: processAssetPath(totalScorePanelFutsuuImage),
+  totalScorePanelMuzukashiiImage: processAssetPath(totalScorePanelMuzukashiiImage),
+  totalScorePanelOniImage: processAssetPath(totalScorePanelOniImage),
   mydonPlaceholderImage: processAssetPath(mydonPlaceholderImage),
   titlePlate: processAssetPath(titlePlate),
   danPlaceholderImage: processAssetPath(danPlaceholderImage)
