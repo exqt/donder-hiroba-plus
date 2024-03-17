@@ -23,7 +23,9 @@
     bind:value={text}
     on:blur={onSubmit}
   />
-  <button type="submit">Search</button>
+  <button type="submit" on:click={onSubmit}>
+    Search
+  </button>
 </form>
 
 <style>
