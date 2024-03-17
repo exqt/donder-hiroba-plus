@@ -10,6 +10,7 @@
   export let songScores: SongScore[] = []
   export let storage: ExtensionStorage
   export let songDB: SongDB
+  export let taikoNo: string | undefined
 
   const getTitle = (parsedTitle: string, songNo: string): string => {
     const language = storage.settings.language
@@ -41,6 +42,7 @@
           songData={songDB.getSongData(songScore.songNo)}
           details={songScore.details}
           genre={genre}
+          taikoNo={taikoNo}
         />
       </Lazy>
     {/each}

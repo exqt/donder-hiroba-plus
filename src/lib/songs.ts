@@ -80,7 +80,9 @@ export const clearSongElements = (): void => {
   songs.replaceChildren()
 }
 
-export const getSongDetailLink = (songNo: string, diff: DifficultyType): string => {
+export const getSongDetailLink = (songNo: string, diff: DifficultyType, taikoNo?: string): string => {
   const diffIndex = DIFFICULTIES.indexOf(diff) + 1
-  return `https://donderhiroba.jp/score_detail.php?song_no=${songNo}&level=${diffIndex}`
+  let s = `https://donderhiroba.jp/score_detail.php?song_no=${songNo}&level=${diffIndex}`
+  if (taikoNo !== undefined) s += `&taiko_no=${taikoNo}`
+  return s
 }

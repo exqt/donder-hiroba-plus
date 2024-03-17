@@ -12,6 +12,7 @@
   export let genre: string | undefined
   export let songData: SongData | undefined
   export let details: Partial<Record<DifficultyType, SongScoreDetail>>
+  export let taikoNo: string | undefined
 
   let showInfo = false
 
@@ -38,7 +39,7 @@
           songNo={songNo}
           difficulty={difficulty}
           level={getDonforceLevel(songData, difficulty)}
-          {i} {detail}
+          {i} {detail} {taikoNo}
         />
       {/if}
     {/each}

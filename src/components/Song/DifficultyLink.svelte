@@ -9,8 +9,9 @@
   export let detail: SongScoreDetail
   export let level: number | undefined
   export let i: number
+  export let taikoNo: string | undefined
 
-  const link = getSongDetailLink(songNo, difficulty)
+  const link = getSongDetailLink(songNo, difficulty, taikoNo)
 </script>
 
 <a draggable="false" href={link}>

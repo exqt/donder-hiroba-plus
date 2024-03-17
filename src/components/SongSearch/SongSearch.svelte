@@ -101,6 +101,7 @@
 
   let songDB: SongDB
   let storage: ExtensionStorage
+  const taikoNo = window.location.search.match(/taiko_no=(\d+)/)?.[1]
 
   let loaded = false
   onMount(async () => {
@@ -145,6 +146,7 @@
       storage={storage}
       genre={genre}
       songDB={songDB}
+      taikoNo={taikoNo}
     />
   {/if}
 </div>
