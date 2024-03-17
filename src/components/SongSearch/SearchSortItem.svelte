@@ -52,11 +52,11 @@
   }
 
   .up-arrow {
-    transform: rotate(270deg);
+    transform: rotate(90deg);
   }
 
   .down-arrow {
-    transform: rotate(90deg);
+    transform: rotate(270deg);
   }
 
   .button-group {
