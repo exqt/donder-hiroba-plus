@@ -7,15 +7,15 @@ export const parseDonderInfo = (): DonderInfo => {
   if (mydon === null) return {}
 
   const donderIdElem = mydon.querySelector('.detail')?.querySelectorAll('p')?.[1].textContent?.trim()
-  const donderId = donderIdElem?.match(/(\d+)/)?.at(0)
+  const id = donderIdElem?.match(/(\d+)/)?.at(0)
 
-  const donderTitle = mydon.children[1].innerHTML.trim()
-  const donderName = mydon.children[2].children[0].innerHTML.trim()
+  const title = mydon.children[1]?.innerHTML.trim()
+  const name = mydon.children[2]?.textContent?.trim()
 
   return {
-    id: donderId,
-    name: donderName,
-    title: donderTitle
+    id,
+    name,
+    title
   }
 }
 
