@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "version": "node -p \"require('./package.json').version\""
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.21",
