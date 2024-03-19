@@ -4,6 +4,7 @@
   import type { DifficultyType, Language } from '../types'
   import { icons } from '../assets'
   import { parseScores } from '../lib/songs'
+  import packageJson from '../../package.json'
 
   export let storage: ExtensionStorage
 
@@ -100,6 +101,7 @@
     preferringDifficulty = storage.settings.preferringDifficulty ?? 'oni'
   })
 
+  const version = packageJson.version
 </script>
 
 <div class="wrapper">
@@ -147,7 +149,7 @@
   <!-- GitHub Link -->
   <a class="github-link" href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
     <img class="icon" src={icons.github} alt="github"/>
-    <span>exqt/donder-hiroba-plus</span>
+    <span>exqt/donder-hiroba-plus ({version}) </span>
   </a>
 </div>
 
