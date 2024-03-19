@@ -115,6 +115,17 @@
     </select>
   </div>
 
+  <!-- preferring Difficulty -->
+  <div>
+    <label for="preferring-difficulty">Preferring Difficulty</label>
+    <select id="preferring-difficulty" bind:value={preferringDifficulty} on:change={updatepreferringDifficulty}>
+      <option value="easy">Kantan</option>
+      <option value="normal">Futsuu</option>
+      <option value="hard">Muzukashii</option>
+      <option value="oni">Oni</option>
+    </select>
+  </div>
+
   <!-- Parse Score -->
   <div class="parse-score-wrapper">
     <button disabled={disableUpdate} on:click={updateSongScoreAll}>
@@ -129,19 +140,11 @@
       <p>{updateMessage}</p>
     {/if}
   </div>
+
+  <!-- Reset -->
   <button class="warning" on:click={reset}>Reset</button>
 
-  <!-- preferring Difficulty -->
-  <div>
-    <label for="preferring-difficulty">Preferring Difficulty</label>
-    <select id="preferring-difficulty" bind:value={preferringDifficulty} on:change={updatepreferringDifficulty}>
-      <option value="easy">Kantan</option>
-      <option value="normal">Futsuu</option>
-      <option value="hard">Muzukashii</option>
-      <option value="oni">Oni</option>
-    </select>
-  </div>
-
+  <!-- GitHub Link -->
   <a class="github-link" href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
     <img class="icon" src={icons.github} alt="github"/>
     <span>exqt/donder-hiroba-plus</span>
@@ -181,11 +184,6 @@
   button:disabled {
     background-color: #575757;
     cursor: not-allowed;
-  }
-
-  .parse-score-wrapper {
-    height: 40px;
-    margin-bottom: 20px;
   }
 
   .github-link {
