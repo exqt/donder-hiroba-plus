@@ -31,7 +31,8 @@ jobs:
 
     - name: Archive distribution files
       run: |
-        zip -r ${{ steps.pkg.outputs.version }}.zip dist/
+        cd dist/
+        zip -r ../${{ steps.pkg.outputs.version }}.zip .
 
     - name: Create Release
       id: create_release
@@ -52,5 +53,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./${{ steps.pkg.outputs.version }}.zip
-        asset_name: ${{ steps.pkg.outputs.version }}.zip
+        asset_name: donder-hiroba-plus-v${{ steps.pkg.outputs.version }}.zip
         asset_content_type: application/zip
