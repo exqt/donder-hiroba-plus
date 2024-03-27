@@ -1,4 +1,5 @@
-import Favorite from '../components/Favorite.svelte'
+import PlaylistEditor from '../components/Playlist/PlaylistEditor.svelte'
+import { PlaylistsStore, parseCurrentFavoriteSongList } from '../lib/playlist'
 
 export default async (): Promise<void> => {
   console.log('fav')
@@ -17,12 +18,22 @@ export default async (): Promise<void> => {
   }
 
   const tckt = tcktElem.attributes.getNamedItem('value')?.value
-  console.log(tckt)
+  if (tckt === undefined) {
+    return
+  }
 
-  // const favorite = new Favorite({
-  //   target: div,
-  //   props: {
-  //     tckt
-  //   }
-  // })
+  const playlists = new PlaylistsStore()
+  await playlists.load()
+
+  const currentFavoriteSongList = parseCurrentFavoriteSongList()
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const playlistEditor = new PlaylistEditor({
+    target: div,
+    props: {
+      tckt,
+      playlists,
+      favoriteSongList: currentFavoriteSongList
+    }
+  })
 }

@@ -10,8 +10,8 @@
   button {
     border-radius: 8px;
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    margin: 0.2em;
+    padding: 4px;
+    margin: 4px 0px;
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
@@ -19,6 +19,7 @@
     color: white;
     cursor: pointer;
     transition: border-color 0.25s;
+    box-shadow: none;
   }
 
   button:active {

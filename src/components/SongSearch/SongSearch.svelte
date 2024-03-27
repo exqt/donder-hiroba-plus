@@ -13,6 +13,7 @@
   import { onMount } from 'svelte'
   import { sortAndFilter } from './sortAndFilter'
   import DifficultySelect from './DifficultySelect.svelte'
+  import { PlaylistsStore } from '../../lib/playlist'
 
   export let scores: SongScore[] = []
 
@@ -101,12 +102,14 @@
 
   let songDB: SongDB
   let storage: ExtensionStorage
+  const playlists = new PlaylistsStore()
   const taikoNo = window.location.search.match(/taiko_no=(\d+)/)?.[1]
 
   let loaded = false
   onMount(async () => {
     songDB = await SongDB.getInstance()
     storage = await ExtensionStorage.getInstance()
+    await playlists.load()
     loaded = true
   })
 
@@ -146,6 +149,7 @@
       storage={storage}
       genre={genre}
       songDB={songDB}
+      playlists={playlists}
       taikoNo={taikoNo}
     />
   {/if}

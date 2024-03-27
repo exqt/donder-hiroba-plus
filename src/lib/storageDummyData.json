@@ -15,7 +15,7 @@
   "playlists": [
     {
       "title": "for donforce 10",
-      "songNoList": [73, 12]
+      "songNoList": ["73", "12"]
     }
   ]
 }
