@@ -16,6 +16,7 @@
   let open = false
 
   let wrapper: HTMLDivElement
+  let title: HTMLDivElement
 
   const getTitle = (songData?: SongData): string => {
     if (songData === undefined) {
@@ -59,12 +60,24 @@
     const newPlaylist = { ...playlist, songNoList: items.map((item) => item.songNo) }
     onChange(newPlaylist)
   }
+
+  const onPointerMove = (): void => {
+    open = false
+  }
+  const onPointerUp = (): void => {
+    title.removeEventListener('pointermove', onPointerMove)
+    title.removeEventListener('pointerup', onPointerUp)
+  }
+  const onPointerDown = (): void => {
+    title.addEventListener('pointermove', onPointerMove)
+    title.addEventListener('pointerup', onPointerUp)
+  }
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="wrapper" bind:this={wrapper}>
-  <div class="title" on:click={() => { open = !open }}>
+  <div class="title" bind:this={title} on:click={() => { open = !open }} on:pointerdown={onPointerDown}>
     <img class="icon" class:open={open} src={icons.chevronArrowDown} alt="arrow"/>
     <span>
       {playlist.title}
@@ -119,7 +132,7 @@
 
   .title {
     padding: 8px;
-    background-color: #cf4844;;
+    background-color: #cf4844;
     color: white;
     font-size: 16px;
     font-weight: bold;
