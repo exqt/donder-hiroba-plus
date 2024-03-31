@@ -35,7 +35,7 @@ export class ExtensionStorage implements StorageData {
     if (storage === undefined) {
       console.warn('storage is not available using default values')
 
-      this.scoresByNo = dummyData.scoresByNo as Record<string, SongScore>
+      this.scoresByNo = (await import('./dummyData/scoresByNo.json')).default as Record<string, SongScore>
       this.playlists = dummyData.playlists as Playlist[]
 
       this.isLoaded = true

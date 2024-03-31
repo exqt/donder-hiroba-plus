@@ -73,6 +73,9 @@
     <a href="https://donderhiroba.jp/score_list.php" target="_blank">
       <Button>Score</Button>
     </a>
+    <a href="https://donderhiroba.jp/favorite_song_select.php?init=1" target="_blank">
+      <Button>Favorite</Button>
+    </a>
   </div>
 </div>
 

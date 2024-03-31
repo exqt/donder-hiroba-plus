@@ -5,12 +5,14 @@
   import type { SongDB } from '../../lib/songDB'
   import type { SongScore } from '../../types'
   import type { ExtensionStorage } from '../../lib/storage'
+  import type { PlaylistsStore } from '../../lib/playlist'
 
   export let genre: string | undefined
   export let songScores: SongScore[] = []
   export let storage: ExtensionStorage
   export let songDB: SongDB
   export let taikoNo: string | undefined
+  export let playlists: PlaylistsStore
 
   const getTitle = (parsedTitle: string, songNo: string): string => {
     const language = storage.settings.language
@@ -43,6 +45,7 @@
           details={songScore.details}
           genre={genre}
           taikoNo={taikoNo}
+          playlists={playlists}
         />
       </Lazy>
     {/each}
@@ -54,7 +57,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 
   .song-count {

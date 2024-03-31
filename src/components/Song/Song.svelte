@@ -1,31 +1,60 @@
 <script lang="ts">
   import { DIFFICULTIES } from '../../constants'
-  import type { DifficultyType, SongData, SongScoreDetail } from '../../types'
+  import type { DifficultyType, GenreType, SongData, SongScoreDetail } from '../../types'
   import DifficultyLink from './DifficultyLink.svelte'
   import SongInfo from './SongInfo.svelte'
   import { getDonforceLevel } from '../../lib/donforce'
   import { icons } from '../../assets'
+  import PlaylistAction from './PlaylistAction.svelte'
+  import type { PlaylistsStore } from '../../lib/playlist'
 
   export let songNo: string
   export let title: string
-  export let translatedTitle: string
-  export let genre: string | undefined
+  export let translatedTitle: string | undefined
+  export let genre: GenreType | undefined
   export let songData: SongData | undefined
   export let details: Partial<Record<DifficultyType, SongScoreDetail>>
   export let taikoNo: string | undefined
+  export let playlists: PlaylistsStore | undefined
 
   let showInfo = false
+  let showPlaylistAction = false
 
   const hasUra = details?.oni_ura !== undefined
 
+  const onClickPlaylist = (e: MouseEvent): void => {
+    e.stopPropagation()
+    showPlaylistAction = !showPlaylistAction
+  }
+
+  const onClickInfo = (e: MouseEvent): void => {
+    e.stopPropagation()
+    showInfo = !showInfo
+  }
 </script>
 
 <div class={`song-wrapper ${genre}`}>
-  <button class="info-toggle" on:click={() => { showInfo = !showInfo }}>
-    <img class="info-toggle-icon" src={icons.informationCircle} alt="info-toggle"/>
+  {#if songData}
+  <button class="info-toggle" on:click={onClickInfo}>
+    <img class="toggle-icon" src={icons.informationCircle} alt="info-toggle"/>
   </button>
+  {/if}
 
-  <span class="title">{translatedTitle}</span>
+  {#if playlists}
+    <button class="playlist-toggle" on:click={onClickPlaylist}>
+      <img class="toggle-icon" src={icons.list} alt="info-toggle"/>
+    </button>
+  {/if}
+
+  <span class="title">{translatedTitle ?? title}</span>
+
+  {#if showPlaylistAction && playlists}
+    <PlaylistAction
+      {songNo}
+      {playlists}
+      onClickOutside={() => { showPlaylistAction = false }}
+    />
+  {/if}
 
   {#if showInfo}
     <SongInfo {title} {songNo} {songData} />
@@ -128,10 +157,7 @@
     z-index: 999;
   }
 
-  .info-toggle {
-    position: absolute;
-    top: 2px;
-    right: 2px;
+  button {
     background-color: #0004;
     filter: invert(0.9);
     border: none;
@@ -145,7 +171,19 @@
     justify-content: center;
   }
 
-  .info-toggle-icon {
+  .info-toggle {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
+
+  .playlist-toggle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+  }
+
+  .toggle-icon {
     width: 24px;
   }
 </style>

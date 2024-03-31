@@ -1,4 +1,4 @@
-import { type BADGES, type CROWNS, type DIFFICULTIES } from './constants'
+import { type GENRES, type BADGES, type CROWNS, type DIFFICULTIES } from './constants'
 
 export interface DonderInfo {
   id?: string
@@ -9,6 +9,7 @@ export interface DonderInfo {
 export type DifficultyType = typeof DIFFICULTIES[number]
 export type CrownType = typeof CROWNS[number]
 export type BadgeType = typeof BADGES[number]
+export type GenreType = typeof GENRES[number]
 
 export interface SearchOptions {
   text: string
@@ -48,6 +49,7 @@ export interface SongData {
   composer: string
   artist: string
   noteCounts: Partial<Record<DifficultyType, number>>
+  genres: GenreType[]
 }
 
 export interface DonforceItem {
@@ -64,8 +66,9 @@ export interface Storage {
 }
 
 export interface Playlist {
+  uuid: string
   title: string
-  songNoList: number[]
+  songNoList: string[]
 }
 
 export interface ExtensionSetting {
@@ -79,4 +82,10 @@ export interface StorageData {
   scoresByNo: Record<string, SongScore>
   playlists: Playlist[]
   settings: ExtensionSetting
+}
+
+export interface FavoriteSong {
+  songNo: string
+  title: string
+  genre: GenreType
 }

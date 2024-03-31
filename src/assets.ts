@@ -31,6 +31,8 @@ import formatListNumberedIcon from './assets/icons/format-list-numbered.svg'
 import cogIcon from './assets/icons/cog.svg'
 import tableIcon from './assets/icons/table.svg'
 import informationCircleIcon from './assets/icons/information-circle.svg'
+import listIcon from './assets/icons/list.svg'
+import chevronArrowDownIcon from './assets/icons/chevron-arrow-down.svg'
 
 import totalScorePanelKantanImage from './assets/images/total_score_image_1.png'
 import totalScorePanelFutsuuImage from './assets/images/total_score_image_2.png'
@@ -60,6 +62,8 @@ export const icons = {
   formatListNumbered: processAssetPath(formatListNumberedIcon),
   cog: processAssetPath(cogIcon),
   table: processAssetPath(tableIcon),
+  list: processAssetPath(listIcon),
+  chevronArrowDown: processAssetPath(chevronArrowDownIcon),
 
   crowns: {
     none: processAssetPath(crownNoneIcon),
