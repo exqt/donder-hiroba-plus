@@ -12,6 +12,7 @@
   import { ExtensionStorage } from '../lib/storage'
   import { SongDB } from '../lib/songDB'
   import { onMount } from 'svelte'
+  import I18N from '../lib/i18n'
 
   interface Tab {
     name: string
@@ -22,6 +23,7 @@
 
   let songDB: SongDB
   let storage: ExtensionStorage
+  let i18n: I18N
 
   const tabs: Tab[] = [
     {
@@ -53,6 +55,7 @@
       storage = await ExtensionStorage.getInstance()
       currentTabIdx = storage.settings.lastTabIndex ?? 0
     }
+    i18n = await I18N.getInstance()
     loaded = true
   })
 
@@ -92,6 +95,7 @@
       {:else if currentTabName === 'settings'}
         <Settings
           storage={storage}
+          {i18n}
         />
       {/if}
     {/if}

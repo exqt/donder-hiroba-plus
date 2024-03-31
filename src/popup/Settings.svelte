@@ -5,8 +5,10 @@
   import { icons } from '../assets'
   import { parseScores } from '../lib/songs'
   import packageJson from '../../package.json'
+  import type I18N from '../lib/i18n'
 
   export let storage: ExtensionStorage
+  export let i18n: I18N
 
   const reset = async (): Promise<void> => {
     await storage.reset()
@@ -19,6 +21,7 @@
     const language = (ev.target as HTMLSelectElement).value as Language
     storage.settings.language = language
     await storage.save()
+    window.close()
   }
 
   let updateStatus = ''
@@ -105,11 +108,11 @@
 </script>
 
 <div class="wrapper">
-  <h1>Settings</h1>
+  <h1>{i18n.t('Settings')}</h1>
 
   <!-- Language Selection -->
   <div>
-    <label for="language">Language</label>
+    <label for="language">{i18n.t('Language')}</label>
     <select id="language" bind:value={language} on:change={onLanguageChange}>
       <option value="en">English</option>
       <option value="ja">日本語</option>
@@ -119,19 +122,19 @@
 
   <!-- preferring Difficulty -->
   <div>
-    <label for="preferring-difficulty">Preferring Difficulty</label>
+    <label for="preferring-difficulty">{i18n.t('Preferring Difficulty')} </label>
     <select id="preferring-difficulty" bind:value={preferringDifficulty} on:change={updatepreferringDifficulty}>
-      <option value="easy">Kantan</option>
-      <option value="normal">Futsuu</option>
-      <option value="hard">Muzukashii</option>
-      <option value="oni">Oni</option>
+      <option value="easy">{i18n.t('Kantan')}</option>
+      <option value="normal">{i18n.t('Futsuu')}</option>
+      <option value="hard">{i18n.t('Muzukashii')}</option>
+      <option value="oni">{i18n.t('Oni')}</option>
     </select>
   </div>
 
   <!-- Parse Score -->
   <div class="parse-score-wrapper">
     <button disabled={disableUpdate} on:click={updateSongScoreAll}>
-      Update Song Score
+      {i18n.t('Update Song Scores')}
     </button>
     {#if updateStatus === 'updating'}
       <p>Updating...</p>
@@ -144,7 +147,7 @@
   </div>
 
   <!-- Reset -->
-  <button class="warning" on:click={reset}>Reset</button>
+  <button class="warning" on:click={reset}>{i18n.t('Reset')}</button>
 
   <!-- GitHub Link -->
   <a class="github-link" href="https://github.com/exqt/donder-hiroba-plus" target="_blank">

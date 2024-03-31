@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <p class="level-text">Star: {(stars + subStar / 10).toFixed(1)}</p>
+  <p class="level-text">★ {(stars + subStar / 10).toFixed(1)}</p>
 
   <Switch bind:checked={perSong} label={` / ${DONFORCE_NUMBER_OF_RECORDS}`}/>
 
