@@ -76,6 +76,9 @@
     <a href="https://donderhiroba.jp/favorite_song_select.php?init=1" target="_blank">
       <Button>Favorite</Button>
     </a>
+    <a href="https://donderhiroba.jp/mypage_other_setting.php" target="_blank">
+      <Button>Settings</Button>
+    </a>
   </div>
 </div>
 
@@ -89,7 +92,7 @@
   .donder-info {
     width: 290px;
     height: 46px;
-    margin-top: 16px;
+    margin-top: 8px;
     background-size: contain;
     background-repeat: no-repeat;
     padding-top: 2px;
@@ -122,5 +125,9 @@
   .hiroba-link-buttons {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    width: 60%;
+    justify-content: center;
   }
 </style>

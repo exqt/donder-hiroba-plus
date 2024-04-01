@@ -11,7 +11,6 @@
     border-radius: 8px;
     border: 1px solid transparent;
     padding: 4px;
-    margin: 4px 0px;
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
