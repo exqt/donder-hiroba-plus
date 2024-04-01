@@ -16,6 +16,9 @@
   let scorePanel = images.totalScorePanelOniImage
 
   onMount(async () => {
+    if (settingsStorage.donderInfo === undefined) {
+      return
+    }
     donderInfo = settingsStorage.donderInfo
     const r = scoreStorage.countBadgesAndCrowns(['oni', 'oni_ura'])
     byBadges = r.badges
