@@ -10,6 +10,7 @@
   button {
     border-radius: 8px;
     border: 1px solid transparent;
+    margin: 4px 2px;
     padding: 4px;
     font-size: 1em;
     font-weight: 500;
