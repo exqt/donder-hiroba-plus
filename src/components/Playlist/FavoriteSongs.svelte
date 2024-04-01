@@ -64,7 +64,7 @@
             title={title}
             genre={genre}
             details={scores?.details ?? {}}
-            translatedTitle={songData?.title ?? 'unknown'}
+            translatedTitle={songData?.title ?? title ?? 'unknown'}
             songData={songData}
             taikoNo={''}
             playlists={undefined}
