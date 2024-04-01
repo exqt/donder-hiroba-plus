@@ -111,6 +111,14 @@
     settingsStorage = await SettingsStorage.getInstance()
     playlists = await PlaylistsStore.getInstance()
     loaded = true
+
+    const preferringDifficulty = settingsStorage.preferringDifficulty ?? 'oni'
+    let difficulties = { easy: false, normal: false, hard: false, oni: false, oni_ura: false }
+    if (preferringDifficulty === 'easy') difficulties = { ...difficulties, easy: true }
+    else if (preferringDifficulty === 'normal') difficulties = { ...difficulties, normal: true }
+    else if (preferringDifficulty === 'hard') difficulties = { ...difficulties, hard: true }
+    else if (preferringDifficulty === 'oni') difficulties = { ...difficulties, oni: true, oni_ura: true }
+    searchDifficulties.set(difficulties)
   })
 
   $: {

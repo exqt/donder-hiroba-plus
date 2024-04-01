@@ -4,7 +4,7 @@
   import { type ScoreStorage } from '../lib/scores'
   import { images } from '../assets'
   import { getDanImageURL, getDonderAvatarURL } from '../lib/donder'
-  import type { BadgeType, CrownType, DonderInfo } from '../types'
+  import type { BadgeType, CrownType, DifficultyType, DonderInfo } from '../types'
   import type { SettingsStorage } from '../lib/settings'
 
   export let scoreStorage: ScoreStorage
@@ -20,7 +20,14 @@
       return
     }
     donderInfo = settingsStorage.donderInfo
-    const r = scoreStorage.countBadgesAndCrowns(['oni', 'oni_ura'])
+
+    const difficulties: DifficultyType[] = []
+    difficulties.push(settingsStorage.preferringDifficulty)
+    if (settingsStorage.preferringDifficulty === 'oni') {
+      difficulties.push('oni_ura')
+    }
+
+    const r = scoreStorage.countBadgesAndCrowns(difficulties)
     byBadges = r.badges
     byCrowns = r.crowns
 
