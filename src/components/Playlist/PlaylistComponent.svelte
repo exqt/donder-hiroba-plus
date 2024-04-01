@@ -58,10 +58,16 @@
     const base64 = encodeBase64(playlist.songNoList)
     const str = `${title}|${base64}`
     await navigator.clipboard.writeText(str)
+
+    alert('Copied to clipboard')
   }
 
   const tckt: string = getContext('tckt')
   const onExport = async (): Promise<void> => {
+    if (!confirm('Are you sure you want to export this playlist?')) {
+      return
+    }
+
     const songNoList = playlist.songNoList
 
     try {
