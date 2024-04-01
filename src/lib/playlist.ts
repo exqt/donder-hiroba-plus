@@ -110,7 +110,7 @@ export class PlaylistsStore {
     }
 
     const data = await storage.get('playlists') as { playlists: Playlist[] }
-    this.store.set(data.playlists)
+    this.store.set(data.playlists ?? [])
   }
 
   public subscribe (run: (value: Playlist[]) => void): () => void {

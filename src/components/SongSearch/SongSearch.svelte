@@ -3,22 +3,22 @@
   import SearchSort from './SearchSort.svelte'
   import SearchFilter from './SearchFilter.svelte'
   import LevelRangeInput from './LevelRangeInput.svelte'
+  import SearchText from './SearchText.svelte'
+  import DifficultySelect from './DifficultySelect.svelte'
 
   import { BADGES, CROWNS, DIFFICULTIES, WIDTH } from '../../constants'
-  import type { BadgeType, CrownType, SongScore, SearchOptions, SortOptions, DifficultyType } from '../../types'
+  import type { BadgeType, CrownType, SongScore, SearchOptions, SortOptions, DifficultyType, GenreType } from '../../types'
   import { writable, type Writable } from 'svelte/store'
   import { SongDB } from '../../lib/songDB'
-  import SearchText from './SearchText.svelte'
-  import { ExtensionStorage } from '../../lib/storage'
+  import { SettingsStorage } from '../../lib/settings'
   import { onMount } from 'svelte'
   import { sortAndFilter } from './sortAndFilter'
-  import DifficultySelect from './DifficultySelect.svelte'
   import { PlaylistsStore } from '../../lib/playlist'
 
   export let scores: SongScore[] = []
 
-  let genre = 'jpop'
-  const genreMap: Record<string, string> = { 2: 'anime', 3: 'kids', 4: 'vocaloid', 5: 'game', 6: 'namco', 7: 'variety', 8: 'classic' }
+  let genre: GenreType = 'jpop'
+  const genreMap: Record<string, GenreType> = { 2: 'anime', 3: 'kids', 4: 'vocaloid', 5: 'game', 6: 'namco', 7: 'variety', 8: 'classic' }
 
   const genreInURL = window.location.search.match(/genre=(\d+)/)
   if (genreInURL !== null) {
@@ -101,15 +101,15 @@
   let filteredSortedScores: SongScore[] = []
 
   let songDB: SongDB
-  let storage: ExtensionStorage
-  const playlists = new PlaylistsStore()
+  let settingsStorage: SettingsStorage
+  let playlists: PlaylistsStore
   const taikoNo = window.location.search.match(/taiko_no=(\d+)/)?.[1]
 
   let loaded = false
   onMount(async () => {
     songDB = await SongDB.getInstance()
-    storage = await ExtensionStorage.getInstance()
-    await playlists.load()
+    settingsStorage = await SettingsStorage.getInstance()
+    playlists = await PlaylistsStore.getInstance()
     loaded = true
   })
 
@@ -120,7 +120,7 @@
         $sortOptions,
         $searchDifficulties,
         songDB,
-        storage,
+        settingsStorage,
         scores,
         !isDefaultOptions($searchOptions, $sortOptions)
       )
@@ -146,7 +146,7 @@
   {#if loaded}
     <SongList
       songScores={filteredSortedScores}
-      storage={storage}
+      {settingsStorage}
       genre={genre}
       songDB={songDB}
       playlists={playlists}

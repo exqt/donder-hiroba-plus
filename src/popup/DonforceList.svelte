@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { type ExtensionStorage } from '../lib/storage'
+  import { type ScoreStorage } from '../lib/scores'
   import { onMount } from 'svelte'
   import { SongDB } from '../lib/songDB'
   import { getDonforceTopK } from '../lib/donforce'
@@ -7,8 +7,10 @@
   import type { DifficultyType, DonforceItem, SongScore } from '../types'
   import { getSongDetailLink } from '../lib/songs'
   import DonforceItemComponent from '../components/Popup/DonforceItemComponent.svelte'
+  import type { SettingsStorage } from '../lib/settings'
 
-  export let storage: ExtensionStorage
+  export let scoreStorage: ScoreStorage
+  export let settingsStorage: SettingsStorage
   export let songDB: SongDB
 
   let scores: SongScore[] = []
@@ -19,9 +21,10 @@
 
   onMount(async () => {
     songDB = await SongDB.getInstance()
-    scores = storage.getAllScores()
+    scores = scoreStorage.getAllScores()
+    console.log(scores)
 
-    diffs = [storage.settings.preferringDifficulty ?? 'oni']
+    diffs = [settingsStorage.preferringDifficulty ?? 'oni']
     if (diffs[0] === 'oni') diffs.push('oni_ura')
 
     items = getDonforceTopK(scores, songDB, diffs, DONFORCE_NUMBER_OF_RECORDS)
@@ -38,7 +41,7 @@
     {#each items as item, i (item.songNo + item.difficulty)}
       {@const color = DIFFICULTY_COLORS[DIFFICULTY_TO_INDEX[item.difficulty]]}
       {@const songData = songDB.getSongData(item.songNo)}
-      {@const detail = storage.getScoreByNo(item.songNo)?.details[item.difficulty]}
+      {@const detail = scoreStorage.getScoreByNo(item.songNo)?.details[item.difficulty]}
       {@const link = getSongDetailLink(item.songNo, item.difficulty)}
       <DonforceItemComponent {item} {i} {songData} {detail} {link} {color} />
     {/each}

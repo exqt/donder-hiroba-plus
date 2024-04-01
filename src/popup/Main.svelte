@@ -9,7 +9,8 @@
   import NotLogined from './NotLogined.svelte'
 
   import { icons } from '../assets'
-  import { ExtensionStorage } from '../lib/storage'
+  import { ScoreStorage } from '../lib/scores'
+  import { SettingsStorage } from '../lib/settings'
   import { SongDB } from '../lib/songDB'
   import { onMount } from 'svelte'
   import I18N from '../lib/i18n'
@@ -22,26 +23,15 @@
   const TAB_HEIGHT = 30
 
   let songDB: SongDB
-  let storage: ExtensionStorage
+  let scoreStorage: ScoreStorage
+  let settingsStorage: SettingsStorage
   let i18n: I18N
 
   const tabs: Tab[] = [
-    {
-      name: 'profile',
-      icon: icons.account
-    },
-    {
-      name: 'donforce-list',
-      icon: icons.formatListNumbered
-    },
-    {
-      name: 'donforce-table',
-      icon: icons.table
-    },
-    {
-      name: 'settings',
-      icon: icons.cog
-    }
+    { name: 'profile', icon: icons.account },
+    { name: 'donforce-list', icon: icons.formatListNumbered },
+    { name: 'donforce-table', icon: icons.table },
+    { name: 'settings', icon: icons.cog }
   ]
 
   export let currentTabIdx = -1
@@ -51,24 +41,27 @@
   let loaded = false
   onMount(async () => {
     songDB = await SongDB.getInstance()
-    if (currentTabIdx === -1) {
-      storage = await ExtensionStorage.getInstance()
-      currentTabIdx = storage.settings.lastTabIndex ?? 0
-    }
+    scoreStorage = await ScoreStorage.getInstance()
+    settingsStorage = await SettingsStorage.getInstance()
     i18n = await I18N.getInstance()
+
+    if (currentTabIdx === -1) {
+      currentTabIdx = settingsStorage.lastTabIndex ?? 0
+    }
+
     loaded = true
   })
 
   const onClickTab = async (idx: number): Promise<void> => {
     currentTabIdx = idx
-    storage.settings.lastTabIndex = idx
-    await storage.save()
+    settingsStorage.lastTabIndex = idx
+    await settingsStorage.save()
   }
 </script>
 
 <main style={`width: ${WIDTH}px; height: ${HEIGHT}px`}>
   <!-- svelte-ignore missing-declaration -->
-  {#if loaded && storage?.donderInfo.id === undefined && chrome === undefined}
+  {#if loaded && settingsStorage?.donderInfo?.id === undefined && chrome !== undefined}
     <NotLogined/>
   {/if}
 
@@ -83,13 +76,13 @@
   <div class="tab-content" style={`height: ${HEIGHT - TAB_HEIGHT}px`}>
     {#if loaded}
       {#if currentTabName === 'profile'}
-        <Profile {storage} />
+        <Profile {scoreStorage} {settingsStorage} />
       {:else if currentTabName === 'donforce-list'}
-        <DonforceList {storage} {songDB} />
+        <DonforceList {settingsStorage} {scoreStorage} {songDB} />
       {:else if currentTabName === 'donforce-table'}
         <DonforceTable/>
       {:else if currentTabName === 'settings'}
-        <Settings {storage} {i18n} />
+        <Settings {settingsStorage} {scoreStorage} {i18n} />
       {/if}
     {/if}
   </div>

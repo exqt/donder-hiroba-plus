@@ -1,4 +1,4 @@
-import { ExtensionStorage } from './storage'
+import { SettingsStorage } from './settings'
 import { images } from '../assets'
 import type { DonderInfo } from '../types'
 
@@ -32,13 +32,13 @@ export const getDanImageURL = (donderId: string | undefined): string => {
 export const updateDonderInfo = async (donderInfo: DonderInfo): Promise<void> => {
   if (donderInfo.id === undefined) return
 
-  const storage = await ExtensionStorage.getInstance()
+  const settings = await SettingsStorage.getInstance()
 
   // if donderId is changed, reset storage
-  if (storage.donderInfo?.id !== donderInfo.id) {
-    await storage.reset()
+  if (settings.donderInfo?.id !== donderInfo.id) {
+    await settings.reset()
   }
 
-  storage.donderInfo = donderInfo
-  await storage.save()
+  settings.donderInfo = donderInfo
+  await settings.save()
 }

@@ -1,14 +1,15 @@
 import I18N from '../lib/i18n'
-import { ExtensionStorage } from '../lib/storage'
+import { SettingsStorage } from '../lib/settings'
 
 const isJapanese = (text: string): boolean => {
   return text.match(/[\u3040-\u30ff\u31f0-\u31ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/) !== null
 }
 
 export default async (): Promise<void> => {
-  const storage = await ExtensionStorage.getInstance()
-  console.log(`Language: ${storage.settings.language}`)
-  if (storage.settings.language === 'ko') {
+  const settings = await SettingsStorage.getInstance()
+
+  console.log(`Language: ${settings.language}`)
+  if (settings.language === 'ko') {
     const style = document.createElement('style')
     style.innerHTML = `* {
       word-break: keep-all;

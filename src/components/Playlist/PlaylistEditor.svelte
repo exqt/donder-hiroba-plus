@@ -6,9 +6,10 @@
 
   import type { FavoriteSong } from '../../types'
   import FavoriteSongs from './FavoriteSongs.svelte'
-  import { ExtensionStorage } from '../../lib/storage'
+  import { ScoreStorage } from '../../lib/scores'
   import PlaylistContainer from './PlaylistContainer.svelte'
   import { genUUID } from '../../lib/utils'
+  import { SettingsStorage } from '../../lib/settings'
 
   export let tckt: string
   export let favoriteSongList: FavoriteSong[] = []
@@ -58,7 +59,8 @@
   }
 
   let songDB: SongDB
-  let storage: ExtensionStorage
+  let scoreStorage: ScoreStorage
+  let settingsStorage: SettingsStorage
   let playlists: PlaylistsStore
 
   setContext('tckt', tckt)
@@ -67,7 +69,8 @@
     console.log('playlists', playlists)
     console.log('currentFavoriteSongList', favoriteSongList)
     songDB = await SongDB.getInstance()
-    storage = await ExtensionStorage.getInstance()
+    scoreStorage = await ScoreStorage.getInstance()
+    settingsStorage = await SettingsStorage.getInstance()
     playlists = await PlaylistsStore.getInstance()
   })
 
@@ -84,7 +87,8 @@
   </div>
   {#if playlists}
     <PlaylistContainer
-      {storage}
+      {scoreStorage}
+      {settingsStorage}
       {playlists}
       {songDB}
     />
@@ -102,7 +106,7 @@
   </div>
   <FavoriteSongs
     {songDB}
-    {storage}
+    storage={scoreStorage}
     {favoriteSongList}
   />
 </div>

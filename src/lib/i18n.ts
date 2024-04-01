@@ -1,5 +1,5 @@
 import type { Language } from '../types'
-import { ExtensionStorage } from './storage'
+import { SettingsStorage } from './settings'
 
 export default class I18N {
   data: Partial<Record<Language, Record<string, string>>> = {}
@@ -17,8 +17,8 @@ export default class I18N {
   }
 
   async load (): Promise<void> {
-    const storage = await ExtensionStorage.getInstance()
-    const language = storage.settings.language
+    const settings = await SettingsStorage.getInstance()
+    const language = settings.language
     const locale = navigator.language.split('-')[0] as Language
     console.log(`Language: ${language}, Locale: ${locale}`)
     this.language = language ?? locale

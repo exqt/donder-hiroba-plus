@@ -4,11 +4,11 @@
   import type { FavoriteSong } from '../../types'
   import Song from '../Song/Song.svelte'
   import { flip } from 'svelte/animate'
-  import type { ExtensionStorage } from '../../lib/storage'
+  import type { ScoreStorage } from '../../lib/scores'
 
   export let songDB: SongDB | undefined
   export let favoriteSongList: FavoriteSong[]
-  export let storage: ExtensionStorage | undefined
+  export let storage: ScoreStorage | undefined
   // export let onChange: (favoriteSongs: FavoriteSong[]) => void
 
   $: items = favoriteSongList.map((song, index) => ({ id: song.songNo, song, originalIndex: index }))

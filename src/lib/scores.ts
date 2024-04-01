@@ -1,55 +1,34 @@
 import { DIFFICULTIES } from '../constants'
-import type { BadgeType, CrownType, DifficultyType, DonderInfo, ExtensionSetting, Playlist, SongScore, StorageData } from '../types'
-import dummyData from './storageDummyData.json'
+import type { BadgeType, CrownType, DifficultyType, SongScore } from '../types'
 
-const STORAGE_KEYS = ['donderInfo', 'scoresByNo', 'playlists', 'settings'] as const
-// type StorageKey = typeof STORAGE_KEYS[number]
+const STORAGE_KEY = 'scoresByNo'
 
-export class ExtensionStorage implements StorageData {
-  private static instance: ExtensionStorage
+export class ScoreStorage {
+  private static instance: ScoreStorage
 
-  donderInfo: DonderInfo = {}
   scoresByNo: Record<string, SongScore> = {}
-  playlists: Playlist[] = []
-  settings: ExtensionSetting = {
-    preferringDifficulty: 'oni',
-    language: 'en',
-    lastTabIndex: 0
-  }
-
-  isLoaded: boolean = false
 
   private constructor () {}
 
-  public static async getInstance (): Promise<ExtensionStorage> {
-    if (ExtensionStorage.instance === undefined) {
-      ExtensionStorage.instance = new ExtensionStorage()
-      await ExtensionStorage.instance.load()
+  public static async getInstance (): Promise<ScoreStorage> {
+    if (ScoreStorage.instance === undefined) {
+      ScoreStorage.instance = new ScoreStorage()
+      await ScoreStorage.instance.load()
     }
 
-    return ExtensionStorage.instance
+    return ScoreStorage.instance
   }
 
   private async load (): Promise<void> {
     const storage = chrome?.storage?.local
     if (storage === undefined) {
       console.warn('storage is not available using default values')
-
       this.scoresByNo = (await import('./dummyData/scoresByNo.json')).default as Record<string, SongScore>
-      this.playlists = dummyData.playlists as Playlist[]
-
-      this.isLoaded = true
       return
     }
 
-    const data = await storage.get(STORAGE_KEYS) as StorageData
-
-    this.donderInfo = data.donderInfo ?? this.donderInfo
-    this.scoresByNo = data.scoresByNo ?? this.scoresByNo
-    this.playlists = data.playlists ?? this.playlists
-    this.settings = { ...this.settings, ...data.settings }
-
-    this.isLoaded = true
+    const data = (await storage.get(STORAGE_KEY))[STORAGE_KEY] as Record<string, SongScore>
+    this.scoresByNo = data ?? this.scoresByNo
   }
 
   async save (): Promise<void> {
@@ -59,10 +38,7 @@ export class ExtensionStorage implements StorageData {
       return
     }
 
-    const k = STORAGE_KEYS
-    for (const key of k) {
-      await storage.set({ [key]: this[key] })
-    }
+    await storage.set({ [STORAGE_KEY]: this.scoresByNo })
   }
 
   async reset (): Promise<void> {
@@ -72,15 +48,8 @@ export class ExtensionStorage implements StorageData {
       return
     }
 
-    console.log('Resetting storage..')
-
-    this.donderInfo = {}
     this.scoresByNo = {}
-    this.playlists = []
-    this.settings = {}
-
     await this.save()
-    await storage.clear()
   }
 
   putScore (score: SongScore): void {

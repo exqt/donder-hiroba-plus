@@ -1,7 +1,7 @@
 import { DIFFICULTIES } from '../../constants'
 import { getDonforceLevel } from '../../lib/donforce'
+import { type SettingsStorage } from '../../lib/settings'
 import type { SongDB } from '../../lib/songDB'
-import type { ExtensionStorage } from '../../lib/storage'
 import type { DifficultyType, SearchOptions, SongScore, SortOptions } from '../../types'
 import * as Hangul from 'hangul-js'
 
@@ -10,11 +10,11 @@ export const sortAndFilter = (
   sortOptions: SortOptions,
   searchDifficulties: Record<DifficultyType, boolean>,
   songDB: SongDB,
-  storage: ExtensionStorage,
+  settings: SettingsStorage,
   scores: SongScore[],
   excludeNoSongData: boolean
 ): SongScore[] => {
-  const language = storage.settings.language
+  const language = settings.language
 
   const filtered = scores.filter((score) => {
     const songData = songDB.getSongData(score.songNo)
@@ -97,7 +97,7 @@ export const sortAndFilter = (
       if (b.details?.oni_ura === undefined) bLevel += offset
       ret = aLevel - bLevel
     } else if (sortOptions.key === 'alphabet') {
-      ret = a.title.localeCompare(b.title, storage.settings.language)
+      ret = a.title.localeCompare(b.title, language)
     } else if (sortOptions.key === 'length') {
       ret = (aSongData?.length ?? 0) - (bSongData?.length ?? 0)
     } else if (sortOptions.key === 'bpm') {

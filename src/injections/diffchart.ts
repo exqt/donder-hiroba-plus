@@ -1,4 +1,4 @@
-import { ExtensionStorage } from '../lib/storage'
+import { ScoreStorage } from '../lib/scores'
 import { icons } from '../assets'
 
 // TODO: make the watcher better
@@ -56,7 +56,7 @@ export default async (): Promise<void> => {
     if (!path.startsWith('diffchart')) return
 
     const titles = document.querySelectorAll('.title')
-    const storage = await ExtensionStorage.getInstance()
+    const storage = await ScoreStorage.getInstance()
 
     titles.forEach((title) => {
       const heading = title.querySelector('h1')

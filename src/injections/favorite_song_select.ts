@@ -1,5 +1,5 @@
 import PlaylistEditor from '../components/Playlist/PlaylistEditor.svelte'
-import { PlaylistsStore, parseCurrentFavoriteSongList } from '../lib/playlist'
+import { parseCurrentFavoriteSongList } from '../lib/playlist'
 
 export default async (): Promise<void> => {
   console.log('fav')
@@ -25,9 +25,6 @@ export default async (): Promise<void> => {
     return
   }
 
-  const playlists = new PlaylistsStore()
-  await playlists.load()
-
   const currentFavoriteSongList = parseCurrentFavoriteSongList()
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -35,7 +32,6 @@ export default async (): Promise<void> => {
     target: div,
     props: {
       tckt,
-      playlists,
       favoriteSongList: currentFavoriteSongList
     }
   })

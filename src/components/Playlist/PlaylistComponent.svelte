@@ -6,14 +6,16 @@
   import { dndzone, type DndEvent } from 'svelte-dnd-action'
   import Button from '../Common/Button.svelte'
   import { icons } from '../../assets'
-  import type { ExtensionStorage } from '../../lib/storage'
   import { type PlaylistsStore, encodeBase64, updateFavoriteSongList } from '../../lib/playlist'
   import { getContext } from 'svelte'
+  import type { SettingsStorage } from '../../lib/settings'
+  import type { ScoreStorage } from '../../lib/scores'
 
   export let playlistsStore: PlaylistsStore
   export let playlist: Playlist
   export let songDB: SongDB
-  export let storage: ExtensionStorage
+  export let settingsStorage: SettingsStorage
+  export let scoreStorage: ScoreStorage
   export let onChange: (playlist: Playlist) => void
   export let onRemove: (playlist: Playlist) => void
 
@@ -24,7 +26,7 @@
 
   const getTranslatedTitle = (songData?: SongData, songScore?: SongScore): string => {
     if (songData !== undefined) {
-      const language = storage.settings.language
+      const language = settingsStorage.language
       if (language === 'ko') {
         return songData?.title_kr_user ?? songData?.title ?? 'unknown'
       }
@@ -143,7 +145,7 @@
         {#each items as item, idx (item.id)}
           {@const songNo = item.songNo}
           {@const songData = songDB.getSongData(songNo)}
-          {@const songScore = storage.getScoreByNo(songNo)}
+          {@const songScore = scoreStorage.getScoreByNo(songNo)}
           <div animate:flip={{ duration: flipDurationMs }}>
             <div class="song-wrapper">
               <div style="display: flex; justify-content: space-between; align-items: center;">

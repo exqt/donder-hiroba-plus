@@ -1,12 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import Button from '../components/Common/Button.svelte'
-  import { type ExtensionStorage } from '../lib/storage'
+  import { type ScoreStorage } from '../lib/scores'
   import { images } from '../assets'
   import { getDanImageURL, getDonderAvatarURL } from '../lib/donder'
   import type { BadgeType, CrownType, DonderInfo } from '../types'
+  import type { SettingsStorage } from '../lib/settings'
 
-  export let storage: ExtensionStorage
+  export let scoreStorage: ScoreStorage
+  export let settingsStorage: SettingsStorage
 
   let donderInfo: DonderInfo = {}
   let byBadges: Record<BadgeType, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 }
@@ -14,12 +16,12 @@
   let scorePanel = images.totalScorePanelOniImage
 
   onMount(async () => {
-    donderInfo = storage.donderInfo
-    const r = storage.countBadgesAndCrowns(['oni', 'oni_ura'])
+    donderInfo = settingsStorage.donderInfo
+    const r = scoreStorage.countBadgesAndCrowns(['oni', 'oni_ura'])
     byBadges = r.badges
     byCrowns = r.crowns
 
-    const diff = storage.settings.preferringDifficulty ?? 'oni'
+    const diff = settingsStorage.preferringDifficulty ?? 'oni'
     scorePanel = {
       easy: images.totalScorePanelKantanImage,
       normal: images.totalScorePanelFutsuuImage,

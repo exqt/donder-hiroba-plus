@@ -1,4 +1,4 @@
-import { ExtensionStorage } from '../lib/storage'
+import { ScoreStorage } from '../lib/scores'
 import SongSearch__SvelteComponent_ from '../components/SongSearch/SongSearch.svelte'
 import type { FavoriteSong, GenreType } from '../types'
 

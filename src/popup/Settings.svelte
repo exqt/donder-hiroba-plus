@@ -1,26 +1,27 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { type ExtensionStorage } from '../lib/storage'
   import type { DifficultyType, Language } from '../types'
   import { icons } from '../assets'
   import { parseScores } from '../lib/songs'
   import packageJson from '../../package.json'
   import type I18N from '../lib/i18n'
+  import type { SettingsStorage } from '../lib/settings'
+  import type { ScoreStorage } from '../lib/scores'
 
-  export let storage: ExtensionStorage
+  export let settingsStorage: SettingsStorage
+  export let scoreStorage: ScoreStorage
   export let i18n: I18N
 
   const reset = async (): Promise<void> => {
-    await storage.reset()
+    await settingsStorage.reset()
+    await scoreStorage.reset()
     window.close()
   }
 
-  let language = ''
-
   const onLanguageChange = async (ev: Event): Promise<void> => {
     const language = (ev.target as HTMLSelectElement).value as Language
-    storage.settings.language = language
-    await storage.save()
+    settingsStorage.language = language
+    await settingsStorage.save()
     window.close()
   }
 
@@ -78,9 +79,9 @@
       docs.forEach((doc) => {
         const scores = parseScores(doc)
         console.log(scores)
-        scores.forEach((score) => { storage.putScore(score) })
+        scores.forEach((score) => { scoreStorage.putScore(score) })
       })
-      await storage.save()
+      await scoreStorage.save()
 
       updateStatus = 'done'
       updateMessage = 'Updated song scores successfully.'
@@ -95,13 +96,15 @@
   let preferringDifficulty: DifficultyType
   const updatepreferringDifficulty = async (ev: Event): Promise<void> => {
     const preferringDifficulty = (ev.target as HTMLSelectElement).value as DifficultyType
-    storage.settings.preferringDifficulty = preferringDifficulty
-    await storage.save()
+    settingsStorage.preferringDifficulty = preferringDifficulty
+    await settingsStorage.save()
   }
 
+  let language: Language
+
   onMount(() => {
-    language = storage.settings.language ?? 'en'
-    preferringDifficulty = storage.settings.preferringDifficulty ?? 'oni'
+    language = settingsStorage.language ?? 'en'
+    preferringDifficulty = settingsStorage.preferringDifficulty ?? 'oni'
   })
 
   const version = packageJson.version

@@ -3,19 +3,19 @@
   import Lazy from 'svelte-lazy'
 
   import type { SongDB } from '../../lib/songDB'
-  import type { SongScore } from '../../types'
-  import type { ExtensionStorage } from '../../lib/storage'
+  import type { GenreType, SongScore } from '../../types'
   import type { PlaylistsStore } from '../../lib/playlist'
+  import type { SettingsStorage } from '../../lib/settings'
 
-  export let genre: string | undefined
+  export let genre: GenreType | undefined
   export let songScores: SongScore[] = []
-  export let storage: ExtensionStorage
+  export let settingsStorage: SettingsStorage
   export let songDB: SongDB
   export let taikoNo: string | undefined
   export let playlists: PlaylistsStore
 
   const getTitle = (parsedTitle: string, songNo: string): string => {
-    const language = storage.settings.language
+    const language = settingsStorage.language
     if (language === 'ko') {
       return songDB.getSongData(songNo)?.title_kr_user ?? parsedTitle
     }

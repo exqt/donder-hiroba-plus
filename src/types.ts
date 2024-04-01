@@ -72,16 +72,10 @@ export interface Playlist {
 }
 
 export interface ExtensionSetting {
+  donderInfo: DonderInfo | undefined
   lastTabIndex?: number
   language?: Language
   preferringDifficulty?: DifficultyType
-}
-
-export interface StorageData {
-  donderInfo: DonderInfo
-  scoresByNo: Record<string, SongScore>
-  playlists: Playlist[]
-  settings: ExtensionSetting
 }
 
 export interface FavoriteSong {

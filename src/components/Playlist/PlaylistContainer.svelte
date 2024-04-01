@@ -5,11 +5,13 @@
   import type { Playlist } from '../../types'
   import type { PlaylistsStore } from '../../lib/playlist'
   import type { SongDB } from '../../lib/songDB'
-  import type { ExtensionStorage } from '../../lib/storage'
+  import type { ScoreStorage } from '../../lib/scores'
+  import type { SettingsStorage } from '../../lib/settings'
 
   export let playlists: PlaylistsStore
   export let songDB: SongDB
-  export let storage: ExtensionStorage
+  export let scoreStorage: ScoreStorage
+  export let settingsStorage: SettingsStorage
 
   $: items = $playlists.map((playlist) => ({ id: playlist.uuid, playlist }))
 
@@ -44,7 +46,8 @@
         playlistsStore={playlists}
         playlist={item.playlist}
         {songDB}
-        {storage}
+        {scoreStorage}
+        {settingsStorage}
         onRemove={async () => { await playlists.remove(item.playlist) }}
         onChange={onChange}
       />
