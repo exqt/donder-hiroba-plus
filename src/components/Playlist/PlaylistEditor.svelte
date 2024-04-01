@@ -120,6 +120,9 @@
     background: #FFCC00;
     border-radius: 8px;
     margin: 0 auto;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
   }
 
   .button-container {
