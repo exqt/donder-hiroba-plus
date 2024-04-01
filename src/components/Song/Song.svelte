@@ -47,6 +47,9 @@
   {/if}
 
   <span class="title">{translatedTitle ?? title}</span>
+  {#if translatedTitle !== title && title !== undefined}
+    <span class="title">{title}</span>
+  {/if}
 
   {#if showPlaylistAction && playlists}
     <PlaylistAction

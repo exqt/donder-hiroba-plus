@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { SongDB } from '../../lib/songDB'
-  import type { Playlist, SongData, SongScore } from '../../types'
+  import type { Language, Playlist } from '../../types'
   import Song from '../Song/Song.svelte'
   import { flip } from 'svelte/animate'
   import { dndzone, type DndEvent } from 'svelte-dnd-action'
@@ -10,6 +10,7 @@
   import { getContext } from 'svelte'
   import type { SettingsStorage } from '../../lib/settings'
   import type { ScoreStorage } from '../../lib/scores'
+  import { getTranslatedTitle } from '../../lib/songs'
 
   export let playlistsStore: PlaylistsStore
   export let playlist: Playlist
@@ -20,23 +21,10 @@
   export let onRemove: (playlist: Playlist) => void
 
   let open = false
+  const language: Language = settingsStorage.language
 
   let wrapper: HTMLDivElement
   let title: HTMLDivElement
-
-  const getTranslatedTitle = (songData?: SongData, songScore?: SongScore): string => {
-    if (songData !== undefined) {
-      const language = settingsStorage.language
-      if (language === 'ko') {
-        return songData?.title_kr_user ?? songData?.title ?? 'unknown'
-      }
-      return songData?.title ?? 'unknown'
-    } else if (songScore?.title !== undefined) {
-      return songScore.title
-    }
-
-    return 'unknown'
-  }
 
   const rename = (): void => {
     const newTitle = prompt('Enter new title', playlist.title)
@@ -159,7 +147,7 @@
                 title={songData?.title ?? `unknown songNo${songNo}`}
                 genre={songData?.genres.at(0) ?? 'unknown'}
                 details={songScore?.details ?? {}}
-                translatedTitle={getTranslatedTitle(songData, songScore)}
+                translatedTitle={getTranslatedTitle(songData, songScore, language)}
                 songData={songData}
                 taikoNo={''}
                 playlists={playlistsStore}

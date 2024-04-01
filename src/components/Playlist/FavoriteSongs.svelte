@@ -1,14 +1,16 @@
 <script lang="ts">
   // import { dndzone } from 'svelte-dnd-action'
   import type { SongDB } from '../../lib/songDB'
-  import type { FavoriteSong } from '../../types'
+  import type { FavoriteSong, Language } from '../../types'
   import Song from '../Song/Song.svelte'
   import { flip } from 'svelte/animate'
   import type { ScoreStorage } from '../../lib/scores'
+  import { getTranslatedTitle } from '../../lib/songs'
 
   export let songDB: SongDB | undefined
   export let favoriteSongList: FavoriteSong[]
-  export let storage: ScoreStorage | undefined
+  export let scoreStorage: ScoreStorage | undefined
+  export let language: Language
   // export let onChange: (favoriteSongs: FavoriteSong[]) => void
 
   $: items = favoriteSongList.map((song, index) => ({ id: song.songNo, song, originalIndex: index }))
@@ -42,14 +44,14 @@
 </script>
 
 <div class="wrapper">
-  {#if songDB !== undefined && storage !== undefined}
+  {#if songDB !== undefined && scoreStorage !== undefined}
   <section class="song-container"> <!--use:dndzone={{ type: 'fav-song', items, flipDurationMs }} on:consider={handleDndConsider} on:finalize={handleDndFinalize}>-->
     {#each items as item, idx (item.id)}
       {@const song = item.song}
       {@const genre = song.genre}
       {@const title = song.title}
       {@const songData = songDB.getSongData(song.songNo)}
-      {@const scores = storage.getScoreByNo(song.songNo)}
+      {@const scores = scoreStorage.getScoreByNo(song.songNo)}
       <div animate:flip={{ duration: flipDurationMs }}>
         <div class="song-wrapper">
           <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -64,7 +66,7 @@
             title={title}
             genre={genre}
             details={scores?.details ?? {}}
-            translatedTitle={songData?.title ?? title ?? 'unknown'}
+            translatedTitle={getTranslatedTitle(songData, scores, language)}
             songData={songData}
             taikoNo={''}
             playlists={undefined}

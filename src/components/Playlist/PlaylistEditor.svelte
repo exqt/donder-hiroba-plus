@@ -4,7 +4,7 @@
   import Button from '../Common/Button.svelte'
   import { SongDB } from '../../lib/songDB'
 
-  import type { FavoriteSong } from '../../types'
+  import type { FavoriteSong, Language } from '../../types'
   import FavoriteSongs from './FavoriteSongs.svelte'
   import { ScoreStorage } from '../../lib/scores'
   import PlaylistContainer from './PlaylistContainer.svelte'
@@ -62,6 +62,7 @@
   let scoreStorage: ScoreStorage
   let settingsStorage: SettingsStorage
   let playlists: PlaylistsStore
+  let language: Language = 'ja'
 
   setContext('tckt', tckt)
   onMount(async () => {
@@ -72,6 +73,7 @@
     scoreStorage = await ScoreStorage.getInstance()
     settingsStorage = await SettingsStorage.getInstance()
     playlists = await PlaylistsStore.getInstance()
+    language = settingsStorage.language
   })
 
 </script>
@@ -106,7 +108,8 @@
   </div>
   <FavoriteSongs
     {songDB}
-    storage={scoreStorage}
+    {scoreStorage}
+    {language}
     {favoriteSongList}
   />
 </div>

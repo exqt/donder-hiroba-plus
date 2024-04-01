@@ -1,5 +1,19 @@
 import { DIFFICULTIES } from '../constants'
-import { type BadgeType, type CrownType, type DifficultyType, type SongScore, type SongScoreDetail } from '../types'
+import { type BadgeType, type CrownType, type DifficultyType, type Language, type SongData, type SongScore, type SongScoreDetail } from '../types'
+
+export const getTranslatedTitle = (songData?: SongData, songScore?: SongScore, language?: Language): string => {
+  language = language ?? 'ja'
+  if (songData !== undefined) {
+    if (language === 'ko') {
+      return songData?.title_kr_user ?? songData?.title ?? 'unknown'
+    }
+    return songData?.title ?? 'unknown'
+  } else if (songScore?.title !== undefined) {
+    return songScore.title
+  }
+
+  return 'unknown'
+}
 
 export const parseScores = (doc?: Document): SongScore[] => {
   const scores: SongScore[] = []
