@@ -26,23 +26,19 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="overlay" on:click={onClickOutside}></div>
 <div class="playlist-action">
-  {#if $playlists.length === 0}
-    <div>There's no playlist</div>
-  {:else}
-    <div class="item-container">
-      {#each $playlists as item, i}
-        <button class="item" on:click={async () => { await onClickItem(i) }}>
-          <span class:invisible={!item.songNoList.includes(songNo)}>✔️</span>
-          <span>{item.title}</span>
-          <span class="song-count" style="margin-left: 8px">({item.songNoList.length}/30)</span>
-        </button>
-      {/each}
-      <button class="item" on:click={createNewPlaylist}>
-        <span>➕</span>
-        <span>Create New Playlist</span>
+  <div class="item-container">
+    {#each $playlists as item, i}
+      <button class="item" on:click={async () => { await onClickItem(i) }}>
+        <span class:invisible={!item.songNoList.includes(songNo)}>✔️</span>
+        <span>{item.title}</span>
+        <span class="song-count" style="margin-left: 8px">({item.songNoList.length}/30)</span>
       </button>
-    </div>
-  {/if}
+    {/each}
+    <button class="item" on:click={createNewPlaylist}>
+      <span>➕</span>
+      <span>Create New Playlist</span>
+    </button>
+  </div>
 </div>
 
 <style>

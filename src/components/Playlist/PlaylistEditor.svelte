@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, setContext } from 'svelte'
-  import { type PlaylistsStore, updateFavoriteSongList, decodeBase64 } from '../../lib/playlist'
+  import { PlaylistsStore, updateFavoriteSongList, decodeBase64 } from '../../lib/playlist'
   import Button from '../Common/Button.svelte'
   import { SongDB } from '../../lib/songDB'
 
@@ -11,7 +11,6 @@
   import { genUUID } from '../../lib/utils'
 
   export let tckt: string
-  export let playlists: PlaylistsStore
   export let favoriteSongList: FavoriteSong[] = []
 
   const save = async (): Promise<void> => {
@@ -60,6 +59,7 @@
 
   let songDB: SongDB
   let storage: ExtensionStorage
+  let playlists: PlaylistsStore
 
   setContext('tckt', tckt)
   onMount(async () => {
@@ -68,6 +68,7 @@
     console.log('currentFavoriteSongList', favoriteSongList)
     songDB = await SongDB.getInstance()
     storage = await ExtensionStorage.getInstance()
+    playlists = await PlaylistsStore.getInstance()
   })
 
 </script>
@@ -81,11 +82,13 @@
       Decode Base64
     </Button>
   </div>
-  <PlaylistContainer
-    {storage}
-    {playlists}
-    {songDB}
-  />
+  {#if playlists}
+    <PlaylistContainer
+      {storage}
+      {playlists}
+      {songDB}
+    />
+  {/if}
   <div class="header">
     Favorites Folder
   </div>

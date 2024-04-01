@@ -67,7 +67,8 @@
 </script>
 
 <main style={`width: ${WIDTH}px; height: ${HEIGHT}px`}>
-  {#if loaded && storage.donderInfo.id === undefined}
+  <!-- svelte-ignore missing-declaration -->
+  {#if loaded && storage?.donderInfo.id === undefined && chrome === undefined}
     <NotLogined/>
   {/if}
 
@@ -82,21 +83,13 @@
   <div class="tab-content" style={`height: ${HEIGHT - TAB_HEIGHT}px`}>
     {#if loaded}
       {#if currentTabName === 'profile'}
-        <Profile
-          storage={storage}
-        />
+        <Profile {storage} />
       {:else if currentTabName === 'donforce-list'}
-        <DonforceList
-          storage={storage}
-          songDB={songDB}
-        />
+        <DonforceList {storage} {songDB} />
       {:else if currentTabName === 'donforce-table'}
         <DonforceTable/>
       {:else if currentTabName === 'settings'}
-        <Settings
-          storage={storage}
-          {i18n}
-        />
+        <Settings {storage} {i18n} />
       {/if}
     {/if}
   </div>

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte'
 
 import Song__SvelteComponent_ from '../components/Song/Song.svelte'
+import type { GenreType } from '../types'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -21,8 +22,8 @@ const songData1 = {
   title: 'てんぢく2000',
   title_kr_official: 'Tenjiku2000',
   title_kr_user: '텐지쿠2000',
-  bpmMin: '180',
-  bpmMax: '180',
+  bpmMin: 180,
+  bpmMax: 180,
   levels: {
     easy: 4,
     normal: 7,
@@ -30,7 +31,7 @@ const songData1 = {
     oni: 10,
     oni_ura: 0
   },
-  genre: '|8|0|0|',
+  genres: ['jpop'] as GenreType[],
   asia: true,
   length: 137.67,
   balloonCounts: {
@@ -74,6 +75,9 @@ export const Case1: Story = {
       normal: { badge: 6, crown: 'silver' },
       hard: { badge: 5, crown: 'donderfull' },
       oni: { badge: 6, crown: 'silver' }
-    }
+    },
+    translatedTitle: undefined,
+    taikoNo: undefined,
+    playlists: undefined
   }
 }

@@ -86,10 +86,20 @@ export const parseCurrentFavoriteSongList = (): FavoriteSong[] => {
 }
 
 export class PlaylistsStore {
+  private static instance: PlaylistsStore
   private readonly store: Writable<Playlist[]>
 
-  constructor (initialValue: Playlist[] = []) {
-    this.store = writable(initialValue)
+  private constructor () {
+    this.store = writable([])
+  }
+
+  public static async getInstance (): Promise<PlaylistsStore> {
+    if (PlaylistsStore.instance === undefined) {
+      PlaylistsStore.instance = new PlaylistsStore()
+      await PlaylistsStore.instance.load()
+    }
+
+    return PlaylistsStore.instance
   }
 
   public async load (): Promise<void> {
@@ -145,13 +155,12 @@ export class PlaylistsStore {
     const storage = chrome?.storage?.local
     if (storage === undefined) {
       console.warn('storage is not available')
-      return
+    } else {
+      await storage.set({ playlists })
+      console.log('Saved playlists', playlists)
     }
 
-    await storage.set({ playlists })
     this.store.set(playlists)
-
-    console.log('Saved playlists', playlists)
   }
 
   public get (): Playlist[] {

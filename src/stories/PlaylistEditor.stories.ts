@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte'
 
 import PlaylistEditor from '../components/Playlist/PlaylistEditor.svelte'
-import { PlaylistsStore } from '../lib/playlist'
 import type { FavoriteSong } from '../types'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
@@ -11,20 +10,12 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     tckt: { control: 'text' },
-    playlists: { control: 'object' },
     favoriteSongList: { control: 'object' }
   }
 } satisfies Meta<PlaylistEditor>
 
 export default meta
 type Story = StoryObj<typeof meta>
-
-const data = [
-  { title: 'playlist1', songNoList: ['1', '2', '3'] },
-  { title: 'playlist2', songNoList: ['4', '5', '6'] },
-  { title: 'playlist3', songNoList: ['7', '8', '9'] },
-  { title: 'playlist4', songNoList: ['10', '11', '12'] }
-]
 
 const favoriteSongList = [
   {
@@ -172,7 +163,6 @@ const favoriteSongList = [
 export const Case1: Story = {
   args: {
     tckt: 'tckt',
-    playlists: new PlaylistsStore(data),
-    favoriteSongList: favoriteSongList
+    favoriteSongList
   }
 }
