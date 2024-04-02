@@ -22,7 +22,6 @@
   onMount(async () => {
     songDB = await SongDB.getInstance()
     scores = scoreStorage.getAllScores()
-    console.log(scores)
 
     diffs = [settingsStorage.preferringDifficulty ?? 'oni']
     if (diffs[0] === 'oni') diffs.push('oni_ura')

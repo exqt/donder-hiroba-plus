@@ -22,7 +22,6 @@
     items = e.detail.items
   }
   const handleDndFinalize = (e: CustomEvent): void => {
-    console.log('finalize', e.detail)
     items = e.detail.items
     onChange(items.map((item) => item.song))
   }

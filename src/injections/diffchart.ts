@@ -24,7 +24,6 @@ const addGlobalStyle = (css: string): void => {
   style.title = 'hiroba-plus-global-style'
   style.innerHTML = css
   head.appendChild(style)
-  console.log('added global style')
 }
 
 export default async (): Promise<void> => {

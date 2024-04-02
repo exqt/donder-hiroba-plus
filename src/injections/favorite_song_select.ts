@@ -2,7 +2,6 @@ import PlaylistEditor from '../components/Playlist/PlaylistEditor.svelte'
 import { parseCurrentFavoriteSongList } from '../lib/playlist'
 
 export default async (): Promise<void> => {
-  console.log('fav')
   const favoriteSong = document.querySelector('.favoriteSong')
   if (favoriteSong === null) {
     return
@@ -15,7 +14,6 @@ export default async (): Promise<void> => {
   favoriteSong.insertBefore(div, favoriteSong.firstChild)
 
   const tcktElem = document.querySelector('#_tckt')
-  console.log(tcktElem)
   if (tcktElem === null) {
     return
   }

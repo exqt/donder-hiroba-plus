@@ -45,10 +45,10 @@
         return
       }
       updateProgress++
-      console.log(tckt)
 
       // request update data
       updateMessage = 'Requesting update data... Don\'t close the popup.'
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const res = await fetch('https://donderhiroba.jp/ajax/update_score.php', {
         method: 'POST',
         headers: {
@@ -58,8 +58,7 @@
         credentials: 'include',
         body: `_tckt=${tckt}`
       })
-      const updateData = await res.text()
-      console.log(updateData)
+      // const updateData = await res.text()
       // TODO: check message
       updateProgress++
 
@@ -72,13 +71,11 @@
         const text = await response.text()
         const doc = new DOMParser().parseFromString(text, 'text/html')
         docs.push(doc)
-        console.log(doc)
         updateProgress++
       }
 
       docs.forEach((doc) => {
         const scores = parseScores(doc)
-        console.log(scores)
         scores.forEach((score) => { scoreStorage.putScore(score) })
       })
       await scoreStorage.save()

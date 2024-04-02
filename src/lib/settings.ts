@@ -13,7 +13,6 @@ export class SettingsStorage implements ExtensionSetting {
   private constructor () {}
 
   public static async getInstance (): Promise<SettingsStorage> {
-    console.trace(this.instance)
     if (SettingsStorage.instance === undefined) {
       SettingsStorage.instance = new SettingsStorage()
       await SettingsStorage.instance.load()

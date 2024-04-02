@@ -19,7 +19,6 @@
 
   const flipDurationMs = 300
   const handleDndConsider = async (e: CustomEvent<DndEvent>): Promise<void> => {
-    console.log('consider', e.detail)
     items = e.detail.items as Array<{ id: string, playlist: Playlist }>
   }
 

@@ -8,7 +8,6 @@ const isJapanese = (text: string): boolean => {
 export default async (): Promise<void> => {
   const settings = await SettingsStorage.getInstance()
 
-  console.log(`Language: ${settings.language}`)
   if (settings.language === 'ko') {
     const style = document.createElement('style')
     style.innerHTML = `* {
@@ -53,6 +52,4 @@ export default async (): Promise<void> => {
     // replace text content
     textNode.textContent = i18n.t(text)
   }
-
-  console.log(set)
 }

@@ -16,7 +16,6 @@
 
   const save = async (): Promise<void> => {
     const songNoList = favoriteSongList.map((item) => item.songNo)
-    console.log(songNoList)
 
     try {
       await updateFavoriteSongList(songNoList, tckt)
@@ -49,7 +48,6 @@
 
     let [title, base64] = t.split('|')
     title = title.replaceAll('_', ' ')
-    console.log(title, base64)
     const songNoList = decodeBase64(base64)
     await playlists.add({
       uuid: genUUID(),
@@ -66,9 +64,6 @@
 
   setContext('tckt', tckt)
   onMount(async () => {
-    console.log('tckt', tckt)
-    console.log('playlists', playlists)
-    console.log('currentFavoriteSongList', favoriteSongList)
     songDB = await SongDB.getInstance()
     scoreStorage = await ScoreStorage.getInstance()
     settingsStorage = await SettingsStorage.getInstance()

@@ -19,9 +19,7 @@ export default class I18N {
   async load (): Promise<void> {
     const settings = await SettingsStorage.getInstance()
     const language = settings.language
-    const locale = navigator.language.split('-')[0] as Language
-    console.log(`Language: ${language}, Locale: ${locale}`)
-    this.language = language ?? locale
+    this.language = language
 
     this.data.ko = (await import('../i18n/ko.json')).default
     this.data.ja = (await import('../i18n/ja.json')).default
@@ -34,7 +32,7 @@ export default class I18N {
 
     const translated = langData[key]
     if (translated === undefined) {
-      console.log(`Translation not found: ${key}`)
+      // console.log(`Translation not found: ${key}`)
       return key
     }
 
