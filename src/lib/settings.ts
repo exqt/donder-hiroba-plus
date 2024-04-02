@@ -29,10 +29,10 @@ export class SettingsStorage implements ExtensionSetting {
 
     const data = (await storage.get(STORAGE_KEY))[STORAGE_KEY] as ExtensionSetting
 
-    this.donderInfo = data.donderInfo ?? this.donderInfo ?? {}
-    this.preferringDifficulty = data.preferringDifficulty ?? this.preferringDifficulty
-    this.language = data.language ?? this.language
-    this.lastTabIndex = data.lastTabIndex ?? this.lastTabIndex
+    this.donderInfo = data?.donderInfo ?? this.donderInfo ?? {}
+    this.preferringDifficulty = data?.preferringDifficulty ?? this.preferringDifficulty
+    this.language = data?.language ?? this.language
+    this.lastTabIndex = data?.lastTabIndex ?? this.lastTabIndex
   }
 
   async save (): Promise<void> {
