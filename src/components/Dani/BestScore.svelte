@@ -1,17 +1,14 @@
 <script lang="ts">
-    export let playdata: {
-        score: number;
-        good: number;
-        ok: number;
-        ng: number;
-        pound: number;
-        combo: number;
-        hit:number;
-    };
+    import { type PlaydataType } from "../../types";
 
-    const keys:(keyof typeof playdata)[] = ["good", "pound", "ok", "combo", "ng", "hit"]
+    export let playdata: Promise<PlaydataType>;
+
+    const keys:(keyof PlaydataType)[] = ["good", "pound", "ok", "combo", "ng", "hit"]
 </script>
 
+{#await playdata}
+로딩중...
+{:then playdata}
 <div class="container">
     <div class="title">
         연주 게임 베스트 스코어
@@ -26,6 +23,9 @@
     </div>
     {/each}
 </div>
+{:catch}
+<div></div>
+{/await}
 
 <style>
     .container {
