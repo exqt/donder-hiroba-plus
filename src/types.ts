@@ -95,7 +95,8 @@ export interface PlaydataType {
 }
 
 export interface TrainingCourse{
-  songs: TrainingSong[]
+  title:string;
+  songs:TrainingSong[];
 }
 
 export interface TrainingSong{
@@ -105,7 +106,7 @@ export interface TrainingSong{
 }
 
 export interface TrainingCondition{
-  name: "good"|"ok"|"bad"|"hit"|"roll";
+  name: "good"|"ok"|"bad"|"hit"|"roll"|"combo";
   type: "more"|"less";
   criteria: number;
 }

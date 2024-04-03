@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "hangul-js": "^0.2.6",
-    "svelte-lazy": "^1.2.7"
+    "svelte-lazy": "^1.2.7",
+    "svelte-spa-router": "^4.0.1"
   }
 }

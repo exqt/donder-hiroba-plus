@@ -3,7 +3,6 @@
         const url = new URL(window.location.origin);
         url.hash = "#/training";
         window.location.href = url.href;
-        window.location.reload()
     }
 </script>
 

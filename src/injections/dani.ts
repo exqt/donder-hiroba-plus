@@ -13,7 +13,6 @@ export default async function dani(): Promise<void> {
             props: {
                 playdata: (async () => {
                     const songTitle = (box.querySelector('.songName') as HTMLElement).innerText.trim();
-                    console.log(songTitle);
                     const songNo = (Object.values(songdata).find(song => song.title === songTitle) as any)?.songNo;
                     const difficulty = box.querySelector('img')?.src.replace(/https:\/\/donderhiroba.jp\/image\/sp\/640\/level_icon_(.)_640.png/, "$1")
 
