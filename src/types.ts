@@ -93,3 +93,19 @@ export interface PlaydataType {
   combo: number;
   hit:number;
 }
+
+export interface TrainingCourse{
+  songs: TrainingSong[]
+}
+
+export interface TrainingSong{
+  songNo: number;
+  difiiculty: "easy"|"normal"|"hard"|"oni"|"oni_ura";
+  conditions: TrainingCondition[]
+}
+
+export interface TrainingCondition{
+  name: "good"|"ok"|"bad"|"hit"|"roll";
+  type: "more"|"less";
+  criteria: number;
+}
