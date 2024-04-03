@@ -1,7 +1,7 @@
 <script>
-    import { getContext } from "svelte";
+    import { getContext } from 'svelte'
 
-    const title = getContext('title');
+    const title = getContext('title')
 </script>
 
 <header style="background-image:url(image/sp/640/menu_03_640.png);color:#ffffff;">
@@ -12,6 +12,6 @@
     </ul>
     <ul class="right">
         <li id="renew" class="imageArea"><a id="ScoreUpdate">
-        <img src="image/sp/640/menu_02_640.png" width="30" height="30" style="cursor:pointer;cursor:hand" alt=""></a></li>
+        <img src="image/sp/640/menu_02_640.png" width="30" height="30" style="cursor:pointer;" alt=""></a></li>
     </ul>
 </header>

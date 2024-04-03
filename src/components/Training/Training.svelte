@@ -1,39 +1,39 @@
 <script lang="ts" context="module">
-    async function reset(){
-        const storage = chrome?.storage?.local
-        if(storage === undefined) return;
+    async function reset (): Promise<void> {
+      const storage = chrome?.storage?.local
+      if (storage === undefined) return
 
-        await storage.set({trainings: {courses: []}})
-        location.reload()
+      await storage.set({ trainings: { courses: [] } })
+      location.reload()
     }
 
-    async function loadTrainingCourses(){
-        const storage = chrome?.storage?.local
-        if(storage === undefined) return [];
+    async function loadTrainingCourses (): Promise<TrainingCourse[]> {
+      const storage = chrome?.storage?.local
+      if (storage === undefined) return []
 
-        let data = (await storage.get()).trainings.courses as TrainingCourse[]
+      let data = (await storage.get()).trainings.courses as TrainingCourse[] | undefined
 
-        if(!data){
-            data = [];
-        }
+      if (data === undefined) {
+        data = []
+      }
 
-        return data;
+      return data
     }
 
-    async function getSong(songNo:number){
-        return ((await import('../../songdata.json') as any).default as Record<string, SongData>)[songNo]
+    async function getSong (songNo: number): Promise<SongData> {
+      return ((await import('../../songdata.json') as any).default as Record<string, SongData>)[songNo]
     }
 </script>
 <script lang="ts">
-    import { getContext } from "svelte";
-    import type { Writable } from "svelte/store";
-    import type { SongData, TrainingCourse } from "../../types";
-    import { link } from "svelte-spa-router";
-    import { icons } from "../../assets";
+    import { getContext } from 'svelte'
+    import type { SongData, TrainingCourse } from '../../types'
+    import { link } from 'svelte-spa-router'
+    import type { Writable } from 'svelte/store'
 
-    const title = getContext('title') as Writable<string>;
-    $title = "훈련"
-    let input:HTMLInputElement
+    /* eslint-disable */
+    const title = getContext('title') as Writable<string>
+    $title = '훈련'
+    let input: HTMLInputElement
 </script>
 
 <input type="text" bind:this={input}>

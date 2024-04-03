@@ -1,32 +1,31 @@
 <script lang="ts">
-    import { push } from "svelte-spa-router";
-    import type { TrainingCourse } from "../../../types";
-    import TrainingCourseEditor from "../TrainingCourseEditor.svelte";
+    import { push } from 'svelte-spa-router'
+    import type { TrainingCourse } from '../../../types'
+    import TrainingCourseEditor from '../TrainingCourseEditor.svelte'
 
-    let course:TrainingCourse;
+    let course: TrainingCourse
 
-    async function save(){
-        if(course.songs.length === 0) push('/training');
-        const storage = chrome?.storage?.local
-        if(storage === undefined){
-            alert("no Storage");
-            push('/training')
-        }
+    async function save (): Promise<void> {
+      if (course.songs.length === 0) await push('/training')
+      const storage = chrome?.storage?.local
+      if (storage === undefined) {
+        alert('no Storage')
+        await push('/training')
+      }
 
-        let data = (await storage.get()).trainings.courses as TrainingCourse[]
+      let data = (await storage.get()).trainings.courses as TrainingCourse[]
 
-        if(!data){
-            data = [];
-        }
+      if (data === undefined || data === null) {
+        data = []
+      }
 
-        data.push(course);
+      data.push(course)
 
-        await storage.set({trainings: {courses: data}})
+      await storage.set({ trainings: { courses: data } })
 
-        push('/training')
+      await push('/training')
     }
 </script>
-
 
 <div class="save" role="presentation" on:click={save}>
     저장

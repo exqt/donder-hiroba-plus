@@ -1,8 +1,8 @@
 <script lang="ts">
-    function gotoTraining(){
-        const url = new URL(window.location.origin);
-        url.hash = "#/training";
-        window.location.href = url.href;
+    function gotoTraining (): void {
+      const url = new URL(window.location.origin)
+      url.hash = '#/training'
+      window.location.href = url.href
     }
 </script>
 

@@ -7,13 +7,15 @@ export default async (): Promise<void> => {
   await updateDonderInfo(donderInfo)
 }
 
-function putAnchorToTraining() {
+function putAnchorToTraining (): void {
+  // eslint-disable-next-line
   const mydonButtonArea = document.querySelector('.mydon_button_area') as HTMLElement | null
-  if (!mydonButtonArea) return
+  if (mydonButtonArea === null || mydonButtonArea === undefined) return
 
   const container = document.createElement('div')
   mydonButtonArea.parentElement?.insertBefore(container, mydonButtonArea.nextElementSibling)
 
+  // eslint-disable-next-line
   const anchor = new TrainingAnchor({
     target: container
   })

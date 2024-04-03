@@ -10,7 +10,7 @@ import dani from './injections/dani'
 import hash, { hashChangeCallback } from './injections/hash'
 
 const runHiroba = async (): Promise<void> => {
-  window.addEventListener("hashchange", hashChangeCallback)
+  window.addEventListener('hashchange', hashChangeCallback)
 
   const path = window.location.href.split('/').slice(3).join('/')
   const page = path.split('?')[0]
@@ -28,13 +28,13 @@ const runHiroba = async (): Promise<void> => {
     'dan_detail.php': dani
   }
 
-  if(page === ""){
-    await scriptMap['index.php']();
-    return;
+  if (page === '') {
+    await scriptMap['index.php']()
+    return
   }
-  if((new URL(window.location.href)).hash !== ""){
-    await hash();
-    return;
+  if ((new URL(window.location.href)).hash !== '') {
+    await hash()
+    return
   }
   await scriptMap[page]?.()
 }

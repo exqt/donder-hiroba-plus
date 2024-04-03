@@ -85,28 +85,28 @@ export interface FavoriteSong {
 }
 
 export interface PlaydataType {
-  score: number;
-  good: number;
-  ok: number;
-  ng: number;
-  pound: number;
-  combo: number;
-  hit:number;
+  score: number
+  good: number
+  ok: number
+  ng: number
+  pound: number
+  combo: number
+  hit: number
 }
 
-export interface TrainingCourse{
-  title:string;
-  songs:TrainingSong[];
+export interface TrainingCourse {
+  title: string
+  songs: TrainingSong[]
 }
 
-export interface TrainingSong{
-  songNo: number;
-  difiiculty: "easy"|"normal"|"hard"|"oni"|"oni_ura";
+export interface TrainingSong {
+  songNo: number
+  difiiculty: 'easy' | 'normal' | 'hard' | 'oni' | 'oni_ura'
   conditions: TrainingCondition[]
 }
 
-export interface TrainingCondition{
-  name: "good"|"ok"|"bad"|"hit"|"roll"|"combo";
-  type: "more"|"less";
-  criteria: number;
+export interface TrainingCondition {
+  name: 'good' | 'ok' | 'bad' | 'hit' | 'roll' | 'combo'
+  type: 'more' | 'less'
+  criteria: number
 }
