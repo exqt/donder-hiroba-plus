@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { type PlaydataType } from "../../types";
+    import { type PlaydataType } from '../../types'
 
-    export let playdata: Promise<PlaydataType>;
+    export let playdata: Promise<PlaydataType>
 
-    const keys:(keyof PlaydataType)[] = ["good", "pound", "ok", "combo", "ng", "hit"]
+    const keys: Array<keyof PlaydataType> = ['good', 'pound', 'ok', 'combo', 'ng', 'hit']
 </script>
 
 {#await playdata}
