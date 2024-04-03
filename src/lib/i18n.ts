@@ -13,7 +13,7 @@ export default class I18N {
       await I18N.instance.load()
     }
 
-    return I18N.instance
+    return I18N.instance;
   }
 
   async load (): Promise<void> {
