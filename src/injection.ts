@@ -22,7 +22,7 @@ const runHiroba = async (): Promise<void> => {
     'favorite_song_select.php': favorite_song_select,
     'score_detail.php': score_detail,
     'select_song.php': select_song,
-    "dan_detail.php": dani
+    'dan_detail.php': dani
   }
 
   await scriptMap[page]?.()

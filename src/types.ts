@@ -85,11 +85,11 @@ export interface FavoriteSong {
 }
 
 export interface PlaydataType {
-  score: number;
-  good: number;
-  ok: number;
-  ng: number;
-  pound: number;
-  combo: number;
-  hit:number;
+  score: number
+  good: number
+  ok: number
+  ng: number
+  pound: number
+  combo: number
+  hit: number
 }
