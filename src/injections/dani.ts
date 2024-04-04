@@ -16,7 +16,7 @@ export default async function dani (): Promise<void> {
         playdata: (async () => {
         // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
           const songTitle = (box.querySelector('.songName') as HTMLElement).innerText.trim()
-          const songNo = songdata.getSongDataByTitle(songTitle)?.[0]
+          const songNo = songdata.getSongNoByTitle(songTitle)
           const difficulty = box.querySelector('img')?.src.replace(/https:\/\/donderhiroba.jp\/image\/sp\/640\/level_icon_(.)_640.png/, '$1')
 
           // db에 해당 곡명을 가진 곡에 대한 데이터가 없으면 종료

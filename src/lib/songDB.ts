@@ -28,11 +28,11 @@ export class SongDB {
     return this.songDataMap.get(songNo)
   }
 
-  getSongDataByTitle (title: string): [number, SongData] | undefined {
+  getSongNoByTitle (title: string): number | undefined {
     for (const songNo of this.songDataMap.keys()) {
       const song = this.songDataMap.get(songNo)
       if (song?.title === title) {
-        return [parseInt(songNo), song]
+        return parseInt(songNo)
       }
     }
     return undefined
