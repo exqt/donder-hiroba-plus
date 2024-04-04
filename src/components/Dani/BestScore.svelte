@@ -23,8 +23,6 @@
     </div>
     {/each}
 </div>
-{:catch}
-<div></div>
 {/await}
 
 <style>

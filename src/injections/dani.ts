@@ -1,11 +1,12 @@
-import { type PlaydataType, type SongData } from '../types'
+import { type PlaydataType } from '../types'
 import BestScore from '../components/Dani/BestScore.svelte'
+import { SongDB } from '../lib/songDB'
 
 export default async function dani (): Promise<void> {
   if ((new URL(window.location.href)).pathname !== '/dan_detail.php') return
 
   const boxes = [...document.querySelectorAll('.contentBox:not(.errorArea)')]
-  const songdata = (await import('../songdata.json') as any).default as Record<string, SongData>
+  const songdata = await SongDB.getInstance()
 
   boxes.forEach((box) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,8 +16,7 @@ export default async function dani (): Promise<void> {
         playdata: (async () => {
         // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
           const songTitle = (box.querySelector('.songName') as HTMLElement).innerText.trim()
-          console.log(songTitle)
-          const songNo = (Object.values(songdata).find(song => song.title === songTitle) as any)?.songNo
+          const songNo = songdata.getSongDataByTitle(songTitle)?.[0]
           const difficulty = box.querySelector('img')?.src.replace(/https:\/\/donderhiroba.jp\/image\/sp\/640\/level_icon_(.)_640.png/, '$1')
 
           // db에 해당 곡명을 가진 곡에 대한 데이터가 없으면 종료
@@ -38,9 +38,9 @@ export default async function dani (): Promise<void> {
           if (scoreDetailTable === null) throw new Error()
           /*
                     한번도 플레이한 적이 없으면 종료
-                    그냥 0점으로 표시할거면 밑줄 지우세요
+                    그냥 0으로 표시할거면 밑줄 지우세요
                     */
-          if (dom.querySelector('.contentBox.errorArea') === null) throw new Error()
+          if (dom.querySelector('.contentBox.errorArea') !== null) throw new Error()
 
           const playdata: PlaydataType = {
             /* eslint-disable */
