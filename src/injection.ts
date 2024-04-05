@@ -29,7 +29,7 @@ const runHiroba = async (): Promise<void> => {
   }
 
   if (page === '') {
-    await scriptMap['index.php']()
+    await index()
     return
   }
   if (page.startsWith('#')) {
