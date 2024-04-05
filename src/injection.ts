@@ -18,6 +18,7 @@ const runHiroba = async (): Promise<void> => {
   const scriptMap: Record<string, Script> = {
     'mypage_top.php': mypage_top,
     'score_list.php': score_list,
+    '': index,
     'index.php': index,
     'favorite_song_select.php': favorite_song_select,
     'score_detail.php': score_detail,
