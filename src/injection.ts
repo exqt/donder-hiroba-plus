@@ -25,6 +25,11 @@ const runHiroba = async (): Promise<void> => {
     'dan_detail.php': dani
   }
 
+  if (page === '') {
+    await scriptMap['index.php']()
+    return
+  }
+
   await scriptMap[page]?.()
 }
 
