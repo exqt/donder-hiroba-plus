@@ -29,10 +29,6 @@ const runHiroba = async (): Promise<void> => {
     'dan_detail.php': dani
   }
 
-  if (page === '') {
-    await index()
-    return
-  }
   if (page.startsWith('#')) {
     await hash()
     return
