@@ -27,6 +27,15 @@ export interface SortOptions {
 export interface SongScoreDetail {
   crown: CrownType
   badge: BadgeType
+  best?: {
+    score: number
+    good: number
+    ok: number
+    ng: number
+    pound: number
+    combo: number
+    hit: number
+  }
 }
 
 export interface SongScore {
