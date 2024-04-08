@@ -1,6 +1,8 @@
-import { type PlaydataType } from '../types'
 import BestScore from '../components/Dani/BestScore.svelte'
 import { SongDB } from '../lib/songDB'
+import { ScoreStorage } from '../lib/scores'
+import { DIFFICULTIES } from '../constants'
+import type { SongScoreDetailBest } from '../types'
 
 export default async function dani (): Promise<void> {
   if ((new URL(window.location.href)).pathname !== '/dan_detail.php') return
@@ -45,7 +47,7 @@ export default async function dani (): Promise<void> {
                     */
           if (dom.querySelector('.contentBox.errorArea') !== null) throw new Error()
 
-          const playdata: PlaydataType = {
+          const playdata: SongScoreDetailBest = {
             /* eslint-disable */
             score: parseInt((dom.querySelector('div.high_score') as HTMLElement).innerText.trim().replace('点', '') as string),
             good: parseInt((dom.querySelector('div.good_cnt') as HTMLElement).innerText.trim().replace('回', '') as string),
@@ -58,6 +60,13 @@ export default async function dani (): Promise<void> {
           }
 
           playdata.hit = playdata.good + playdata.ok + playdata.pound
+
+          const scoreStorage = await ScoreStorage.getInstance()
+          const songScoreDetail = scoreStorage.getScoreByNo(songNo)?.details[DIFFICULTIES[parseInt(difficulty) - 1]]
+          if (songScoreDetail !== undefined) {
+            songScoreDetail.best = playdata
+            await scoreStorage.save()
+          }
 
           return playdata
         })()

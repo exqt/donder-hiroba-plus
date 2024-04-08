@@ -40,7 +40,6 @@ export interface SongScoreDetailBest {
   hit: number
 }
 
-
 export interface SongScore {
   title: string
   songNo: string
