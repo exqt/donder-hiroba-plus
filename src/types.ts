@@ -94,3 +94,18 @@ export interface FavoriteSong {
   title: string
   genre: GenreType
 }
+
+export interface TrainingCourse {
+  name: string
+  songs: TrainingCourseSong[]
+}
+
+export interface TrainingCourseSong {
+  songNo: number
+  conditions: TrainingCourseCondition[]
+}
+
+export interface TrainingCourseCondition {
+  type: 'good' | 'ok' | 'bad' | 'combo' | 'roll' | 'hit'
+  criterion: number
+}
