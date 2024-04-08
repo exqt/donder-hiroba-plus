@@ -97,6 +97,7 @@ export interface FavoriteSong {
 
 export interface TrainingCourse {
   name: string
+  generatedTime: number
   songs: TrainingCourseSong[]
 }
 
