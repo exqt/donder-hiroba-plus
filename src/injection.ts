@@ -7,8 +7,11 @@ import score_detail from './injections/score_detail'
 import select_song from './injections/select_song'
 import i18n from './injections/i18n'
 import dani from './injections/dani'
+import hash, { hashChangeCallback } from './injections/hash'
 
 const runHiroba = async (): Promise<void> => {
+  window.addEventListener('hashchange', hashChangeCallback)
+
   const path = window.location.href.split('/').slice(3).join('/')
   const page = path.split('?')[0]
 
@@ -24,6 +27,15 @@ const runHiroba = async (): Promise<void> => {
     'score_detail.php': score_detail,
     'select_song.php': select_song,
     'dan_detail.php': dani
+  }
+
+  if (page === '') {
+    await index()
+    return
+  }
+  if (page.startsWith('#')) {
+    await hash()
+    return
   }
 
   await scriptMap[page]?.()
