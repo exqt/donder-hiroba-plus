@@ -27,16 +27,19 @@ export interface SortOptions {
 export interface SongScoreDetail {
   crown: CrownType
   badge: BadgeType
-  best?: {
-    score: number
-    good: number
-    ok: number
-    ng: number
-    pound: number
-    combo: number
-    hit: number
-  }
+  best?: SongScoreDetailBest
 }
+
+export interface SongScoreDetailBest {
+  score: number
+  good: number
+  ok: number
+  ng: number
+  pound: number
+  combo: number
+  hit: number
+}
+
 
 export interface SongScore {
   title: string
@@ -91,14 +94,4 @@ export interface FavoriteSong {
   songNo: string
   title: string
   genre: GenreType
-}
-
-export interface PlaydataType {
-  score: number
-  good: number
-  ok: number
-  ng: number
-  pound: number
-  combo: number
-  hit: number
 }
