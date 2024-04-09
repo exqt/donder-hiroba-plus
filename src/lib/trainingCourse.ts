@@ -23,7 +23,10 @@ export default class TrainingCourseStorage {
       return
     }
 
-    this.courses = (await storage.get(STORAGE_KEY))[STORAGE_KEY] as TrainingCourse[]
+    const data = (await storage.get(STORAGE_KEY))[STORAGE_KEY] as TrainingCourse[]
+    if (data !== undefined) {
+      this.courses = data
+    }
   }
 
   async save (): Promise<void> {
