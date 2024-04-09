@@ -54,4 +54,8 @@ export class TrainingCourseStorage {
   remove (name: string, generatedTime: number): void {
     this.courses = this.courses.filter(course => course.name !== name || course.generatedTime !== generatedTime)
   }
+
+  getAll (): TrainingCourse[] {
+    return this.courses
+  }
 }
