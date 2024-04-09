@@ -103,6 +103,7 @@ export interface TrainingCourse {
 
 export interface TrainingCourseSong {
   songNo: number
+  difficulty: 'easy' | 'normal' | 'hard' | 'oni' | 'oni_ura'
   conditions: TrainingCourseCondition[]
 }
 
