@@ -51,12 +51,34 @@ export default class TrainingCourseStorage {
     this.courses.push(course)
   }
 
-  remove (name: string, generatedTime: number): void {
-    this.courses = this.courses.filter(course => course.name !== name || course.generatedTime !== generatedTime)
+  remove (hash: number): void {
+    this.courses = this.courses.filter(course => course.hash !== hash)
+  }
+
+  get (hash: number): TrainingCourse | undefined {
+    return this.courses.find(course => course.hash === hash)
+  }
+
+  getIndex (hash: number): number {
+    return this.courses.findIndex(course => course.hash === hash)
   }
 
   getAll (): TrainingCourse[] {
     return this.courses
+  }
+
+  static createHash (name: string, generatedTime: number): number {
+    const string = name + generatedTime + Math.round(Math.random() * 10000)
+    let hash = 0
+    if (string.length === 0) {
+      return hash
+    }
+    for (let i = 0; i < string.length; i++) {
+      const ch = string.charCodeAt(i)
+      hash = ((hash << 5) - hash) + ch
+      hash = hash & hash
+    }
+    return hash
   }
 }
 
