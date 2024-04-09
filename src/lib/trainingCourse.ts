@@ -2,7 +2,7 @@ import type { TrainingCourse } from '../types'
 
 const STORAGE_KEY = 'training'
 
-export class TrainingCourseStorage {
+export default class TrainingCourseStorage {
   private static instance: TrainingCourseStorage
 
   private courses: TrainingCourse[] = []
@@ -59,3 +59,7 @@ export class TrainingCourseStorage {
     return this.courses
   }
 }
+
+const courseStorage = await TrainingCourseStorage.getInstance()
+
+export { courseStorage }
