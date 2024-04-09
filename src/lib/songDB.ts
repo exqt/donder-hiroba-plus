@@ -38,7 +38,7 @@ export class SongDB {
     return undefined
   }
 
-  getAll (): SongData[] {
-    return Array.from(this.songDataMap.values())
+  getAll (): Map<string, SongData> {
+    return this.songDataMap
   }
 }
