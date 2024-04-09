@@ -33,7 +33,6 @@ const runHiroba = async (): Promise<void> => {
     await hash()
     return
   }
-
   await scriptMap[page]?.()
 }
 
