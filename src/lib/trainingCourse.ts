@@ -81,7 +81,3 @@ export default class TrainingCourseStorage {
     return hash
   }
 }
-
-const courseStorage = await TrainingCourseStorage.getInstance()
-
-export { courseStorage }
