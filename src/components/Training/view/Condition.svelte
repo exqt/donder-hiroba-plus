@@ -13,10 +13,10 @@
           return score.best?.good >= condition.criterion
         }
         case 'ok': {
-          return score.best?.ok <= condition.criterion
+          return score.best?.ok < condition.criterion
         }
         case 'bad': {
-          return score.best?.ng <= condition.criterion
+          return score.best?.ng < condition.criterion
         }
         case 'combo': {
           return score.best?.combo >= condition.criterion
