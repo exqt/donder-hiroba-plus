@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { TrainingCourseCondition } from '../../types'
+    import type { TrainingCourseCondition } from '../../../types'
 
     export let condition: TrainingCourseCondition
     export let removeCondition: () => void

@@ -1,12 +1,21 @@
 <script lang="ts">
+    import { ScoreStorage } from '../../../lib/scores'
     import TrainingCourseStorage from '../../../lib/trainingCourse'
-    import Course from '../Course.svelte'
+    import { SongDB } from '../../../lib/songDB'
+    import Course from '../view/Course.svelte'
     import { link } from 'svelte-spa-router'
+
+    let reloading = false
+    function reload (): void {
+      reloading = !reloading
+    }
 </script>
 
 <a href="/training/add" use:link>추가</a>
-{#await TrainingCourseStorage.getInstance() then storage}
-    {#each storage.getAll() as course}
-        <Course {course}/>
+{#await Promise.all([TrainingCourseStorage.getInstance(), ScoreStorage.getInstance(), SongDB.getInstance()]) then [courseStorage, scoreStorage, songDB]}
+    {#key reloading}
+    {#each courseStorage.getAll() as course}
+        <Course {course} {scoreStorage} {songDB} {courseStorage} {reload}/>
     {/each}
+    {/key}
 {/await}

@@ -1,12 +1,13 @@
 <script lang="ts">
-    import { SongDB } from '../../lib/songDB'
-    import type { TrainingCourseSong } from '../../types'
+    import { type SongDB } from '../../../lib/songDB'
+    import type { TrainingCourseSong } from '../../../types'
     import SongSelector from './SongSelector.svelte'
-    import Condition from './condition.svelte'
-    import { icons } from '../../assets'
+    import { icons } from '../../../assets'
+    import ConditionEditor from './ConditionEditor.svelte'
 
     export let song: TrainingCourseSong
     export let removeSong: () => void
+    export let songDB: SongDB
 
     let selecting = false
 
@@ -66,32 +67,27 @@
     }
 </script>
 
-{#await SongDB.getInstance() then songDB}
-    <div class="container">
-        <div class="r">
-            <button class="remove" on:click={removeSong}>X</button>
-        </div>
-        <button
-            on:click={() => {
-              selecting = !selecting
-            }}
-            class="title"
-            style={`background:${gradient(songDB.getSongData(song.songNo.toString())?.genres ?? ['unknown'])};`}
-        >
-            {#if song.songNo === 0}
-                +
-            {:else}
-                {songDB.getSongData(song.songNo.toString())?.title}
-            {/if}
-        </button>
-        {#if song.songNo !== 0}
+<div class="container">
+    <div class="r">
+        <button class="remove" on:click={removeSong}>X</button>
+    </div>
+    <button
+        on:click={() => {
+          selecting = !selecting
+        }}
+        class="title"
+        style={`background:${gradient(songDB.getSongData(song.songNo.toString())?.genres ?? ['unknown'])};`}
+    >
+        {#if song.songNo === 0}
+            +
+        {:else}
+            {songDB.getSongData(song.songNo.toString())?.title}
+        {/if}
+    </button>
+    {#if song.songNo !== 0}
         <div class="difficulty">
             <label>
-                <input
-                    type="radio"
-                    bind:group={song.difficulty}
-                    value="easy"
-                />
+                <input type="radio" bind:group={song.difficulty} value="easy" />
                 <img src={icons.kantan} alt="" />
             </label>
             <label>
@@ -103,26 +99,17 @@
                 <img src={icons.futsuu} alt="" />
             </label>
             <label>
-                <input
-                    type="radio"
-                    bind:group={song.difficulty}
-                    value="hard"
-                />
+                <input type="radio" bind:group={song.difficulty} value="hard" />
                 <img src={icons.muzukashii} alt="" />
             </label>
             <label>
-                <input
-                    type="radio"
-                    bind:group={song.difficulty}
-                    value="oni"
-                />
+                <input type="radio" bind:group={song.difficulty} value="oni" />
                 <img src={icons.oni} alt="" />
             </label>
             {#if songDB.getSongData(song.songNo.toString())?.levels.oni_ura !== 0}
                 <label>
                     <input
                         type="radio"
-                        name="diff"
                         bind:group={song.difficulty}
                         value="oni_ura"
                     />
@@ -130,29 +117,28 @@
                 </label>
             {/if}
         </div>
-        {/if}
-        <SongSelector
-            bind:selecting
-            bind:songNo={song.songNo}
-            {gradient}
-            {songDB}
-        />
-        <div class="condition">
-            <span>
-                조건
-                <button on:click={addCondition}>+</button>
-            </span>
-            {#each song.conditions as condition, index}
-                <Condition
-                    bind:condition
-                    removeCondition={() => {
-                      removeCondition(index)
-                    }}
-                />
-            {/each}
-        </div>
+    {/if}
+    <SongSelector
+        bind:selecting
+        bind:songNo={song.songNo}
+        {gradient}
+        {songDB}
+    />
+    <div class="condition">
+        <span>
+            조건
+            <button on:click={addCondition}>+</button>
+        </span>
+        {#each song.conditions as condition, index}
+            <ConditionEditor
+                bind:condition
+                removeCondition={() => {
+                  removeCondition(index)
+                }}
+            />
+        {/each}
     </div>
-{/await}
+</div>
 
 <style>
     .container {
@@ -189,7 +175,7 @@
     }
     .title {
         width: 265px;
-        height: 42px;
+        min-height: 42px;
         color: white;
         font-weight: bold;
         text-shadow:
@@ -198,21 +184,21 @@
             -2px 2px 2px rgba(142, 142, 142, 0.606),
             2px 2px 2px rgba(142, 142, 142, 0.606);
     }
-    .difficulty{
-        width:100%;
+    .difficulty {
+        width: 100%;
 
-        display:flex;
+        display: flex;
         flex-direction: row;
         justify-content: space-evenly;
     }
-    .difficulty > label{
-        display:flex;
+    .difficulty > label {
+        display: flex;
         flex-direction: row;
         align-items: center;
     }
-    .difficulty img{
-        width:30px;
-        height:30px;
+    .difficulty img {
+        width: 30px;
+        height: 30px;
     }
     .condition {
         width: 100%;

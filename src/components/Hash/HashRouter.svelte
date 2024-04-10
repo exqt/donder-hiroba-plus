@@ -4,10 +4,12 @@
     import { writable } from 'svelte/store'
     import { setContext } from 'svelte'
     import TrainingAdd from '../Training/pages/add/TrainingAdd.svelte'
+    import TrainingEdit from '../Training/pages/edit/TrainingEdit.svelte'
 
     const routes = {
       '/training': Training,
-      '/training/add': TrainingAdd
+      '/training/add': TrainingAdd,
+      '/training/edit/:hash': TrainingEdit
     }
 
     const title = writable<string>('')

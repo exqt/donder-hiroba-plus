@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { type SongDB } from '../../lib/songDB'
+  import { type SongDB } from '../../../lib/songDB'
 
   export let selecting: boolean
   export let songNo: number

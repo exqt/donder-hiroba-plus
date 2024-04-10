@@ -1,5 +1,5 @@
 <script>
-    import CourseEditor from '../../CourseEditor.svelte'
+    import CourseEditor from '../../editor/CourseEditor.svelte'
 </script>
 
 <CourseEditor/>
