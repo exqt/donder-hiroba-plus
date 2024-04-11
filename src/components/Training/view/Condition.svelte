@@ -3,6 +3,7 @@
 
     export let condition: TrainingCourseCondition
     export let score: SongScoreDetail | undefined
+    export let addAchievedCondition: () => void
 
     function checkCondition (condition: TrainingCourseCondition, score: SongScoreDetail | undefined): boolean {
       if (score?.best === undefined) {
@@ -39,13 +40,15 @@
         case 'hit': return '두드린 횟수'
       }
     }
+
+    if (checkCondition(condition, score)) addAchievedCondition()
 </script>
 
 <div class="condition">
     {#if checkCondition(condition, score)}
-    O
+    ✅
     {:else}
-    X
+    ❌
     {/if}
     {getTypeName(condition.type)}
     {condition.criterion}개

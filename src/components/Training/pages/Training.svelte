@@ -3,27 +3,33 @@
     import TrainingCourseStorage from '../../../lib/trainingCourse'
     import { SongDB } from '../../../lib/songDB'
     import Course from '../view/Course.svelte'
-    import { link, location } from 'svelte-spa-router'
+    import { push, location } from 'svelte-spa-router'
+    import { getContext } from 'svelte'
+    import type { Writable } from 'svelte/store'
 
     let reloading = false
     function reload (): void {
       reloading = !reloading
     }
 
-    let json: string
+    let jsonInput: HTMLInputElement
     async function importCourse (json: string): Promise<void> {
       const storage = await TrainingCourseStorage.getInstance()
       storage.add(TrainingCourseStorage.parse(json))
       await storage.save()
       console.log('불러오기 완료')
+      jsonInput.value = ''
       reload()
     }
+
+    // eslint-disable-next-line
+    (getContext('title') as Writable<string>).set('훈련 코스')
 </script>
 
-<a href="/training/add" use:link>추가</a>
 <div class="load-container">
-    <input type="text" bind:value={json} placeholder="json"/>
-    <button on:click={async () => { await importCourse(json) }}>불러오기</button>
+    <input type="text" bind:this={jsonInput} placeholder="json"/>
+    <button on:click={async () => { await importCourse(jsonInput.value) }}>불러오기</button>
+    <button on:click={async () => { await push('/training/add') }}>추가</button>
 </div>
 {#key $location}
     {#await Promise.all([TrainingCourseStorage.getInstance(), ScoreStorage.getInstance(), SongDB.getInstance()]) then [courseStorage, scoreStorage, songDB]}
@@ -40,3 +46,17 @@
         {/key}
     {/await}
 {/key}
+
+<style>
+    .load-container{
+        width:300px;
+        display:flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .load-container input{
+        width:170px;
+    }
+</style>

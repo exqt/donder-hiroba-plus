@@ -27,6 +27,14 @@
         alert('복사에 실패했습니다.')
       }
     }
+
+    let achieved = 0
+    function addAchieve (): void {
+      achieved++
+    }
+    function progress (): string {
+      return `background: linear-gradient(90deg, rgba(42,128,247,1) 0%, rgba(42,128,247,1) calc( 100% * ${achieved} / ${course.songs.length} ), rgba(0,0,0,0) calc( 100% * ${achieved} / ${course.songs.length} ), rgba(0,0,0,0) 100%);`
+    }
 </script>
 
 <div class="btn-container">
@@ -38,8 +46,13 @@
     <h1 class="name">
         {course.name}
     </h1>
+    {#key achieved}
+    <div class="progress" style={`${progress()}`}>
+        {achieved}/{course.songs.length}
+    </div>
+    {/key}
     {#each course.songs as song}
-        <Song {song} {songDB} {scoreStorage}/>
+        <Song {song} {songDB} {scoreStorage} {addAchieve}/>
     {/each}
 </div>
 
@@ -93,5 +106,20 @@
 
         font-weight: bold;
         color:white;
+    }
+
+    .progress{
+        width:265px;
+        height:24px;
+
+        display:flex;
+        justify-content: center;
+        align-items: center;
+
+        border-radius: 10px;
+        border: 1px solid white;
+        box-sizing: border-box;
+
+        font-weight: bold;
     }
 </style>

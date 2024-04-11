@@ -8,6 +8,15 @@
     export let song: TrainingCourseSong
     export let songDB: SongDB
     export let scoreStorage: ScoreStorage
+    export let addAchieve: () => void
+
+    let achievedConditions = 0
+    $: if (achievedConditions === song.conditions.length) {
+      addAchieve()
+    }
+    function addAchievedCondition (): void {
+      achievedConditions++
+    }
 
     const score = scoreStorage.getScoreByNo(song.songNo.toString())?.details[song.difficulty]
 
@@ -38,7 +47,7 @@
         <div>{songDB.getSongData(song.songNo.toString())?.title}</div>
     </h1>
     {#each song.conditions as condition}
-        <Condition {condition} {score}/>
+        <Condition {condition} {score} {addAchievedCondition}/>
     {/each}
 </div>
 
