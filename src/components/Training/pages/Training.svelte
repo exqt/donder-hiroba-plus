@@ -9,9 +9,22 @@
     function reload (): void {
       reloading = !reloading
     }
+
+    let json: string
+    async function importCourse (json: string): Promise<void> {
+      const storage = await TrainingCourseStorage.getInstance()
+      storage.add(TrainingCourseStorage.parse(json))
+      await storage.save()
+      console.log('불러오기 완료')
+      reload()
+    }
 </script>
 
 <a href="/training/add" use:link>추가</a>
+<div class="load-container">
+    <input type="text" bind:value={json} placeholder="json"/>
+    <button on:click={async () => { await importCourse(json) }}>불러오기</button>
+</div>
 {#key $location}
     {#await Promise.all([TrainingCourseStorage.getInstance(), ScoreStorage.getInstance(), SongDB.getInstance()]) then [courseStorage, scoreStorage, songDB]}
         {#key reloading}

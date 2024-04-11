@@ -1,4 +1,4 @@
-import type { TrainingCourse } from '../types'
+import type { TrainingCourse, TrainingCourseSong } from '../types'
 
 const STORAGE_KEY = 'training'
 
@@ -51,7 +51,7 @@ export default class TrainingCourseStorage {
   }
 
   add (course: TrainingCourse): void {
-    this.courses.push(course)
+    if (!this.courses.map(course => course.hash).includes(course.hash)) this.courses.push(course)
   }
 
   remove (hash: number): void {
@@ -68,6 +68,40 @@ export default class TrainingCourseStorage {
 
   getAll (): TrainingCourse[] {
     return this.courses
+  }
+
+  static parse (json: string): TrainingCourse {
+    const parsed = JSON.parse(json)
+    if (
+      !('name' in parsed) || typeof (parsed.name) !== 'string' ||
+      !('hash' in parsed) || typeof (parsed.hash) !== 'number' ||
+      !('songs' in parsed) || !Array.isArray(parsed.songs)
+    ) {
+      throw new Error('invalid json')
+    }
+
+    const difficulties = ['easy', 'normal', 'hard', 'oni', 'oni_ura']
+
+    if (
+      (parsed.songs as any[]).some((value) => {
+        return !('songNo' in value) || typeof (value.songNo) !== 'number' || !('difficulty' in value) || typeof (value.difficulty) !== 'string' || !difficulties.includes(value.difficulty as string) || !('conditions' in value) || !Array.isArray(value.conditions)
+      })
+    ) {
+      throw new Error('invalid json')
+    }
+
+    const conditionTypes = ['good', 'ok', 'bad', 'combo', 'roll', 'hit']
+    if (
+      (parsed.songs as TrainingCourseSong[]).some((song) => {
+        return song.conditions.some(condition => {
+          return !('type' in condition) || typeof (condition.type) !== 'string' || !conditionTypes.includes(condition.type) || !('criterion' in condition) || typeof (condition.criterion) !== 'number'
+        })
+      })
+    ) {
+      throw new Error('invalid json')
+    }
+
+    return parsed
   }
 
   static createHash (name: string, generatedTime: number): number {

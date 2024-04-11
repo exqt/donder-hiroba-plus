@@ -17,9 +17,20 @@
       await courseStorage.save()
       reload()
     }
+
+    async function copy (): Promise<void> {
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(course))
+        alert('복사되었습니다.')
+      } catch (err) {
+        console.log(err)
+        alert('복사에 실패했습니다.')
+      }
+    }
 </script>
 
 <div class="btn-container">
+    <button class="btn" on:click={copy}>내보내기</button>
     <button class="btn" on:click={async () => { await push(`/training/edit/${course.hash}`) }}>수정</button>
     <button class="btn" on:click={remove}>삭제</button>
 </div>
@@ -43,7 +54,7 @@
         justify-content: flex-end;
     }
     .btn{
-        width:50px;
+        min-width:50px;
         height:30px;
 
         background-color: rgb(207, 72, 68);
