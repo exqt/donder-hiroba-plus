@@ -110,7 +110,7 @@
     )
 
     await scoreStorage.save()
-    console.log('새로고침 완료')
+    alert('새로고침 완료')
     rerender()
   }
 </script>
