@@ -4,11 +4,12 @@
   import { SongDB } from '../../../lib/songDB'
   import Course from '../view/Course.svelte'
   import { push, location } from 'svelte-spa-router'
-  import { getContext } from 'svelte'
+  import { getContext, setContext } from 'svelte'
   import type { Writable } from 'svelte/store'
   import type { DifficultyType, SongScoreDetailBest } from '../../../types'
   import { DIFFICULTIES } from '../../../constants'
   import Button from '../../Common/Button.svelte'
+  import I18N from '../../../lib/i18n'
 
   let rerendering = false
   function rerender (): void {
@@ -26,7 +27,7 @@
   }
 
   // eslint-disable-next-line
-  (getContext("title") as Writable<string>).set("훈련 코스");
+  const title = getContext("title") as Writable<string>;
 
   async function reload (): Promise<void> {
     const songs: Record<string, DifficultyType[]> = {}
@@ -59,7 +60,9 @@
 
               const scoreDetailTable = dom.querySelector('.scoreDetailTable')
               if (scoreDetailTable === null) throw new Error()
-              if (dom.querySelector('.contentBox.errorArea') !== null) { throw new Error() }
+              if (dom.querySelector('.contentBox.errorArea') !== null) {
+                throw new Error()
+              }
 
               const playdata: SongScoreDetailBest = {
                 /* eslint-disable */
@@ -99,11 +102,14 @@
 
               playdata.hit = playdata.good + playdata.ok + playdata.pound
 
-              const songScoreDetail = scoreStorage.getScoreByNo(songNo)?.details[difficulty]
+              const songScoreDetail =
+                scoreStorage.getScoreByNo(songNo)?.details[difficulty]
               if (songScoreDetail !== undefined) {
                 songScoreDetail.best = playdata
               }
-            } catch (err) { console.log(err) }
+            } catch (err) {
+              console.log(err)
+            }
           })
         )
       })
@@ -113,22 +119,27 @@
     alert('새로고침 완료')
     rerender()
   }
+
+  /* eslint-disable*/
+  let i18n = I18N.getInstance()
+  setContext<Promise<I18N>>('i18n', i18n)
 </script>
 
+{#await i18n then i18n}
 <div class="load-container">
   <Button
     on:click={async () => {
       await push('/training/add')
-    }}>추가</Button
+    }}>{i18n.t('Add')}</Button
   >
-  <Button on:click={reload}>새로고침</Button>
+  <Button on:click={reload}>{i18n.t('Refresh')}</Button>
 </div>
 <div class="load-container">
   <input type="text" bind:this={jsonInput} placeholder="json" />
   <Button
     on:click={async () => {
       await importCourse(jsonInput.value)
-    }}>불러오기</Button
+    }}>{i18n.t('Import')}</Button
   >
 </div>
 {#key $location}
@@ -140,6 +151,7 @@
     {/key}
   {/await}
 {/key}
+{/await}
 
 <style>
   .load-container {

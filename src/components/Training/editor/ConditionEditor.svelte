@@ -1,25 +1,32 @@
 <script lang="ts">
   import type { TrainingCourseCondition } from '../../../types'
+  import { getContext } from 'svelte'
+  import type I18N from '../../../lib/i18n'
 
   export let condition: TrainingCourseCondition
   export let removeCondition: () => void
+
+  // eslint-disable-next-line
+  const i18n = getContext('i18n') as Promise<I18N>
 </script>
 
+{#await i18n then i18n}
 <div class="container">
   <button on:click={removeCondition}>X</button>
   <select bind:value={condition.type}>
-    <option value="good">량</option>
-    <option value="ok">가</option>
-    <option value="bad">불가</option>
-    <option value="combo">콤보</option>
-    <option value="roll">연타</option>
-    <option value="hit">두드린 횟수</option>
+    <option value="good">{i18n.t('Good')}</option>
+    <option value="ok">{i18n.t('Ok')}</option>
+    <option value="bad">{i18n.t('Bad')}</option>
+    <option value="combo">{i18n.t('Combo')}</option>
+    <option value="roll">{i18n.t('Roll')}</option>
+    <option value="hit">{i18n.t('Hit')}</option>
   </select>
   <input type="number" min="1" step="1" bind:value={condition.criterion} />
   <span>
-    개 {condition.type === 'ok' || condition.type === 'bad' ? '미만' : '이상'}
+    {condition.type === 'ok' || condition.type === 'bad' ? i18n.t('Under') : i18n.t('Over')}
   </span>
 </div>
+{/await}
 
 <style>
   button {

@@ -1,11 +1,19 @@
 <script lang="ts">
-  import type { SongScoreDetail, TrainingCourseCondition } from '../../../types'
+  import { getContext } from 'svelte'
+  import type I18N from '../../../lib/i18n'
+  import type {
+    SongScoreDetail,
+    TrainingCourseCondition
+  } from '../../../types'
 
   export let condition: TrainingCourseCondition
   export let score: SongScoreDetail | undefined
   export let addAchievedCondition: () => void
 
-  function checkCondition (condition: TrainingCourseCondition, score: SongScoreDetail | undefined): boolean {
+  function checkCondition (
+    condition: TrainingCourseCondition,
+    score: SongScoreDetail | undefined
+  ): boolean {
     if (score?.best === undefined) {
       return false
     }
@@ -30,36 +38,54 @@
     }
   }
 
-  function getTypeName (type: TrainingCourseCondition['type']): string {
+  function getTypeName (
+    type: TrainingCourseCondition['type'],
+    i18n: I18N
+  ): string {
     switch (type) {
-      case 'good': return '량'
-      case 'ok': return '가'
-      case 'bad': return '불가'
-      case 'combo': return '콤보'
-      case 'roll': return '연타'
-      case 'hit': return '두드린 횟수'
+      case 'good':
+        return i18n.t('Good')
+      case 'ok':
+        return i18n.t('Ok')
+      case 'bad':
+        return i18n.t('Bad')
+      case 'combo':
+        return i18n.t('Combo')
+      case 'roll':
+        return i18n.t('Roll')
+      case 'hit':
+        return i18n.t('Hit')
     }
   }
 
   if (checkCondition(condition, score)) addAchievedCondition()
+
+  // eslint-disable-next-line
+  const i18n = getContext("i18n") as Promise<I18N>;
 </script>
 
-<div class="condition">
-  {#if checkCondition(condition, score)}
-  ✅
-  {:else}
-  ❌
-  {/if}
-  {getTypeName(condition.type)}
-  {condition.criterion}개
-  {condition.type === 'ok' || condition.type === 'bad' ? '이하' : '이상'}
-</div>
+{#await i18n then i18n}
+  <div class="condition">
+    <span>
+      {#if checkCondition(condition, score)}
+        ✅
+      {:else}
+        ❌
+      {/if}
+      {getTypeName(condition.type, i18n)}
+      <span style="color:#c70000;">{condition.criterion}</span>
+      {condition.type === 'ok' || condition.type === 'bad'
+        ? i18n.t('Over')
+        : i18n.t('Under')}
+    </span>
+  </div>
+{/await}
 
 <style>
-  .condition{
-    width:100%;
+  .condition {
+    width: 100%;
 
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;

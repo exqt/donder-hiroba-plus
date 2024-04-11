@@ -5,6 +5,8 @@
   import type { TrainingCourse } from '../../../types'
   import Song from './Song.svelte'
   import { push } from 'svelte-spa-router'
+  import { getContext } from 'svelte'
+  import type I18N from '../../../lib/i18n'
 
   export let course: TrainingCourse
   export let courseStorage: TrainingCourseStorage
@@ -35,17 +37,21 @@
   function progress (): string {
     return `background: linear-gradient(90deg, rgba(42,128,247,1) 0%, rgba(42,128,247,1) calc( 100% * ${achieved} / ${course.songs.length} ), rgba(0,0,0,0) calc( 100% * ${achieved} / ${course.songs.length} ), rgba(0,0,0,0) 100%);`
   }
+
+  // eslint-disable-next-line
+  const i18n = getContext('i18n') as Promise<I18N>
 </script>
 
+{#await i18n then i18n}
 <div class="btn-container">
-  <button class="btn" on:click={copy}>내보내기</button>
+  <button class="btn" on:click={copy}>{i18n.t('Export')}</button>
   <button
     class="btn"
     on:click={async () => {
       await push(`/training/edit/${course.hash}`)
-    }}>수정</button
+    }}>{i18n.t('Edit')}</button
   >
-  <button class="btn" on:click={remove}>삭제</button>
+  <button class="btn" on:click={remove}>{i18n.t('Remove')}</button>
 </div>
 <div class="container">
   <h1 class="name">
@@ -60,6 +66,7 @@
     <Song {song} {songDB} {scoreStorage} {addAchieve} />
   {/each}
 </div>
+{/await}
 
 <style>
   .btn-container {
