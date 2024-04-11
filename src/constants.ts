@@ -19,3 +19,5 @@ export const GENRES = ['unknown', 'jpop', 'anime', 'kids', 'vocaloid', 'game', '
 
 export const DONFORCE_NUMBER_OF_RECORDS = 50
 export const MAX_PLAYLIST_SONGS = 30
+
+export const CONDITION_TYPES = ['good', 'ok', 'bad', 'combo', 'roll', 'hit']

@@ -65,7 +65,7 @@
 <style>
   .name-container {
     width: 300px;
-    display:flex;
+    display: flex;
     justify-content: center;
   }
 </style>

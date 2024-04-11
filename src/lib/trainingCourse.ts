@@ -1,3 +1,4 @@
+import { CONDITION_TYPES, DIFFICULTIES } from '../constants'
 import type { TrainingCourse, TrainingCourseSong } from '../types'
 
 const STORAGE_KEY = 'training'
@@ -80,21 +81,19 @@ export default class TrainingCourseStorage {
       throw new Error('invalid json')
     }
 
-    const difficulties = ['easy', 'normal', 'hard', 'oni', 'oni_ura']
-
     if (
       (parsed.songs as any[]).some((value) => {
-        return !('songNo' in value) || typeof (value.songNo) !== 'number' || !('difficulty' in value) || typeof (value.difficulty) !== 'string' || !difficulties.includes(value.difficulty as string) || !('conditions' in value) || !Array.isArray(value.conditions)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        return !('songNo' in value) || typeof (value.songNo) !== 'number' || !('difficulty' in value) || typeof (value.difficulty) !== 'string' || !DIFFICULTIES.includes(value.difficulty) || !('conditions' in value) || !Array.isArray(value.conditions)
       })
     ) {
       throw new Error('invalid json')
     }
 
-    const conditionTypes = ['good', 'ok', 'bad', 'combo', 'roll', 'hit']
     if (
       (parsed.songs as TrainingCourseSong[]).some((song) => {
         return song.conditions.some(condition => {
-          return !('type' in condition) || typeof (condition.type) !== 'string' || !conditionTypes.includes(condition.type) || !('criterion' in condition) || typeof (condition.criterion) !== 'number'
+          return !('type' in condition) || typeof (condition.type) !== 'string' || !CONDITION_TYPES.includes(condition.type) || !('criterion' in condition) || typeof (condition.criterion) !== 'number'
         })
       })
     ) {

@@ -1,20 +1,11 @@
 <script lang="ts">
   import { type SongDB } from '../../../lib/songDB'
+    import type { GenreType } from '../../../types'
 
   export let selecting: boolean
   export let songNo: number
   export let gradient: (
-    genres: Array<
-    | 'unknown'
-    | 'jpop'
-    | 'anime'
-    | 'kids'
-    | 'vocaloid'
-    | 'game'
-    | 'namco'
-    | 'variety'
-    | 'classic'
-    >,
+    genres: GenreType[],
   ) => string
 
   export let songDB: SongDB
@@ -94,9 +85,9 @@
     text-shadow: none;
   }
 
-  .songs{
-    width:100%;
-    height:calc(100% - 16px);
+  .songs {
+    width: 100%;
+    height: calc(100% - 16px);
 
     overflow-x: hidden;
     overflow-y: scroll;
