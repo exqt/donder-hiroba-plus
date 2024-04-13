@@ -112,7 +112,7 @@
     />
     <div class="condition">
       <span>
-        {i18n.t('Condition')}
+        {i18n.t('条件')}
         <button on:click={addCondition}>+</button>
       </span>
       {#each song.conditions as condition, index}

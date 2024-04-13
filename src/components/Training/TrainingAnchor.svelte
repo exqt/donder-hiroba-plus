@@ -11,6 +11,6 @@
 
 {#await I18N.getInstance() then i18n}
   <Button on:click={gotoTraining}>
-    <div style="width:290px;">{i18n.t('Training')}</div>
+    <div style="width:290px;">{i18n.t('訓練')}</div>
   </Button>
 {/await}

@@ -44,14 +44,14 @@
 
 {#await i18n then i18n}
 <div class="btn-container">
-  <button class="btn" on:click={copy}>{i18n.t('Export')}</button>
+  <button class="btn" on:click={copy}>{i18n.t('エクスポート')}</button>
   <button
     class="btn"
     on:click={async () => {
       await push(`/training/edit/${course.hash}`)
-    }}>{i18n.t('Edit')}</button
+    }}>{i18n.t('修整')}</button
   >
-  <button class="btn" on:click={remove}>{i18n.t('Remove')}</button>
+  <button class="btn" on:click={remove}>{i18n.t('削除')}</button>
 </div>
 <div class="container">
   <h1 class="name">

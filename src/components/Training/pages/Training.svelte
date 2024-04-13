@@ -130,16 +130,16 @@
   <Button
     on:click={async () => {
       await push('/training/add')
-    }}>{i18n.t('Add')}</Button
+    }}>{i18n.t('追加')}</Button
   >
-  <Button on:click={reload}>{i18n.t('Refresh')}</Button>
+  <Button on:click={reload}>{i18n.t('リロード')}</Button>
 </div>
 <div class="load-container">
   <input type="text" bind:this={jsonInput} placeholder="json" />
   <Button
     on:click={async () => {
       await importCourse(jsonInput.value)
-    }}>{i18n.t('Import')}</Button
+    }}>{i18n.t('インポート')}</Button
   >
 </div>
 {#key $location}

@@ -44,17 +44,17 @@
   ): string {
     switch (type) {
       case 'good':
-        return i18n.t('Good')
+        return i18n.t('良')
       case 'ok':
-        return i18n.t('Ok')
+        return i18n.t('可')
       case 'bad':
-        return i18n.t('Bad')
+        return i18n.t('不可')
       case 'combo':
-        return i18n.t('Combo')
+        return i18n.t('コンボ')
       case 'roll':
-        return i18n.t('Roll')
+        return i18n.t('連打')
       case 'hit':
-        return i18n.t('Hit')
+        return i18n.t('叩けた数')
     }
   }
 
@@ -75,8 +75,8 @@
       {getTypeName(condition.type, i18n)}
       <span style="color:#c70000;">{condition.criterion}</span>
       {condition.type === 'ok' || condition.type === 'bad'
-        ? i18n.t('Over')
-        : i18n.t('Under')}
+        ? i18n.t('以上')
+        : i18n.t('未満')}
     </span>
   </div>
 {/await}

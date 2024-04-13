@@ -48,12 +48,12 @@
       on:click={save}
       disabled={course.name === '' ||
         course.songs.length === 0 ||
-        course.songs.some((song) => song.songNo === 0)}>{i18n.t('Save')}</button
+        course.songs.some((song) => song.songNo === 0)}>{i18n.t('保存')}</button
     >
   </div>
 
   <span>
-    {i18n.t('Song')}
+    {i18n.t('曲')}
     <button on:click={addSong}>+</button>
   </span>
   {#await SongDB.getInstance() then songDB}

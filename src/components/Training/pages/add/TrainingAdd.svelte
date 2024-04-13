@@ -8,7 +8,7 @@
   /* eslint-disable*/
   let i18n = I18N.getInstance()
   setContext('i18n', i18n)
-  i18n.then(i18n => $title = `${i18n.t('Training')} ${i18n.t('Course')} ${i18n.t('Edit')}`)
+  i18n.then(i18n => $title = `${i18n.t('訓練')} ${i18n.t('コース')} ${i18n.t('修整')}`)
 </script>
 
 <CourseEditor />

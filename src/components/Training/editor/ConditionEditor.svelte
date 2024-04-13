@@ -14,16 +14,16 @@
 <div class="container">
   <button on:click={removeCondition}>X</button>
   <select bind:value={condition.type}>
-    <option value="good">{i18n.t('Good')}</option>
-    <option value="ok">{i18n.t('Ok')}</option>
-    <option value="bad">{i18n.t('Bad')}</option>
-    <option value="combo">{i18n.t('Combo')}</option>
-    <option value="roll">{i18n.t('Roll')}</option>
-    <option value="hit">{i18n.t('Hit')}</option>
+    <option value="good">{i18n.t('良')}</option>
+    <option value="ok">{i18n.t('可')}</option>
+    <option value="bad">{i18n.t('不可')}</option>
+    <option value="combo">{i18n.t('コンボ')}</option>
+    <option value="roll">{i18n.t('連打')}</option>
+    <option value="hit">{i18n.t('叩けた数')}</option>
   </select>
   <input type="number" min="1" step="1" bind:value={condition.criterion} />
   <span>
-    {condition.type === 'ok' || condition.type === 'bad' ? i18n.t('Under') : i18n.t('Over')}
+    {condition.type === 'ok' || condition.type === 'bad' ? i18n.t('未満') : i18n.t('以上')}
   </span>
 </div>
 {/await}
