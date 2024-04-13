@@ -119,7 +119,7 @@
     )
 
     await scoreStorage.save()
-    alert('새로고침 완료')
+    alert((await i18n).t('リロード完了'))
     rerender()
   }
 
