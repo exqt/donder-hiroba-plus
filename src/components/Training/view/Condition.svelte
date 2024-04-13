@@ -73,10 +73,13 @@
         ❌
       {/if}
       {getTypeName(condition.type, i18n)}
-      <span style="color:#c70000;">{condition.criterion}</span>
+      <span
+        style={`color:${checkCondition(condition, score) ? '#00d26a' : '#c70000'};`}
+        >{condition.criterion}</span
+      >
       {condition.type === 'ok' || condition.type === 'bad'
-        ? i18n.t('以上')
-        : i18n.t('未満')}
+        ? i18n.t('未満')
+        : i18n.t('以上')}
     </span>
   </div>
 {/await}
@@ -89,5 +92,8 @@
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
+
+    margin-top: 5px;
+    font-weight: bold;
   }
 </style>

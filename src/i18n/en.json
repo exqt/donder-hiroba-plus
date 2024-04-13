@@ -230,5 +230,8 @@
   "叩けた数": "Hit count",
   "以上": "or Over",
   "未満": "Under",
-  "削除": "Remove"
+  "削除": "Remove",
+  "ベストスコア": "Best Score",
+  "点": "point",
+  "回": "count"
 }

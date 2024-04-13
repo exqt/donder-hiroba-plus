@@ -3,6 +3,7 @@
   import type { ScoreStorage } from '../../../lib/scores'
   import type { SongDB } from '../../../lib/songDB'
   import type { DifficultyType, TrainingCourseSong } from '../../../types'
+  import BestScore from './BestScore.svelte'
   import Condition from './Condition.svelte'
 
   export let song: TrainingCourseSong
@@ -50,6 +51,9 @@
     <img src={getDifficulty(song.difficulty)} alt="" />
     <div>{songDB.getSongData(song.songNo.toString())?.title}</div>
   </h1>
+  {#if score?.best !== undefined}
+    <BestScore best={score.best}/>
+  {/if}
   {#each song.conditions as condition}
     <Condition {condition} {score} {addAchievedCondition} />
   {/each}
