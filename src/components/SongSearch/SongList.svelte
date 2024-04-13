@@ -6,6 +6,7 @@
   import type { GenreType, SongScore } from '../../types'
   import type { PlaylistsStore } from '../../lib/playlist'
   import type { SettingsStorage } from '../../lib/settings'
+  import SongLazyInfo from './SongLazyInfo.svelte'
 
   export let genre: GenreType | undefined
   export let songScores: SongScore[] = []
@@ -36,11 +37,12 @@
   </span>
   <div class="song-container">
     {#each songScores as songScore (songScore.songNo)}
-      <Lazy height={94} offset={1000} fadeOption={{ duration: 100 }}>
+      {@const translatedTitle = getTitle(songScore.title, songScore.songNo)}
+      <Lazy height={94} offset={1000} fadeOption={{ duration: 100 }} placeholder={SongLazyInfo} placeholderProps={{ str: songScore.title + translatedTitle }} >
         <Song
           songNo={songScore.songNo}
           title={songScore.title}
-          translatedTitle={getTitle(songScore.title, songScore.songNo)}
+          translatedTitle={translatedTitle}
           songData={songDB.getSongData(songScore.songNo)}
           details={songScore.details}
           genre={genre}
