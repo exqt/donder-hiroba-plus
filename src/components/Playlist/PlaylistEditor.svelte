@@ -106,6 +106,7 @@
     {scoreStorage}
     {language}
     {favoriteSongList}
+    {playlists}
   />
 </div>
 
