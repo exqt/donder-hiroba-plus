@@ -233,5 +233,9 @@
   "削除": "Remove",
   "ベストスコア": "Best Score",
   "点": "point",
-  "回": "count"
+  "回": "count",
+  "インポート失敗": "Import failed",
+  "インポート成功": "Import successful",
+  "複写完了": "Copy complete",
+  "複写失敗": "Copy failed"
 }

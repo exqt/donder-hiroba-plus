@@ -23,8 +23,6 @@
         <img alt="" src="image/sp/640/menu_01_640.png"></a></li>
     </ul>
     <ul class="right">
-        <li id="renew" class="imageArea"><a id="ScoreUpdate">
-        <img alt="" src="image/sp/640/menu_02_640.png" width="30" height="30" style="cursor:pointer;"></a></li>
     </ul>
 </header>
 
