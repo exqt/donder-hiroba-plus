@@ -37,4 +37,8 @@ export class SongDB {
     }
     return undefined
   }
+
+  getAll (): Map<string, SongData> {
+    return this.songDataMap
+  }
 }

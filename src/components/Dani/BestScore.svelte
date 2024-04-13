@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { type PlaydataType } from '../../types'
+    import { type SongScoreDetailBest } from '../../types'
 
-    export let playdata: Promise<PlaydataType>
+    export let playdata: Promise<SongScoreDetailBest>
 
-    const keys: Array<keyof PlaydataType> = ['good', 'pound', 'ok', 'combo', 'ng', 'hit']
+    const keys: Array<keyof SongScoreDetailBest> = ['good', 'pound', 'ok', 'combo', 'ng', 'hit']
 </script>
 
 {#await playdata}
@@ -18,7 +18,7 @@
     </div>
     {#each keys as key}
     <div class="data">
-        <img src={`image/sp/640/score_name_${key}_640.png`} alt="icon">
+        <img src={`image/sp/640/score_name_${key.toString()}_640.png`} alt="icon">
         {playdata[key]}회
     </div>
     {/each}

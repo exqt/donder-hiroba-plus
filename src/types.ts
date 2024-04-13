@@ -27,6 +27,17 @@ export interface SortOptions {
 export interface SongScoreDetail {
   crown: CrownType
   badge: BadgeType
+  best?: SongScoreDetailBest
+}
+
+export interface SongScoreDetailBest {
+  score: number
+  good: number
+  ok: number
+  ng: number
+  pound: number
+  combo: number
+  hit: number
 }
 
 export interface SongScore {
@@ -84,12 +95,19 @@ export interface FavoriteSong {
   genre: GenreType
 }
 
-export interface PlaydataType {
-  score: number
-  good: number
-  ok: number
-  ng: number
-  pound: number
-  combo: number
-  hit: number
+export interface TrainingCourse {
+  name: string
+  hash: number
+  songs: TrainingCourseSong[]
+}
+
+export interface TrainingCourseSong {
+  songNo: number
+  difficulty: 'easy' | 'normal' | 'hard' | 'oni' | 'oni_ura'
+  conditions: TrainingCourseCondition[]
+}
+
+export interface TrainingCourseCondition {
+  type: 'good' | 'ok' | 'bad' | 'combo' | 'roll' | 'hit'
+  criterion: number
 }
