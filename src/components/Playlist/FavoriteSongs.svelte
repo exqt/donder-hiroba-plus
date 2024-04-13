@@ -6,11 +6,13 @@
   import { flip } from 'svelte/animate'
   import type { ScoreStorage } from '../../lib/scores'
   import { getTranslatedTitle } from '../../lib/songs'
+  import type { PlaylistsStore } from '../../lib/playlist'
 
   export let songDB: SongDB | undefined
   export let favoriteSongList: FavoriteSong[]
   export let scoreStorage: ScoreStorage | undefined
   export let language: Language
+  export let playlists: PlaylistsStore
   // export let onChange: (favoriteSongs: FavoriteSong[]) => void
 
   $: items = favoriteSongList.map((song, index) => ({ id: song.songNo, song, originalIndex: index }))
@@ -68,7 +70,7 @@
             translatedTitle={getTranslatedTitle(songData, scores, language)}
             songData={songData}
             taikoNo={''}
-            playlists={undefined}
+            playlists={playlists}
           />
         </div>
       </div>
