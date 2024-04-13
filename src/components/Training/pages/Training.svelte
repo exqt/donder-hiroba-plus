@@ -19,9 +19,12 @@
   let jsonInput: HTMLInputElement
   async function importCourse (json: string): Promise<void> {
     const storage = await TrainingCourseStorage.getInstance()
-    storage.add(TrainingCourseStorage.parse(json))
+    try {
+      storage.add(TrainingCourseStorage.parse(json))
+    } catch {
+      alert((await i18n).t('インポート失敗'))
+    }
     await storage.save()
-    console.log('불러오기 완료')
     jsonInput.value = ''
     rerender()
   }
@@ -116,13 +119,14 @@
     )
 
     await scoreStorage.save()
-    alert('새로고침 완료')
+    alert((await i18n).t('リロード完了'))
     rerender()
   }
 
   /* eslint-disable*/
   let i18n = I18N.getInstance()
   setContext<Promise<I18N>>('i18n', i18n)
+  i18n.then(i18n => $title = `${i18n.t('訓練')} ${i18n.t('コース')}`)
 </script>
 
 {#await i18n then i18n}

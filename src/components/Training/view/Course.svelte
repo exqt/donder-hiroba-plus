@@ -23,10 +23,10 @@
   async function copy (): Promise<void> {
     try {
       await navigator.clipboard.writeText(JSON.stringify(course))
-      alert('복사되었습니다.')
+      alert((await i18n).t('複写完了'))
     } catch (err) {
       console.log(err)
-      alert('복사에 실패했습니다.')
+      alert((await i18n).t('複写失敗'))
     }
   }
 
