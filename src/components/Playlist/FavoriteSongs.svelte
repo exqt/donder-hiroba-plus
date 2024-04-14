@@ -7,6 +7,7 @@
   import type { ScoreStorage } from '../../lib/scores'
   import { getTranslatedTitle } from '../../lib/songs'
   import type { PlaylistsStore } from '../../lib/playlist'
+  import Button from '../Common/Button.svelte'
 
   export let songDB: SongDB | undefined
   export let favoriteSongList: FavoriteSong[]
@@ -42,6 +43,13 @@
     if (elem === undefined) return
     elem.querySelector('img')?.click()
   }
+
+  const addSong = (): void => {
+    const nextIdx = items.length + 1
+    const addSongButton = document.querySelector(`.songSelectButton${nextIdx}`)
+    if (addSongButton === null) return
+    (addSongButton as HTMLElement).click()
+  }
 </script>
 
 <div class="wrapper">
@@ -75,6 +83,9 @@
         </div>
       </div>
   {/each}
+  {#if items.length < 30}
+    <Button on:click={addSong}>+ Add Song</Button>
+  {/if}
   </section>
   {/if}
 </div>
