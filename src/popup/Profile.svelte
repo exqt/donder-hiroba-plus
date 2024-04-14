@@ -14,6 +14,8 @@
   let byBadges: Record<BadgeType, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 }
   let byCrowns: Record<CrownType, number> = { none: 0, silver: 0, gold: 0, donderfull: 0 }
   let scorePanel = images.totalScorePanelOniImage
+  let donderAvatarURL = images.mydonPlaceholderImage
+  let danImageURL = ''
 
   onMount(async () => {
     if (settingsStorage.donderInfo === undefined) {
@@ -39,6 +41,11 @@
       oni: images.totalScorePanelOniImage,
       oni_ura: images.totalScorePanelOniImage
     }[diff]
+
+    const img = new Image()
+    img.onload = () => { donderAvatarURL = img.src }
+    img.src = getDonderAvatarURL(donderInfo.id)
+    danImageURL = getDanImageURL(donderInfo.id)
   })
 </script>
 
@@ -52,12 +59,12 @@
         {donderInfo.name}
       </div>
       <div style="width:135px;text-align:center">
-        <img src={getDanImageURL(donderInfo.id)} style="height:21px;margin:1px 0;" alt="danlabel">
+        <img src={danImageURL} style="height:21px;margin:1px 0;" alt="danlabel">
       </div>
     </div>
   </div>
 
-  <img class="avatar-image" src={getDonderAvatarURL(donderInfo.id)} alt="avatar" />
+  <img class="avatar-image" src={donderAvatarURL} alt="avatar" />
 
   <div class="total-score" style={`background-image: url(${scorePanel})`}>
     <span class="total-score-text" style="transform: translate(220px, 18px);">{byBadges[8]}</span>
