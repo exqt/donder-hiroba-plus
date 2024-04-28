@@ -63,9 +63,9 @@ jobs:
 
     - name: Upload step
       run: |-
-        chrome-webstore-upload upload \\
-          --source donder-hiroba-plus-v${{ steps.pkg.outputs.version }}.zip \\
-          --extension-id ${{ vars.EXTENSION_ID }} \\
-          --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \\
-          --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \\
+        chrome-webstore-upload upload \
+          --source donder-hiroba-plus-v${{ steps.pkg.outputs.version }}.zip \
+          --extension-id ${{ vars.EXTENSION_ID }} \
+          --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \
+          --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \
           --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
