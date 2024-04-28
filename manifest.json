@@ -20,10 +20,10 @@
   "content_scripts": [
     {
       "js": ["src/injection.ts"],
-      "matches": ["https://donderhiroba.jp/*", "http://taikowiki.com/*"],
+      "matches": ["https://donderhiroba.jp/*", "*://taikowiki.com/*"],
       "run_at": "document_end"
     }
   ],
-  "host_permissions": ["https://donderhiroba.jp/*", "http://taikowiki.com/*"],
+  "host_permissions": ["https://donderhiroba.jp/*", "*://taikowiki.com/*"],
   "permissions": ["storage"]
 }

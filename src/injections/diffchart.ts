@@ -1,17 +1,7 @@
 import { ScoreStorage } from '../lib/scores'
 import { icons } from '../assets'
 
-// TODO: make the watcher better
-const attachURLWatcher = (callback: () => Promise<void>): void => {
-  // check every 1 second
-  let prevURL = ''
-  setInterval(() => {
-    if (prevURL !== window.location.href) {
-      prevURL = window.location.href
-      void callback()
-    }
-  }, 500)
-}
+const INTERVAL_TIME = 500
 
 const addGlobalStyle = (css: string): void => {
   // check if already exists
@@ -27,35 +17,47 @@ const addGlobalStyle = (css: string): void => {
 }
 
 export default async (): Promise<void> => {
-  attachURLWatcher(async () => {
-    addGlobalStyle(`
-      .song { transition: background-color 0.3s; }
-      .song .badge {
-        position: absolute;
-        top: 2px;
-        right: 2px;
-        width: 22px;
-        height: 22px;
-      }
-      .song.gold { background-color: #ffe972; }
-      .song.silver { background-color: #d4e8ff; }
-      .song.donderfull {
-        background: linear-gradient(
-          45deg,
-          #ffb3ba,  /* pink */
-          #ffdfba,  /* peach */
-          #ffffba,  /* yellow */
-          #baffc9,  /* mint */
-          #bae1ff   /* light blue */
-        );
-      }
-    `)
+  addGlobalStyle(`
+    .song { transition: background-color 0.3s; }
+    .song .badge {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 22px;
+      height: 22px;
+    }
+    .song.gold { background-color: #ffe972; }
+    .song.silver { background-color: #d4e8ff; }
+    .song.donderfull {
+      background: linear-gradient(
+        45deg,
+        #ffb3ba,  /* pink */
+        #ffdfba,  /* peach */
+        #ffffba,  /* yellow */
+        #baffc9,  /* mint */
+        #bae1ff   /* light blue */
+      );
+    }
+  `)
 
+  const storage = await ScoreStorage.getInstance()
+
+  setInterval(() => {
     const path = window.location.href.split('/').slice(3).join('/')
     if (!path.startsWith('diffchart')) return
 
     const titles = document.querySelectorAll('.title')
-    const storage = await ScoreStorage.getInstance()
+
+    // check if already processed
+    let flag = false
+    titles.forEach((title) => {
+      const heading = title.querySelector('h1')
+      if (heading === null) return
+
+      if (heading.innerText.endsWith(')')) flag = true
+    })
+
+    if (flag) return
 
     titles.forEach((title) => {
       const heading = title.querySelector('h1')
@@ -100,5 +102,5 @@ export default async (): Promise<void> => {
         }
       })
     })
-  })
+  }, INTERVAL_TIME)
 }
