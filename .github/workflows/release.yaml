@@ -55,3 +55,17 @@ jobs:
         asset_path: ./${{ steps.pkg.outputs.version }}.zip
         asset_name: donder-hiroba-plus-v${{ steps.pkg.outputs.version }}.zip
         asset_content_type: application/zip
+
+    # https://github.com/fregante/chrome-webstore-upload-cli
+    - name: Install webstore cli
+      run: |-
+        npm install -g chrome-webstore-upload-cli
+
+    - name: Upload step
+      run: |-
+        chrome-webstore-upload upload \\
+          --source donder-hiroba-plus-v${{ steps.pkg.outputs.version }}.zip \\
+          --extension-id ${{ vars.EXTENSION_ID }} \\
+          --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \\
+          --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \\
+          --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
