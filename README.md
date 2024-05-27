@@ -61,7 +61,7 @@ Click the icon in the top right corner of a song to see detailed information and
 
 ### Integration with Korean Taikowiki Difficulty Chart
 
-After 'Song Score Update' in the setting, visit the [Taikowiki Difficulty Chart](http://taikowiki.com/diffchart/clear/10/) to see song backgrounds colored based on crown status, and badges displayed in the top right corner.
+After 'Song Score Update' in the setting, visit the [Taikowiki Difficulty Chart](https://taiko.wiki/diffchart/clear/10) to see song backgrounds colored based on crown status, and badges displayed in the top right corner.
 
 ### Translation
 - Some UI texts are translated into English when the language is set to English.

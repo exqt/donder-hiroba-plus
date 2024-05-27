@@ -40,7 +40,7 @@ const runTaikoWiki = async (): Promise<void> => {
   void diffchart()
 }
 
-if (window.location.href.includes('taikowiki.com')) {
+if (window.location.href.includes('taiko.wiki')) {
   void runTaikoWiki()
 } else {
   void runHiroba()
