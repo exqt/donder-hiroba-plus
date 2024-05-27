@@ -44,7 +44,7 @@
     <a href={`https://wikiwiki.jp/taiko-fumen/?cmd=search&word=${urlTitle}&type=AND`} target="_blank">
       wikiwiki.jp
     </a>
-    <a href={`http://taikowiki.com/song/${songNo}/`} target="_blank">
+    <a href={`http://taiko.wiki/song/${songNo}/`} target="_blank">
       태고위키
     </a>
   </div>
