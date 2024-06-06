@@ -70,7 +70,7 @@
         selecting = !selecting
       }}
       class="title"
-      style={`background:${gradient(songDB.getSongData(song.songNo.toString())?.genres ?? ['unknown'])};`}
+      style={`background:${gradient(songDB.getSongData(song.songNo.toString())?.genre ?? ['unknown'])};`}
     >
       {#if song.songNo === 0}
         +
@@ -96,7 +96,7 @@
           <input type="radio" bind:group={song.difficulty} value="oni" />
           <img src={icons.oni} alt="" />
         </label>
-        {#if songDB.getSongData(song.songNo.toString())?.levels.oni_ura !== 0}
+        {#if songDB.getSongData(song.songNo.toString())?.courses.oni_ura !== undefined}
           <label>
             <input type="radio" bind:group={song.difficulty} value="oni_ura" />
             <img src={icons.ura} alt="" />

@@ -18,7 +18,7 @@
   const getTitle = (parsedTitle: string, songNo: string): string => {
     const language = settingsStorage.language
     if (language === 'ko') {
-      return songDB.getSongData(songNo)?.title_kr_user ?? parsedTitle
+      return songDB.getSongData(songNo)?.titleKo ?? parsedTitle
     }
 
     return parsedTitle

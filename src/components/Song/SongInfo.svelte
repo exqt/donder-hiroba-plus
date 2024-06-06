@@ -15,24 +15,25 @@
   let balloonCountStr = '???'
   let artistComposerStr = '???'
 
+  console.log(songData)
+
   if (songData !== undefined) {
-    if (songData.bpmMax !== undefined) bpmStr = songData.bpmMax.toString()
-    if (songData.length !== undefined) {
-      const t = Math.floor(songData.length)
+    if (songData.bpm.max !== undefined) bpmStr = songData.bpm.max.toString()
+    const playTime = songData?.courses?.oni?.playTime
+    if (playTime !== undefined) {
+      const t = Math.floor(playTime)
       lengthStr = `${Math.floor(t / 60)}:${(t % 60).toString().padStart(2, '0')}`
     }
-    if (songData.drumrollLengths !== undefined) {
-      drumrollCountStr = DIFFICULTIES.map(diff => songData?.drumrollLengths[diff] ?? 0).join('/')
+    if (songData?.artists !== undefined) {
+      artistComposerStr = songData?.artists.join(', ')
     }
-    if (songData.balloonCounts !== undefined) {
-      balloonCountStr = DIFFICULTIES.map(diff => songData?.balloonCounts[diff] ?? 0).join('/')
-    }
-    if (songData.artist !== undefined) {
-      artistComposerStr = [songData.artist, songData.composer].filter(x => x !== undefined && x !== '').join(' / ')
-    }
-    if (songData.noteCounts !== undefined) {
-      noteCountStr = DIFFICULTIES.map(diff => songData?.noteCounts[diff] ?? 0).join('/')
-    }
+
+    const hasUra = songData?.courses?.oni_ura !== undefined
+    const diffs = hasUra ? DIFFICULTIES : DIFFICULTIES.filter((d) => d !== 'oni_ura')
+
+    drumrollCountStr = diffs.map((d) => songData?.courses[d]?.rollTime?.[0] ?? 0).join('/')
+    balloonCountStr = diffs.map((d) => songData?.courses[d]?.balloon?.[0] ?? 0).join('/')
+    noteCountStr = diffs.map((d) => songData?.courses[d]?.maxCombo ?? 0).join('/')
   }
 </script>
 

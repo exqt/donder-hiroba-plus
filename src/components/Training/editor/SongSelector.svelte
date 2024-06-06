@@ -28,7 +28,7 @@
             selecting = false
             songNo = parseInt(song[0])
           }}
-          style={`background:${gradient(song[1].genres)};`}
+          style={`background:${gradient(song[1].genre)};`}
         >
           {song[1].title}
         </button>

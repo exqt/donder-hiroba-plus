@@ -17,7 +17,7 @@
   <div class="card" style={`background-color: ${color}`}>
     <span> {item.title} (#{i + 1}) </span>
     <div class="items">
-      {#if songData?.levels[item.difficulty]}
+      {#if songData?.courses[item.difficulty]}
         {@const level = getDonforceLevel(songData, item.difficulty)}
         <span> ★ {level.toFixed(1)} </span>
         <span class="divider"> | </span>

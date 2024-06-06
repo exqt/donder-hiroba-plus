@@ -18,9 +18,9 @@ export class SongDB {
 
   private async loadSongData (): Promise<void> {
     const songdata = await import('../songdata.json')
-    const s = songdata.default as Record<string, SongData>
-    for (const songNo in s) {
-      this.songDataMap.set(songNo, s[songNo])
+    const list = songdata.default as SongData[]
+    for (const item of list) {
+      this.songDataMap.set(item.songNo, item)
     }
   }
 

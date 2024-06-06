@@ -27,10 +27,19 @@ export const sortAndFilter = (
       let haystack = score.title.toLowerCase()
       if (songData !== undefined) {
         if (language === 'ko') {
-          haystack += songData.title_kr_user.toLowerCase()
+          if (songData.titleKo !== undefined && songData.titleKo !== null) {
+            haystack += songData.titleKo?.toLowerCase()
+          }
+          if (songData.aliasKo !== undefined && songData.aliasKo !== null) {
+            haystack += songData.aliasKo.toLowerCase()
+          }
         }
-        haystack += songData.composer.toLowerCase()
-        haystack += songData.artist.toLowerCase()
+
+        if (songData.titleEn !== undefined && songData.titleEn !== null) {
+          haystack += songData.titleEn.toLowerCase()
+        }
+
+        if (songData.artists !== undefined) haystack += songData.artists.join('').toLowerCase()
       }
 
       if (language === 'ko') {
@@ -73,16 +82,16 @@ export const sortAndFilter = (
     const bSongData = songDB.getSongData(b.songNo)
 
     if (sortOptions.key === 'easy') {
-      const aLevel = aSongData?.levels.easy ?? 0
-      const bLevel = bSongData?.levels.easy ?? 0
+      const aLevel = aSongData?.courses.easy.level ?? 0
+      const bLevel = bSongData?.courses.easy.level ?? 0
       ret = aLevel - bLevel
     } else if (sortOptions.key === 'normal') {
-      const aLevel = aSongData?.levels.normal ?? 0
-      const bLevel = bSongData?.levels.normal ?? 0
+      const aLevel = aSongData?.courses.normal.level ?? 0
+      const bLevel = bSongData?.courses.normal.level ?? 0
       ret = aLevel - bLevel
     } else if (sortOptions.key === 'hard') {
-      const aLevel = aSongData?.levels.hard ?? 0
-      const bLevel = bSongData?.levels.hard ?? 0
+      const aLevel = aSongData?.courses.hard.level ?? 0
+      const bLevel = bSongData?.courses.hard.level ?? 0
       ret = aLevel - bLevel
     } else if (sortOptions.key === 'oni') {
       const aLevel = getDonforceLevel(aSongData, 'oni')
@@ -99,9 +108,9 @@ export const sortAndFilter = (
     } else if (sortOptions.key === 'alphabet') {
       ret = a.title.localeCompare(b.title, language)
     } else if (sortOptions.key === 'length') {
-      ret = (aSongData?.length ?? 0) - (bSongData?.length ?? 0)
+      ret = (aSongData?.courses?.oni?.playTime ?? 0) - (bSongData?.courses?.oni?.playTime ?? 0)
     } else if (sortOptions.key === 'bpm') {
-      ret = (aSongData?.bpmMax ?? 0) - (bSongData?.bpmMax ?? 0)
+      ret = (aSongData?.bpm.max ?? 0) - (bSongData?.bpm.min ?? 0)
     }
 
     return ret * (sortOptions.inc ? 1 : -1)

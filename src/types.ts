@@ -47,20 +47,34 @@ export interface SongScore {
 }
 
 export interface SongData {
+  songNo: string
+  order: number
   title: string
-  title_kr_official: string
-  title_kr_user: string
-  bpmMin: number
-  bpmMax: number
-  levels: Partial<Record<DifficultyType, number>>
-  asia: boolean
-  length: number
-  balloonCounts: Partial<Record<DifficultyType, number>>
-  drumrollLengths: Partial<Record<DifficultyType, number>>
-  composer: string
-  artist: string
-  noteCounts: Partial<Record<DifficultyType, number>>
-  genres: GenreType[]
+  titleKo?: string | null
+  aliasKo?: string | null
+  titleEn?: string | null
+  aliasEn?: string | null
+  bpm: {
+    min: number
+    max: number
+  }
+  bpmShiver: number
+  version: string[]
+  isAsiaBanned: number
+  isKrBanned: number
+  genre: GenreType[]
+  artists: string[]
+  addedDate: number
+  courses: Record<DifficultyType, {
+    level: number
+    playTime: number
+    balloon: number[]
+    rollTime: number[]
+    maxCombo: number
+    maxDensity: number
+    dani: string[]
+  }>
+  isDeleted: number
 }
 
 export interface DonforceItem {

@@ -59,8 +59,10 @@ export const getDonforceTopK = (scores: SongScore[], songDB: SongDB, diffs: Diff
 export const getDonforceLevel = (songData: SongData | undefined, difficulty: string): number => {
   if (songData === undefined) return 0
 
-  const level = songData.levels[difficulty as DifficultyType]
-  if (level === undefined) return 0
+  const level = songData.courses[difficulty as DifficultyType]?.level
+  if (level === undefined) {
+    return 0
+  }
 
   return level
 }
