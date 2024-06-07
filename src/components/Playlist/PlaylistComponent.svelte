@@ -145,7 +145,7 @@
               <Song
                 songNo={songNo}
                 title={songData?.title ?? `unknown songNo${songNo}`}
-                genre={songData?.genres.at(0) ?? 'unknown'}
+                genre={songData?.genre.at(0) ?? 'unknown'}
                 details={songScore?.details ?? {}}
                 translatedTitle={getTranslatedTitle(songData, songScore, language)}
                 songData={songData}
