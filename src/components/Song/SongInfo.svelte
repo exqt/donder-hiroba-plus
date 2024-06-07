@@ -15,8 +15,6 @@
   let balloonCountStr = '???'
   let artistComposerStr = '???'
 
-  console.log(songData)
-
   if (songData !== undefined) {
     if (songData.bpm.max !== undefined) bpmStr = songData.bpm.max.toString()
     const playTime = songData?.courses?.oni?.playTime

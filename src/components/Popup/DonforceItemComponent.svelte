@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { getDonforceLevel } from '../../lib/donforce'
   import type { DonforceItem, SongData, SongScoreDetail } from '../../types'
   import { icons } from '../../assets'
 
@@ -7,9 +6,9 @@
   export let i: number
   export let songData: SongData | undefined
   export let detail: SongScoreDetail | undefined
+  export let level: number
   export let link: string
   export let color: string
-
 </script>
 
 {#if detail}
@@ -18,10 +17,11 @@
     <span> {item.title} (#{i + 1}) </span>
     <div class="items">
       {#if songData?.courses[item.difficulty]}
-        {@const level = getDonforceLevel(songData, item.difficulty)}
         <span> ★ {level.toFixed(1)} </span>
         <span class="divider"> | </span>
-        <span> 💪 {item.donforce.toFixed(3)} </span>
+        <span class="tooltip">
+          💪 {item.donforce.toFixed(3)}
+        </span>
         <span class="divider"> | </span>
       {/if}
       <img class="icon" src={icons.badges[detail.badge]} alt={'badge-' + detail.badge}/>

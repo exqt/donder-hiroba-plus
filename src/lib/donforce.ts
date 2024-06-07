@@ -1,4 +1,5 @@
-import type { BadgeType, CrownType, DifficultyType, DonforceItem, SongData, SongScore } from '../types'
+import type { BadgeType, CrownType, DifficultyType, DonforceItem, SongScore } from '../types'
+import type { Analyzer } from './analyzer'
 import { type SongDB } from './songDB'
 
 export const BADGE_COEF: Record<BadgeType, number> = {
@@ -26,7 +27,7 @@ export const calculateDonforce = (badge: BadgeType, crown: CrownType, level: num
   return 6.0 * Math.pow(1.3, level - 6.0) * badgeCoefficient * crownCoefficient
 }
 
-export const getDonforceTopK = (scores: SongScore[], songDB: SongDB, diffs: DifficultyType[], k: number): DonforceItem[] => {
+export const getDonforceTopK = (scores: SongScore[], songDB: SongDB, analyzer: Analyzer, diffs: DifficultyType[], k: number): DonforceItem[] => {
   const items: DonforceItem[] = []
 
   scores.forEach((s) => {
@@ -34,8 +35,7 @@ export const getDonforceTopK = (scores: SongScore[], songDB: SongDB, diffs: Diff
       const detail = s.details[diff]
       if (detail === undefined) continue
 
-      const songData = songDB.getSongData(s.songNo)
-      const level = getDonforceLevel(songData, diff)
+      const level = analyzer.getLevelWidthSub(s.songNo, diff)
       if (level === undefined) continue
 
       const donforce = calculateDonforce(detail.badge, detail.crown, level)
@@ -53,16 +53,4 @@ export const getDonforceTopK = (scores: SongScore[], songDB: SongDB, diffs: Diff
   return items
     .toSorted((a, b) => b.donforce - a.donforce)
     .slice(0, k)
-}
-
-// temporary conversion
-export const getDonforceLevel = (songData: SongData | undefined, difficulty: string): number => {
-  if (songData === undefined) return 0
-
-  const level = songData.courses[difficulty as DifficultyType]?.level
-  if (level === undefined) {
-    return 0
-  }
-
-  return level
 }

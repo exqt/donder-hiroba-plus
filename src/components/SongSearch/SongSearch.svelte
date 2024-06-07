@@ -14,6 +14,7 @@
   import { onMount } from 'svelte'
   import { sortAndFilter } from './sortAndFilter'
   import { PlaylistsStore } from '../../lib/playlist'
+  import { Analyzer } from '../../lib/analyzer'
 
   export let scores: SongScore[] = []
 
@@ -101,6 +102,7 @@
   let filteredSortedScores: SongScore[] = []
 
   let songDB: SongDB
+  let analyzer: Analyzer
   let settingsStorage: SettingsStorage
   let playlists: PlaylistsStore
   const taikoNo = window.location.search.match(/taiko_no=(\d+)/)?.[1]
@@ -108,6 +110,7 @@
   let loaded = false
   onMount(async () => {
     songDB = await SongDB.getInstance()
+    analyzer = await Analyzer.getInstance()
     settingsStorage = await SettingsStorage.getInstance()
     playlists = await PlaylistsStore.getInstance()
     loaded = true
@@ -128,6 +131,7 @@
         $sortOptions,
         $searchDifficulties,
         songDB,
+        analyzer,
         settingsStorage,
         scores,
         !isDefaultOptions($searchOptions, $sortOptions)

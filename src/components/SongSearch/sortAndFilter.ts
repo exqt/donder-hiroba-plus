@@ -1,5 +1,5 @@
 import { DIFFICULTIES } from '../../constants'
-import { getDonforceLevel } from '../../lib/donforce'
+import type { Analyzer } from '../../lib/analyzer'
 import { type SettingsStorage } from '../../lib/settings'
 import type { SongDB } from '../../lib/songDB'
 import type { DifficultyType, SearchOptions, SongScore, SortOptions } from '../../types'
@@ -10,6 +10,7 @@ export const sortAndFilter = (
   sortOptions: SortOptions,
   searchDifficulties: Record<DifficultyType, boolean>,
   songDB: SongDB,
+  analyzer: Analyzer,
   settings: SettingsStorage,
   scores: SongScore[],
   excludeNoSongData: boolean
@@ -62,7 +63,7 @@ export const sortAndFilter = (
       const songData = songDB.getSongData(score.songNo)
       if (songData === undefined) return true
 
-      const level = getDonforceLevel(songData, diff)
+      const level = analyzer.getLevelWidthSub(score.songNo, diff)
       if (level === undefined) return true
 
       let minLevel = searchOptions.minLevel
@@ -94,12 +95,12 @@ export const sortAndFilter = (
       const bLevel = bSongData?.courses.hard.level ?? 0
       ret = aLevel - bLevel
     } else if (sortOptions.key === 'oni') {
-      const aLevel = getDonforceLevel(aSongData, 'oni')
-      const bLevel = getDonforceLevel(bSongData, 'oni')
+      const aLevel = aSongData !== undefined ? analyzer.getLevelWidthSub(aSongData.songNo, 'oni') : 0
+      const bLevel = bSongData !== undefined ? analyzer.getLevelWidthSub(bSongData.songNo, 'oni') : 0
       ret = aLevel - bLevel
     } else if (sortOptions.key === 'ura') {
-      let aLevel = getDonforceLevel(aSongData, 'oni_ura')
-      let bLevel = getDonforceLevel(bSongData, 'oni_ura')
+      let aLevel = aSongData !== undefined ? analyzer.getLevelWidthSub(aSongData.songNo, 'oni_ura') : 0
+      let bLevel = bSongData !== undefined ? analyzer.getLevelWidthSub(bSongData.songNo, 'oni_ura') : 0
       if (aLevel === 0) aLevel = offset
       if (bLevel === 0) bLevel = offset
       if (a.details?.oni_ura === undefined) aLevel += offset

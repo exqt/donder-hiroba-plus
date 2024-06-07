@@ -1,12 +1,22 @@
+<script context="module" lang="ts">
+  import { Analyzer } from '../../lib/analyzer'
+  let analyzer: Analyzer
+
+  export const getLevel = async (songNo: string, difficulty: DifficultyType): Promise<number> => {
+    if (analyzer === undefined) analyzer = await Analyzer.getInstance()
+    return analyzer.getLevelWidthSub(songNo, difficulty)
+  }
+</script>
+
 <script lang="ts">
   import { DIFFICULTIES } from '../../constants'
   import type { DifficultyType, GenreType, SongData, SongScoreDetail } from '../../types'
   import DifficultyLink from './DifficultyLink.svelte'
   import SongInfo from './SongInfo.svelte'
-  import { getDonforceLevel } from '../../lib/donforce'
   import { icons } from '../../assets'
   import PlaylistAction from './PlaylistAction.svelte'
   import type { PlaylistsStore } from '../../lib/playlist'
+  import { onMount } from 'svelte'
 
   export let songNo: string
   export let title: string
@@ -31,6 +41,22 @@
     e.stopPropagation()
     showInfo = !showInfo
   }
+
+  const levels: Record<DifficultyType, number> = {
+    easy: 0,
+    normal: 0,
+    hard: 0,
+    oni: 0,
+    oni_ura: 0
+  }
+
+  onMount(async () => {
+    levels.easy = await getLevel(songNo, 'easy')
+    levels.normal = await getLevel(songNo, 'normal')
+    levels.hard = await getLevel(songNo, 'hard')
+    levels.oni = await getLevel(songNo, 'oni')
+    levels.oni_ura = await getLevel(songNo, 'oni_ura')
+  })
 </script>
 
 <div class={`song-wrapper ${genre}`}>
@@ -66,13 +92,9 @@
   <div class="difficulties">
     {#each DIFFICULTIES.slice(0, hasUra ? 5 : 4) as difficulty, i}
       {@const detail = details[difficulty]}
+      {@const level = levels[difficulty]}
       {#if detail}
-        <DifficultyLink
-          songNo={songNo}
-          difficulty={difficulty}
-          level={getDonforceLevel(songData, difficulty)}
-          {i} {detail} {taikoNo}
-        />
+        <DifficultyLink {songNo} {difficulty} {level} {i} {detail} {taikoNo} />
       {/if}
     {/each}
   </div>
