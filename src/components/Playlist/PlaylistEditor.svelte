@@ -10,6 +10,7 @@
   import PlaylistContainer from './PlaylistContainer.svelte'
   import { genUUID } from '../../lib/utils'
   import { SettingsStorage } from '../../lib/settings'
+  import { Analyzer } from '../../lib/analyzer'
 
   export let tckt: string
   export let favoriteSongList: FavoriteSong[] = []
@@ -57,6 +58,7 @@
   }
 
   let songDB: SongDB
+  let analyzer: Analyzer
   let scoreStorage: ScoreStorage
   let settingsStorage: SettingsStorage
   let playlists: PlaylistsStore
@@ -65,6 +67,7 @@
   setContext('tckt', tckt)
   onMount(async () => {
     songDB = await SongDB.getInstance()
+    analyzer = await Analyzer.getInstance()
     scoreStorage = await ScoreStorage.getInstance()
     settingsStorage = await SettingsStorage.getInstance()
     playlists = await PlaylistsStore.getInstance()
@@ -88,6 +91,7 @@
       {settingsStorage}
       {playlists}
       {songDB}
+      {analyzer}
     />
   {/if}
   <div class="header">
@@ -103,6 +107,7 @@
   </div>
   <FavoriteSongs
     {songDB}
+    {analyzer}
     {scoreStorage}
     {language}
     {favoriteSongList}

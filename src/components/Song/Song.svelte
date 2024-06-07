@@ -1,14 +1,5 @@
-<script context="module" lang="ts">
-  import { Analyzer } from '../../lib/analyzer'
-  let analyzer: Analyzer
-
-  export const getLevel = async (songNo: string, difficulty: DifficultyType): Promise<number> => {
-    if (analyzer === undefined) analyzer = await Analyzer.getInstance()
-    return analyzer.getLevelWidthSub(songNo, difficulty)
-  }
-</script>
-
 <script lang="ts">
+  import { type Analyzer } from '../../lib/analyzer'
   import { DIFFICULTIES } from '../../constants'
   import type { DifficultyType, GenreType, SongData, SongScoreDetail } from '../../types'
   import DifficultyLink from './DifficultyLink.svelte'
@@ -26,6 +17,7 @@
   export let details: Partial<Record<DifficultyType, SongScoreDetail>>
   export let taikoNo: string | undefined
   export let playlists: PlaylistsStore | undefined
+  export let analyzer: Analyzer
 
   let showInfo = false
   let showPlaylistAction = false
@@ -59,11 +51,11 @@
   }
 
   onMount(async () => {
-    levels.easy = await getLevel(songNo, 'easy')
-    levels.normal = await getLevel(songNo, 'normal')
-    levels.hard = await getLevel(songNo, 'hard')
-    levels.oni = await getLevel(songNo, 'oni')
-    levels.oni_ura = await getLevel(songNo, 'oni_ura')
+    levels.easy = analyzer.getLevelWidthSub(songNo, 'easy')
+    levels.normal = analyzer.getLevelWidthSub(songNo, 'normal')
+    levels.hard = analyzer.getLevelWidthSub(songNo, 'hard')
+    levels.oni = analyzer.getLevelWidthSub(songNo, 'oni')
+    levels.oni_ura = analyzer.getLevelWidthSub(songNo, 'oni_ura')
 
     document.body.addEventListener('click', hideShowPlaylist)
     document.body.addEventListener('contextmenu', hideShowPlaylist)

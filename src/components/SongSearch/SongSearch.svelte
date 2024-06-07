@@ -163,6 +163,7 @@
       songDB={songDB}
       playlists={playlists}
       taikoNo={taikoNo}
+      analyzer={analyzer}
     />
   {/if}
 </div>

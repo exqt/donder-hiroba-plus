@@ -11,10 +11,12 @@
   import type { SettingsStorage } from '../../lib/settings'
   import type { ScoreStorage } from '../../lib/scores'
   import { getTranslatedTitle } from '../../lib/songs'
+  import type { Analyzer } from '../../lib/analyzer'
 
   export let playlistsStore: PlaylistsStore
   export let playlist: Playlist
   export let songDB: SongDB
+  export let analyzer: Analyzer
   export let settingsStorage: SettingsStorage
   export let scoreStorage: ScoreStorage
   export let onChange: (playlist: Playlist) => void
@@ -151,6 +153,7 @@
                 songData={songData}
                 taikoNo={''}
                 playlists={playlistsStore}
+                analyzer={analyzer}
               />
             </div>
           </div>

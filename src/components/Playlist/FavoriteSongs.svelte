@@ -8,8 +8,10 @@
   import { getTranslatedTitle } from '../../lib/songs'
   import type { PlaylistsStore } from '../../lib/playlist'
   import Button from '../Common/Button.svelte'
+  import type { Analyzer } from '../../lib/analyzer'
 
   export let songDB: SongDB | undefined
+  export let analyzer: Analyzer
   export let favoriteSongList: FavoriteSong[]
   export let scoreStorage: ScoreStorage | undefined
   export let language: Language
@@ -79,6 +81,7 @@
             songData={songData}
             taikoNo={''}
             playlists={playlists}
+            analyzer={analyzer}
           />
         </div>
       </div>

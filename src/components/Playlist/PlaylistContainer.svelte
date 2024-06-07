@@ -7,9 +7,11 @@
   import type { SongDB } from '../../lib/songDB'
   import type { ScoreStorage } from '../../lib/scores'
   import type { SettingsStorage } from '../../lib/settings'
+  import type { Analyzer } from '../../lib/analyzer'
 
   export let playlists: PlaylistsStore
   export let songDB: SongDB
+  export let analyzer: Analyzer
   export let scoreStorage: ScoreStorage
   export let settingsStorage: SettingsStorage
 
@@ -44,6 +46,7 @@
       <PlaylistComponent
         playlistsStore={playlists}
         playlist={item.playlist}
+        {analyzer}
         {songDB}
         {scoreStorage}
         {settingsStorage}

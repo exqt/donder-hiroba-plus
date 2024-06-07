@@ -7,11 +7,13 @@
   import type { PlaylistsStore } from '../../lib/playlist'
   import type { SettingsStorage } from '../../lib/settings'
   import SongLazyInfo from './SongLazyInfo.svelte'
+  import type { Analyzer } from '../../lib/analyzer'
 
   export let genre: GenreType | undefined
   export let songScores: SongScore[] = []
   export let settingsStorage: SettingsStorage
   export let songDB: SongDB
+  export let analyzer: Analyzer
   export let taikoNo: string | undefined
   export let playlists: PlaylistsStore
 
@@ -48,6 +50,7 @@
           genre={genre}
           taikoNo={taikoNo}
           playlists={playlists}
+          analyzer={analyzer}
         />
       </Lazy>
     {/each}

@@ -13,8 +13,8 @@ export class Analyzer {
   public static async getInstance (): Promise<Analyzer> {
     if (Analyzer.instance === undefined) {
       Analyzer.instance = new Analyzer()
-      await Analyzer.instance.loadSongData()
       Analyzer.songDB = await SongDB.getInstance()
+      await Analyzer.instance.loadSongData()
     }
 
     return Analyzer.instance
@@ -66,7 +66,7 @@ export class Analyzer {
   }
 
   getLevelWidthSub (songNo: string, diff: DifficultyType): number {
-    const originalLevel = Analyzer.songDB.getSongData(songNo)?.courses[diff]?.level ?? 0
+    const originalLevel = Analyzer.songDB?.getSongData(songNo)?.courses[diff]?.level ?? 0
     if (originalLevel === 0) return originalLevel
 
     const ranges = [
