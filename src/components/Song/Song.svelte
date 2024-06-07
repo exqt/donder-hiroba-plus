@@ -14,9 +14,9 @@
   import DifficultyLink from './DifficultyLink.svelte'
   import SongInfo from './SongInfo.svelte'
   import { icons } from '../../assets'
-  import PlaylistAction from './PlaylistAction.svelte'
   import type { PlaylistsStore } from '../../lib/playlist'
-  import { onMount } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
+  import PlaylistContextMenu from '../Common/PlaylistContextMenu.svelte'
 
   export let songNo: string
   export let title: string
@@ -33,12 +33,10 @@
   const hasUra = details?.oni_ura !== undefined
 
   const onClickPlaylist = (e: MouseEvent): void => {
-    e.stopPropagation()
     showPlaylistAction = !showPlaylistAction
   }
 
   const onClickInfo = (e: MouseEvent): void => {
-    e.stopPropagation()
     showInfo = !showInfo
   }
 
@@ -50,16 +48,34 @@
     oni_ura: 0
   }
 
+  let wrapper: HTMLDivElement
+  const hideShowPlaylist = (ev: MouseEvent): void => {
+    if (!showPlaylistAction) return
+
+    const target = ev.target as HTMLElement
+
+    if (wrapper.contains(target)) return
+    showPlaylistAction = false
+  }
+
   onMount(async () => {
     levels.easy = await getLevel(songNo, 'easy')
     levels.normal = await getLevel(songNo, 'normal')
     levels.hard = await getLevel(songNo, 'hard')
     levels.oni = await getLevel(songNo, 'oni')
     levels.oni_ura = await getLevel(songNo, 'oni_ura')
+
+    document.body.addEventListener('click', hideShowPlaylist)
+    document.body.addEventListener('contextmenu', hideShowPlaylist)
+  })
+
+  onDestroy(() => {
+    document.body.removeEventListener('click', hideShowPlaylist)
+    document.body.removeEventListener('contextmenu', hideShowPlaylist)
   })
 </script>
 
-<div class={`song-wrapper ${genre}`}>
+<div class={`song-wrapper ${genre}`} bind:this={wrapper}>
   {#if songData}
   <button class="info-toggle" on:click={onClickInfo}>
     <img class="toggle-icon" src={icons.informationCircle} alt="info-toggle"/>
@@ -78,10 +94,11 @@
   {/if}
 
   {#if showPlaylistAction && playlists}
-    <PlaylistAction
+    <PlaylistContextMenu
       {songNo}
       {playlists}
-      onClickOutside={() => { showPlaylistAction = false }}
+      x={0}
+      y={0}
     />
   {/if}
 

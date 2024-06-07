@@ -63,6 +63,8 @@ Click the icon in the top right corner of a song to see detailed information and
 
 After 'Song Score Update' in the setting, visit the [Taikowiki Difficulty Chart](https://taiko.wiki/diffchart/clear/10) to see song backgrounds colored based on crown status, and badges displayed in the top right corner.
 
+- You can also use [Playlist](#playlist) feature to create a playlist from the Taikowiki Difficulty Chart. (Right-click on the song to add it to the playlist)
+
 ### Translation
 - Some UI texts are translated into English when the language is set to English.
 - Translation may not be perfect since it is done by machine translation + my poor English skills. Please let me know if there are any errors.

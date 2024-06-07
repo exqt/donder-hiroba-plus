@@ -3,7 +3,8 @@
 
   export let songNo: string
   export let playlists: PlaylistsStore
-  export let onClickOutside: () => void
+  export let x: number
+  export let y: number
 
   const onClickItem = async (idx: number): Promise<void> => {
     const playlist = $playlists[idx]
@@ -22,33 +23,34 @@
   }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="overlay" on:click={onClickOutside}></div>
-<div class="playlist-action">
-  <div class="item-container">
-    {#each $playlists as item, i}
-      <button class="item" on:click={async () => { await onClickItem(i) }}>
-        <span class:invisible={!item.songNoList.includes(songNo)}>✔️</span>
-        <span>{item.title}</span>
-        <span class="song-count" style="margin-left: 8px">({item.songNoList.length}/30)</span>
+<div class="context-menu" style="top: {y}px; left: {x}px">
+  <div class="playlist-action">
+    <div class="item-container">
+      {#each $playlists as item, i}
+        <button class="item" on:click={async () => { await onClickItem(i) }}>
+          <span class:invisible={!item.songNoList.includes(songNo)}>✔️</span>
+          <span>{item.title}</span>
+          <span class="song-count" style="margin-left: 8px">({item.songNoList.length}/30)</span>
+        </button>
+      {/each}
+      <button class="item" on:click={createNewPlaylist}>
+        <span>➕</span>
+        <span>Create New Playlist</span>
       </button>
-    {/each}
-    <button class="item" on:click={createNewPlaylist}>
-      <span>➕</span>
-      <span>Create New Playlist</span>
-    </button>
+    </div>
   </div>
+
 </div>
 
 <style>
-  .overlay {
-    position: fixed;
+  .context-menu {
+    position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
+    font-size: 1em;
+    border-radius: 4px;
+    font-weight: 500;
+    z-index: 10000;
   }
 
   .playlist-action {
@@ -59,21 +61,9 @@
     border-radius: 5px;
     padding: 5px;
     z-index: 1000;
-    background-color: inherit;
+    background-color: #333;
     color: white;
     filter: drop-shadow(4px 4px 4px #0005);
-  }
-
-  .playlist-action:after {
-    content: "";
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    border-radius: 5px;
-    background-color: rgba(0,0,0,0.2);
-    z-index: -1;
   }
 
   .item-container {
@@ -108,5 +98,33 @@
     margin-left: auto;
     text-align: right;
     float: right;
+  }
+
+  @media (prefers-color-scheme: light) {
+    .context-menu {
+      background-color: #f1f1f1;
+      color: black;
+    }
+
+    .item {
+      color: black;
+    }
+
+    .item:hover {
+      background-color: #0003;
+    }
+
+    .playlist-action {
+      background-color: #f1f1f1;
+      color: black;
+    }
+
+    .playlist-action:after {
+      background-color: rgba(0,0,0,0.2);
+    }
+
+    .song-count {
+      color: black;
+    }
   }
 </style>
