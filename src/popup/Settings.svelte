@@ -7,6 +7,7 @@
   import type I18N from '../lib/i18n'
   import type { SettingsStorage } from '../lib/settings'
   import type { ScoreStorage } from '../lib/scores'
+    import { SongDB } from '../lib/songDB';
 
   export let settingsStorage: SettingsStorage
   export let scoreStorage: ScoreStorage
@@ -97,6 +98,17 @@
     await settingsStorage.save()
   }
 
+  let disableSongDataUpdate = false
+  const forceSongDataUpdate = async () => {
+    try {
+      await SongDB.fetchAndStoreSongData()
+    } catch (e) {
+      console.error(e)
+    }
+
+    disableSongDataUpdate = true
+  }
+
   let language: Language
 
   onMount(() => {
@@ -148,6 +160,10 @@
 
   <!-- Reset -->
   <button class="warning" on:click={reset}>{i18n.t('Reset')}</button>
+
+  <!-- ForceSongDataUpdate -->
+  <button class="warning" disabled={disableSongDataUpdate} on:click={forceSongDataUpdate}>{'Force SongData Update'}</button>
+  <span></span>
 
   <!-- GitHub Link -->
   <a class="github-link" href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
