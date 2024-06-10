@@ -165,11 +165,19 @@
   <button class="warning" disabled={disableSongDataUpdate} on:click={forceSongDataUpdate}>{'Force SongData Update'}</button>
   <span></span>
 
-  <!-- GitHub Link -->
-  <a class="github-link" href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
-    <img class="icon" src={icons.github} alt="github"/>
-    <span>exqt/donder-hiroba-plus ({version}) </span>
-  </a>
+  <div class="footer">
+    <a href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
+      <img class="icon" src={icons.github} alt="github"/>
+      <span>exqt/donder-hiroba-plus ({version}) </span>
+    </a>
+
+    <span>
+      SongData by
+      <a style="display: inline;" href="https://taiko.wiki" target="_blank">
+        Taiko.Wiki
+      </a>
+    </span>
+  </div>
 </div>
 
 <style>
@@ -207,16 +215,19 @@
     cursor: not-allowed;
   }
 
-  .github-link {
+  .footer {
     margin-top: auto;
     margin-bottom: 12px;
+  }
+
+  a {
     display: flex;
     align-items: center;
     justify-content: center;
     color: #000;
   }
 
-  .github-link:hover {
+  a:hover {
     color: #0366d6;
   }
 
