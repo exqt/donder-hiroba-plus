@@ -1,2 +1,6 @@
+# 0.2.4
+- 태고 위키 데이터 연동
+- 플레이 리스트 태고 위키 서열표에서도 사용 가능 (오른쪽 마우스 클릭)
+
 # 0.2.3
-- [새 태고 위키 서열표](https://taiko.wiki/diffchart/clear/10) 수정
+- [새 태고 위키 서열표](https://taiko.wiki/diffchart/clear/10) 연동
