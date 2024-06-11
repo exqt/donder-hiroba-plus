@@ -26,7 +26,7 @@
       artistComposerStr = songData?.artists.join(', ')
     }
 
-    const hasUra = songData?.courses?.oni_ura !== undefined
+    const hasUra = songData?.courses?.oni_ura !== undefined && songData?.courses?.oni_ura !== null
     const diffs = hasUra ? DIFFICULTIES : DIFFICULTIES.filter((d) => d !== 'oni_ura')
 
     drumrollCountStr = diffs.map((d) => songData?.courses[d]?.rollTime?.[0] ?? 0).join('/')
