@@ -66,7 +66,7 @@ export class SongDB {
     await storage.set({ recentCheckTime: (new Date()).getTime() })
 
     const now = (new Date()).getTime()
-    const ONE_DAY = 1000 * 60
+    const ONE_DAY = 1000 * 60 * 60 * 24
 
     let ret = recentCheckTime + ONE_DAY < now
     if (!ret) return false;
