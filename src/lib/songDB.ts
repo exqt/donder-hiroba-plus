@@ -17,25 +17,27 @@ export class SongDB {
     return SongDB.instance
   }
 
-  public static async fetchAndStoreSongData (): Promise<void> {
-    const SONG_DATA_API = 'https://taiko.wiki/api/song'
+  public static async fetchAndStoreSongData (timestamp?: number): Promise<void> {
+    timestamp = timestamp ?? 0
+
+    const SONG_DATA_API = `https://taiko.wiki/api/song?after=${timestamp}`
     const res = await fetch(SONG_DATA_API)
-    const songData = (await res.json()) as SongData[]
-    console.log('fetched song data', songData)
+    const newSongData = (await res.json()) as SongData[]
+    console.log('fetched song data', newSongData)
 
     // validate?
     // 1. is List?
-    if (!Array.isArray(songData)) {
+    if (!Array.isArray(newSongData)) {
       throw new Error('song data is not an array')
     }
 
     // 2. is SongData?
-    const song = songData[0]
+    const song = newSongData[0]
     if (song === undefined || typeof song !== 'object') {
       throw new Error('song data is not an object')
     }
 
-    for (const item of songData) {
+    for (const item of newSongData) {
       if (item.courses !== undefined) {
         // @ts-ignore
         // TODO: better way to handle this
@@ -43,9 +45,20 @@ export class SongDB {
       }
     }
 
+    let newSongIdsMap = new Map<string, boolean>()
+    for (const song of newSongData) {
+      newSongIdsMap.set(song.songNo, true)
+    }
 
     const storage = chrome.storage.local
     try {
+      let { songData } = await storage.get('songData') as { songData: SongData[] }
+
+      songData = songData.filter((song) => !newSongIdsMap.get(song.songNo))
+      for (const song of newSongData) {
+        songData.push(song)
+      }
+
       await storage.set({ songData })
     }
     catch (e) {
@@ -66,13 +79,13 @@ export class SongDB {
     await storage.set({ recentCheckTime: (new Date()).getTime() })
 
     const now = (new Date()).getTime()
-    const ONE_DAY = 1000 * 60 * 60 * 24
+    const CHECK_INTERVAL = 1000 * 60 * 60 * 24 // 1 day
 
-    let ret = recentCheckTime + ONE_DAY < now
+    let ret = recentCheckTime + CHECK_INTERVAL < now
     if (!ret) return false;
 
     // compare with server
-    const { localSongDataVersion } = (await storage.get('localSongDataVersion')) as { localSongDataVersion: number }
+    let { localSongDataVersion } = (await storage.get('localSongDataVersion')) as { localSongDataVersion: number }
     await storage.set({ recentCheckTime: (new Date()).getTime() })
 
     const RECENT_UPDATE_API = 'https://taiko.wiki/api/song/recent_update'
@@ -80,23 +93,26 @@ export class SongDB {
     const serverSongDataVersion = parseInt(await res.text(), 10)
     await storage.set({ localSongDataVersion: serverSongDataVersion })
 
+    console.log('local', localSongDataVersion, 'server', serverSongDataVersion)
+
     return localSongDataVersion < serverSongDataVersion
   }
 
   private async loadSongData (): Promise<void> {
-    try {
-      if (await SongDB.shouldFetchSongData()) {
-        await SongDB.fetchAndStoreSongData()
-      }
-    } catch (e) {
-      console.error('failed to fetch song data', e)
-    }
-
     // load song data
     const storage = chrome?.storage?.local
     if (storage === undefined) {
       console.warn('storage is not available')
       return
+    }
+
+    try {
+      if (await SongDB.shouldFetchSongData()) {
+        let { localSongDataVersion } = (await storage.get('localSongDataVersion')) as { localSongDataVersion: number }
+        await SongDB.fetchAndStoreSongData(localSongDataVersion)
+      }
+    } catch (e) {
+      console.error('failed to fetch song data', e)
     }
 
     let { songData } = await storage.get('songData') as { songData: SongData[] }
