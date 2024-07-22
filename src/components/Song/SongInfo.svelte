@@ -29,8 +29,8 @@
     const hasUra = songData?.courses?.oni_ura !== undefined && songData?.courses?.oni_ura !== null
     const diffs = hasUra ? DIFFICULTIES : DIFFICULTIES.filter((d) => d !== 'oni_ura')
 
-    drumrollCountStr = diffs.map((d) => songData?.courses[d]?.rollTime?.[0] ?? 0).join('/')
-    balloonCountStr = diffs.map((d) => songData?.courses[d]?.balloon?.[0] ?? 0).join('/')
+    drumrollCountStr = diffs.map((d) => songData?.courses[d]?.rollTime?.reduce((a, b) => a + b, 0) ?? 0).map((x) => x.toFixed(2)).join('/')
+    balloonCountStr = diffs.map((d) => songData?.courses[d]?.balloon?.reduce((a, b) => a + b, 0) ?? 0).join('/')
     noteCountStr = diffs.map((d) => songData?.courses[d]?.maxCombo ?? 0).join('/')
   }
 </script>
