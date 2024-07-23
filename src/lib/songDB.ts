@@ -19,6 +19,17 @@ export class SongDB {
     return storage
   }
 
+  async reset(): Promise<void> {
+    const storage = this.getStorage()
+    await storage.remove('recentCheckTime')
+    await storage.remove('songData')
+    await storage.remove('localSongDataVersion')
+    await storage.remove('serverSongDataVersion')
+    this.songDataMap.clear()
+    this.localSongDataVersion = undefined
+    this.serverSongDataVersion = undefined
+  }
+
   async getLocalSongDataVersion (): Promise<number> {
     if (this.localSongDataVersion === undefined) {
       const storage = this.getStorage()
@@ -98,6 +109,7 @@ export class SongDB {
 
     try {
       let { songData } = await storage.get('songData') as { songData: SongData[] }
+      songData ??= []
 
       songData = songData.filter((song) => !newSongIdsMap.get(song.songNo))
       for (const song of newSongData) {
@@ -150,6 +162,7 @@ export class SongDB {
     if (songData === undefined) {
       console.log('using local default song data')
       songData = (await import('../songdata.json')).default as SongData[]
+      await storage.set({ songData })
     }
 
     for (const item of songData) {
