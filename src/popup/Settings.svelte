@@ -7,15 +7,17 @@
   import type I18N from '../lib/i18n'
   import type { SettingsStorage } from '../lib/settings'
   import type { ScoreStorage } from '../lib/scores'
-    import { SongDB } from '../lib/songDB';
+  import { SongDB } from '../lib/songDB'
 
   export let settingsStorage: SettingsStorage
   export let scoreStorage: ScoreStorage
+  export let songDB: SongDB
   export let i18n: I18N
 
   const reset = async (): Promise<void> => {
     await settingsStorage.reset()
     await scoreStorage.reset()
+    await songDB.reset()
     window.close()
   }
 

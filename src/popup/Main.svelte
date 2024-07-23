@@ -82,7 +82,7 @@
       {:else if currentTabName === 'donforce-table'}
         <DonforceTable/>
       {:else if currentTabName === 'settings'}
-        <Settings {settingsStorage} {scoreStorage} {i18n} />
+        <Settings {settingsStorage} {scoreStorage} {songDB} {i18n} />
       {/if}
     {/if}
   </div>
