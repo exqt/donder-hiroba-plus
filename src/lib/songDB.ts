@@ -5,7 +5,49 @@ export class SongDB {
   private static instance: SongDB
   private readonly songDataMap = new Map<string, SongData>()
 
+  localSongDataVersion: number | undefined
+  serverSongDataVersion: number | undefined
+
   private constructor () {
+  }
+
+  private getStorage() {
+    const storage = chrome.storage.local
+    if (storage === undefined) {
+      console.warn('storage is not available')
+    }
+    return storage
+  }
+
+  async getLocalSongDataVersion (): Promise<number> {
+    if (this.localSongDataVersion === undefined) {
+      const storage = this.getStorage()
+      const { localSongDataVersion } = await storage.get('localSongDataVersion') as { localSongDataVersion: number }
+      this.localSongDataVersion = localSongDataVersion ?? 0
+    }
+    return this.localSongDataVersion
+  }
+
+  async setLocalSongDataVersion (version: number): Promise<void> {
+    const storage = this.getStorage()
+    await storage.set({ localSongDataVersion: version })
+    this.localSongDataVersion = version
+  }
+
+  async getServerSongDataVersion (): Promise<number> {
+    if (this.serverSongDataVersion === undefined) {
+      const RECENT_UPDATE_API = 'https://taiko.wiki/api/song/recent_update'
+      const res = await fetch(RECENT_UPDATE_API)
+      this.serverSongDataVersion = parseInt(await res.text(), 10)
+      await this.setServerSongDataVersion(this.serverSongDataVersion)
+    }
+    return this.serverSongDataVersion
+  }
+
+  async setServerSongDataVersion (version: number): Promise<void> {
+    const storage = this.getStorage()
+    await storage.set({ serverSongDataVersion: version })
+    this.serverSongDataVersion = version
   }
 
   public static async getInstance (): Promise<SongDB> {
@@ -17,13 +59,15 @@ export class SongDB {
     return SongDB.instance
   }
 
-  public static async fetchAndStoreSongData (timestamp?: number): Promise<void> {
-    timestamp = timestamp ?? 0
-
-    const SONG_DATA_API = `https://taiko.wiki/api/song?after=${timestamp}`
+  public async fetchAndStoreSongData (): Promise<void> {
+    const storage = this.getStorage()
+    const localSongDataVersion = await SongDB.instance.getLocalSongDataVersion()
+    const SONG_DATA_API = `https://taiko.wiki/api/song?after=${localSongDataVersion}`
     const res = await fetch(SONG_DATA_API)
     const newSongData = (await res.json()) as SongData[]
-    console.log('fetched song data', newSongData)
+    console.log('fetched song data', new Date(localSongDataVersion), newSongData)
+
+    await this.setLocalSongDataVersion(await this.getServerSongDataVersion())
 
     // validate?
     // 1. is List?
@@ -50,7 +94,6 @@ export class SongDB {
       newSongIdsMap.set(song.songNo, true)
     }
 
-    const storage = chrome.storage.local
     try {
       let { songData } = await storage.get('songData') as { songData: SongData[] }
 
@@ -66,33 +109,23 @@ export class SongDB {
     }
   }
 
-  public static async shouldFetchSongData (): Promise<boolean> {
-    const storage = chrome?.storage?.local
-    if (storage === undefined) {
-      console.warn('storage is not available')
-      return false
-    }
+  public async shouldFetchSongData (): Promise<boolean> {
+    const now = (new Date()).getTime()
+    const CHECK_INTERVAL = 1000 * 60 * 60 // 1 hour
 
+    const storage = this.getStorage()
     // should check if it's been a day since last check
     let { recentCheckTime } = (await storage.get('recentCheckTime')) as { recentCheckTime: number }
-    recentCheckTime = recentCheckTime ?? 0
-    await storage.set({ recentCheckTime: (new Date()).getTime() })
-
-    const now = (new Date()).getTime()
-    const CHECK_INTERVAL = 1000 * 60 * 60 * 24 // 1 day
+    recentCheckTime ??= 0
 
     let ret = recentCheckTime + CHECK_INTERVAL < now
     if (!ret) return false;
 
-    // compare with server
-    let { localSongDataVersion } = (await storage.get('localSongDataVersion')) as { localSongDataVersion: number }
     await storage.set({ recentCheckTime: (new Date()).getTime() })
 
-    const RECENT_UPDATE_API = 'https://taiko.wiki/api/song/recent_update'
-    const res = await fetch(RECENT_UPDATE_API)
-    const serverSongDataVersion = parseInt(await res.text(), 10)
-    await storage.set({ localSongDataVersion: serverSongDataVersion })
-
+    // compare with server
+    const localSongDataVersion = await this.getLocalSongDataVersion()
+    const serverSongDataVersion = await this.getServerSongDataVersion()
     console.log('local', localSongDataVersion, 'server', serverSongDataVersion)
 
     return localSongDataVersion < serverSongDataVersion
@@ -100,16 +133,11 @@ export class SongDB {
 
   private async loadSongData (): Promise<void> {
     // load song data
-    const storage = chrome?.storage?.local
-    if (storage === undefined) {
-      console.warn('storage is not available')
-      return
-    }
+    const storage = this.getStorage()
 
     try {
-      if (await SongDB.shouldFetchSongData()) {
-        let { localSongDataVersion } = (await storage.get('localSongDataVersion')) as { localSongDataVersion: number }
-        await SongDB.fetchAndStoreSongData(localSongDataVersion)
+      if (await this.shouldFetchSongData()) {
+        await this.fetchAndStoreSongData()
       }
     } catch (e) {
       console.error('failed to fetch song data', e)
