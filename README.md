@@ -3,7 +3,7 @@
 
 A Chrome extension that adds useful features to the site [Donder Hiroba](https://donderhiroba.jp/index.php), which allows you to check your information in the game "Taiko no Tatsujin".
 
-Song data are provided by [Team LAGOS](https://twitter.com/KOREA_TAIKO), Thanks!
+Song data are provided by [Korean Taiko Wiki](https://taiko.wiki), Thanks!
 
 ## Installation
 
