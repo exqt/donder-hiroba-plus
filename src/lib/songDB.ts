@@ -59,9 +59,11 @@ export class SongDB {
     return SongDB.instance
   }
 
-  public async fetchAndStoreSongData (): Promise<void> {
+  public async fetchAndStoreSongData (all?: boolean): Promise<void> {
     const storage = this.getStorage()
-    const localSongDataVersion = await SongDB.instance.getLocalSongDataVersion()
+    let localSongDataVersion = await SongDB.instance.getLocalSongDataVersion()
+    if (all) localSongDataVersion = 0
+
     const SONG_DATA_API = `https://taiko.wiki/api/song?after=${localSongDataVersion}`
     const res = await fetch(SONG_DATA_API)
     const newSongData = (await res.json()) as SongData[]

@@ -101,7 +101,8 @@
   let disableSongDataUpdate = false
   const forceSongDataUpdate = async () => {
     try {
-      await SongDB.fetchAndStoreSongData()
+      let songDB = await SongDB.getInstance()
+      await songDB.fetchAndStoreSongData(true)
     } catch (e) {
       console.error(e)
     }
