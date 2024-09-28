@@ -1,7 +1,11 @@
 <script lang="ts">
+    import { DIFFICULTY_TO_INDEX } from '../../constants';
   import type { PlaylistsStore } from '../../lib/playlist'
+    import type { DifficultyType } from '../../types';
+    import Song from '../Song/Song.svelte';
 
   export let songNo: string
+  export let difficulty: DifficultyType = 'oni'
   export let playlists: PlaylistsStore
   export let x: number
   export let y: number
@@ -21,10 +25,27 @@
       songNoList: [songNo]
     })
   }
+
+  const wikiLink = `https://taiko.wiki/song/${songNo}`
+  const hirobaLink = `https://donderhiroba.jp/score_detail.php?song_no=${songNo}&level=${DIFFICULTY_TO_INDEX[difficulty]+1}`
 </script>
 
 <div class="context-menu" style="top: {y}px; left: {x}px">
   <div class="playlist-action">
+    <div class="item-container">
+      <a href={wikiLink} target="_blank" rel="noreferrer">
+        <button class="item">
+          <span>🔗</span>
+          <span>Open in New Tab</span>
+        </button>
+      </a>
+      <a href={hirobaLink} target="_blank" rel="noopener noreferrer">
+        <button class="item">
+          <span>🔗</span>
+          <span>Score on Donder Hiroba</span>
+        </button>
+      </a>
+    </div>
     <div class="item-container">
       {#each $playlists as item, i}
         <button class="item" on:click={async () => { await onClickItem(i) }}>
@@ -71,6 +92,10 @@
     flex-direction: column;
   }
 
+  .item-container:not(:last-child) {
+    border-bottom: 4px solid #0002;
+  }
+
   .invisible {
     visibility: hidden;
   }
@@ -84,6 +109,7 @@
     box-shadow: none;
     text-align: left;
     color: white;
+    width: 100%;
   }
 
   .item:hover {
