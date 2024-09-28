@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { DIFFICULTY_TO_INDEX } from '../../constants';
+  import { DIFFICULTY_TO_INDEX } from '../../constants'
   import type { PlaylistsStore } from '../../lib/playlist'
-    import type { DifficultyType } from '../../types';
-    import Song from '../Song/Song.svelte';
+  import type { DifficultyType } from '../../types'
 
   export let songNo: string
   export let difficulty: DifficultyType = 'oni'
   export let playlists: PlaylistsStore
   export let x: number
   export let y: number
+  export let wikiLink: string | undefined
 
   const onClickItem = async (idx: number): Promise<void> => {
     const playlist = $playlists[idx]
@@ -26,12 +26,14 @@
     })
   }
 
-  const wikiLink = `https://taiko.wiki/song/${songNo}`
-  const hirobaLink = `https://donderhiroba.jp/score_detail.php?song_no=${songNo}&level=${DIFFICULTY_TO_INDEX[difficulty]+1}`
+  wikiLink ??= `https://taiko.wiki/song/${songNo}?diff=${difficulty}`
+  const hirobaLink = `https://donderhiroba.jp/score_detail.php?song_no=${songNo}&level=${DIFFICULTY_TO_INDEX[difficulty] + 1}`
+  const isWiki = window?.location?.hostname === 'taiko.wiki'
 </script>
 
 <div class="context-menu" style="top: {y}px; left: {x}px">
   <div class="playlist-action">
+    {#if isWiki}
     <div class="item-container">
       <a href={wikiLink} target="_blank" rel="noreferrer">
         <button class="item">
@@ -46,6 +48,7 @@
         </button>
       </a>
     </div>
+    {/if}
     <div class="item-container">
       {#each $playlists as item, i}
         <button class="item" on:click={async () => { await onClickItem(i) }}>

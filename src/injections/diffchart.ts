@@ -32,11 +32,11 @@ const insertContextMenu = (playlistsStore: PlaylistsStore): () => void => {
 
     const songNo = linkElem.href.match(/\/(\d+)$/)?.[1]
     if (songNo === undefined) return
-      
+
     const titleElem = linkElem.querySelector('.title')
     if (titleElem === null) return
     const titleStyle = window.getComputedStyle(titleElem)
-    const diff: DifficultyType = titleStyle.getPropertyValue('color') == 'rgb(148, 106, 222)' ? 'oni_ura' : 'oni'
+    const diff: DifficultyType = titleStyle.getPropertyValue('color') === 'rgb(148, 106, 222)' ? 'oni_ura' : 'oni'
 
     const mouseEvent = ev as MouseEvent
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -47,7 +47,8 @@ const insertContextMenu = (playlistsStore: PlaylistsStore): () => void => {
         difficulty: diff,
         songNo,
         x: mouseEvent.pageX,
-        y: mouseEvent.pageY
+        y: mouseEvent.pageY,
+        wikiLink: linkElem.href
       }
     })
 
