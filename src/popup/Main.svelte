@@ -60,7 +60,6 @@
 </script>
 
 <main style={`width: ${WIDTH}px; height: ${HEIGHT}px`}>
-  <!-- svelte-ignore missing-declaration -->
   {#if loaded && settingsStorage?.donderInfo?.id === undefined && chrome !== undefined}
     <NotLogined/>
   {/if}

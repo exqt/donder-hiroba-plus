@@ -1,5 +1,4 @@
 import type { SongData } from '../types'
-import { waitFor } from './utils'
 
 export class SongDB {
   private static instance: SongDB
@@ -11,7 +10,7 @@ export class SongDB {
   private constructor () {
   }
 
-  private getStorage() {
+  private getStorage (): chrome.storage.LocalStorageArea {
     const storage = chrome.storage.local
     if (storage === undefined) {
       console.warn('storage is not available')
@@ -19,7 +18,7 @@ export class SongDB {
     return storage
   }
 
-  async reset(): Promise<void> {
+  async reset (): Promise<void> {
     const storage = this.getStorage()
     await storage.remove('recentCheckTime')
     await storage.remove('songData')
@@ -73,7 +72,7 @@ export class SongDB {
   public async fetchAndStoreSongData (all?: boolean): Promise<void> {
     const storage = this.getStorage()
     let localSongDataVersion = await SongDB.instance.getLocalSongDataVersion()
-    if (all) localSongDataVersion = 0
+    if (all === true) localSongDataVersion = 0
 
     const SONG_DATA_API = `https://taiko.wiki/api/song?after=${localSongDataVersion}`
     const res = await fetch(SONG_DATA_API)
@@ -96,13 +95,12 @@ export class SongDB {
 
     for (const item of newSongData) {
       if (item.courses !== undefined) {
-        // @ts-ignore
         // TODO: better way to handle this
-        item.courses.oni_ura = item.courses["ura"]
+        item.courses.oni_ura = (item.courses as any).ura
       }
     }
 
-    let newSongIdsMap = new Map<string, boolean>()
+    const newSongIdsMap = new Map<string, boolean>()
     for (const song of newSongData) {
       newSongIdsMap.set(song.songNo, true)
     }
@@ -111,14 +109,15 @@ export class SongDB {
       let { songData } = await storage.get('songData') as { songData: SongData[] }
       songData ??= []
 
-      songData = songData.filter((song) => !newSongIdsMap.get(song.songNo))
+      songData = songData.filter((song) => {
+        return newSongIdsMap.get(song.songNo) !== true
+      })
       for (const song of newSongData) {
         songData.push(song)
       }
 
       await storage.set({ songData })
-    }
-    catch (e) {
+    } catch (e) {
       throw new Error('failed to store songdata')
     }
   }
@@ -132,8 +131,8 @@ export class SongDB {
     let { recentCheckTime } = (await storage.get('recentCheckTime')) as { recentCheckTime: number }
     recentCheckTime ??= 0
 
-    let ret = recentCheckTime + CHECK_INTERVAL < now
-    if (!ret) return false;
+    const ret = recentCheckTime + CHECK_INTERVAL < now
+    if (!ret) return false
 
     await storage.set({ recentCheckTime: (new Date()).getTime() })
 

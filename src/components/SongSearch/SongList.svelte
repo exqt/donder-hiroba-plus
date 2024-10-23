@@ -23,8 +23,8 @@
       const songData = songDB.getSongData(songNo)
       if (songData === undefined) return parsedTitle
 
-      if (songData.aliasKo) return songData.aliasKo
-      if (songData.titleKo) return songData.titleKo
+      if (songData.aliasKo !== null && songData.aliasKo !== undefined) return songData.aliasKo
+      if (songData.titleKo !== null && songData.titleKo !== undefined) return songData.titleKo
       return parsedTitle
     }
 
