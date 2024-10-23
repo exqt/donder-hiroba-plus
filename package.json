@@ -14,7 +14,7 @@
     "lint": "eslint --ext .js,.ts,.svelte src"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^2.0.0-beta.21",
+    "@crxjs/vite-plugin": "^1.0.14",
     "@storybook/addon-essentials": "^7.6.5",
     "@storybook/addon-interactions": "^7.6.5",
     "@storybook/addon-links": "^7.6.5",
@@ -44,6 +44,8 @@
   },
   "dependencies": {
     "hangul-js": "^0.2.6",
+    "lzutf8": "^0.6.3",
+    "node-hiroba": "^1.7.3",
     "svelte-lazy": "^1.2.7",
     "svelte-spa-router": "^4.0.1"
   }
