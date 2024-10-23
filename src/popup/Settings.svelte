@@ -8,7 +8,7 @@
   import type { SettingsStorage } from '../lib/settings'
   import type { ScoreStorage } from '../lib/scores'
   import { SongDB } from '../lib/songDB'
-  import { openRatingPage } from '../lib/utils';
+  import { openRatingPage } from '../lib/utils'
 
   export let settingsStorage: SettingsStorage
   export let scoreStorage: ScoreStorage
@@ -102,9 +102,9 @@
   }
 
   let disableSongDataUpdate = false
-  const forceSongDataUpdate = async () => {
+  const forceSongDataUpdate = async (): Promise<void> => {
     try {
-      let songDB = await SongDB.getInstance()
+      const songDB = await SongDB.getInstance()
       await songDB.fetchAndStoreSongData(true)
     } catch (e) {
       console.error(e)

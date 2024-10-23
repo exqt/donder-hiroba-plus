@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type {CardData} from 'node-hiroba/types'
+    import type { CardData } from 'node-hiroba/types'
 
-    export let cardData: CardData;
+    export let cardData: CardData
 </script>
 
 <table>
