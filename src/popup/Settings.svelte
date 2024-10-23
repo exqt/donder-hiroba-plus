@@ -8,6 +8,7 @@
   import type { SettingsStorage } from '../lib/settings'
   import type { ScoreStorage } from '../lib/scores'
   import { SongDB } from '../lib/songDB'
+  import { openRatingPage } from '../lib/utils';
 
   export let settingsStorage: SettingsStorage
   export let scoreStorage: ScoreStorage
@@ -161,15 +162,11 @@
     {/if}
   </div>
 
+  <!---->
+  <button on:click={openRatingPage}>taiko.wiki Rating Upload</button>
+
   <!-- Reset -->
   <button class="warning" on:click={reset}>{i18n.t('Reset')}</button>
-
-  <!---->
-  <button on:click={() => {
-    const popup = window.open()
-    if (popup === null) return
-    popup.window.location.href = `chrome-extension://${chrome.runtime.id}/page.html`
-  }}></button>
 
   <!-- ForceSongDataUpdate -->
   <button class="warning" disabled={disableSongDataUpdate} on:click={forceSongDataUpdate}>{'Force SongData Update'}</button>
