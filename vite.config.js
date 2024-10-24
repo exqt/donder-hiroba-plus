@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { crx } from '@crxjs/vite-plugin'
 import manifest from './manifest.json'
+import { resolve } from 'path';
+import { existsSync, unlinkSync, renameSync } from 'fs';
 
 const debug = process.env.NODE_ENV !== 'production'
 
@@ -30,5 +32,21 @@ export default defineConfig({
   ],
   build: {
     assetsInlineLimit: 0,
+    rollupOptions: {
+      input: {
+        rating: resolve(import.meta.dirname, 'public', 'rating.html')
+      },
+      plugins: [{
+        name: 'rename rating.html',
+        closeBundle() {
+          const path1 = resolve(import.meta.dirname, 'dist', 'rating.html');
+          const path2 = resolve(import.meta.dirname, 'dist', 'public', 'rating.html')
+          if (existsSync(path1) && existsSync(path2)) {
+            unlinkSync(path1);
+            renameSync(path2, path1);
+          }
+        }
+      }]
+    }
   }
 })
