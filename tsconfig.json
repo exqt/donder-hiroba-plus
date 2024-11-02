@@ -15,7 +15,8 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
-    "types": ["chrome"]
+    "types": ["chrome"],
+    "skipLibCheck": true,
   },
   "include": [
     "src/**/*.ts",
