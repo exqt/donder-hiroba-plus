@@ -57,7 +57,7 @@
     }
 
     // ready
-    let sendType: 'clear' | 'score' | 'recent' = 'clear'
+    let sendType: 'clear' | 'score' | 'all' | 'recent' = 'clear'
 
     // 새로운 유틸리티 함수들
     async function checkWikiLogin (): Promise<boolean> {
@@ -128,7 +128,7 @@
     }
 
     // 리팩토링된 send 함수
-    async function send (cardData: CardData, sendType: 'clear' | 'score' | 'recent'): Promise<void> {
+    async function send (cardData: CardData, sendType: 'clear' | 'score' | 'all' | 'recent'): Promise<void> {
       if (!confirm(`Send your donderhiroba datas to ${wikiOrigin}. It will be deleted together when you delete your account. Do you agree?`)) {
         alert('Canceled.')
         message = ''
@@ -173,6 +173,57 @@
               uploadMessage = `Fetch score data... (${complete}/${counts})`
             })
           )
+
+          const scoreDataMap: Record<string, ScoreData> = {}
+          for (const recentScore of recentScoreData) {
+            const songNo = songNameToSongNo.get(recentScore.songName)
+            if (songNo === undefined) continue
+            const score = recentScore.scoreData
+            if (scoreDataMap[songNo] === undefined) {
+              scoreDataMap[songNo] = {
+                title: recentScore.songName,
+                songNo,
+                difficulty: {}
+              }
+            }
+            scoreDataMap[songNo].difficulty[recentScore.difficulty] = score
+          }
+
+          console.log(nRecentPageToFetch)
+          console.log(recentScoreData)
+          console.log(songNameToSongNo)
+          console.log(scoreDataMap)
+
+          await uploadToWiki(cardData, clearData, scoreDataMap)
+
+          message = 'Upload completed'
+          scene = 'ready'
+        } else if (sendType === 'all') {
+          uploadMessage = 'Fetching recent score data...'
+          const songNameToSongNo = new Map<string, string>()
+          for (const song of clearData) {
+            songNameToSongNo.set(song.title, song.songNo)
+          }
+
+          complete = 0
+          uploadMessage = 'Fetch score data... (0/?)'
+
+          const recentScoreData: RecentScoreData[] = []
+          const firstPage = await getRecentScoreData(1)
+          recentScoreData.push(...firstPage)
+          complete++
+          uploadMessage = `Fetch score data... (${complete}/?)`
+
+          // parse until fetched page is same as first page
+          while (true) {
+            const nextPage = await getRecentScoreData(complete + 1)
+            if (nextPage[0].songName === firstPage[0].songName &&
+              nextPage[0].difficulty === firstPage[0].difficulty
+            ) break
+            recentScoreData.push(...nextPage)
+            complete++
+            uploadMessage = `Fetch score data... (${complete}/?)`
+          }
 
           const scoreDataMap: Record<string, ScoreData> = {}
           for (const recentScore of recentScoreData) {
@@ -253,15 +304,19 @@
             <Profile {cardData} />
             <label>
               <input type="radio" bind:group={sendType} value="clear" />
-              Upload only clear data.
+              only clear data
             </label>
             <label>
               <input type="radio" bind:group={sendType} value="score" />
-              Upload both clear data and score data. (all)
+              clear data + score data
+            </label>
+            <label>
+              <input type="radio" bind:group={sendType} value="all" />
+              clear data + score data (fast?)
             </label>
             <label style="text-align: center;">
               <input type="radio" bind:group={sendType} value="recent" />
-              Upload both clear data and score data. <br> (recent
+              clear data + score data <br> (only recent
                 <select bind:value={nRecentPageToFetch}>
                   <option value={5}>25</option>
                   <option value={10}>50</option>
@@ -273,6 +328,8 @@
                   <option value={100}>500</option>
                 </select>
                 plays)
+                <br>
+                <span style="font-size: 0.8rem;">use this if you recently uploaded scores</span>
             </label>
             <button style="margin-top: 20px; font-size: 1.5rem;"
                 on:click={async () => {

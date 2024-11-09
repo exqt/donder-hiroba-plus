@@ -1,6 +1,7 @@
 import { load } from 'cheerio'
 import * as cheerio from 'cheerio'
 import type { Difficulty, DifficultyScoreData, Crown, Badge } from './ratingTypes'
+import { waitFor } from '../../lib/utils'
 
 const CROWN_MAP: Record<string, Crown> = {
   '01': 'played',
@@ -95,8 +96,17 @@ function parseScoreDataFromHtml (html: string): RecentScoreData[] {
 }
 
 export const getRecentScoreData = async (page: number): Promise<RecentScoreData[]> => {
-  const url = `https://donderhiroba.jp/history_recent_score.php?page=${page}`
-  const res = await fetch(url)
-  const html = await res.text()
-  return parseScoreDataFromHtml(html)
+  let waitTime = 3000
+  while (true) {
+    try {
+      const url = `https://donderhiroba.jp/history_recent_score.php?page=${page}`
+      const res = await fetch(url)
+      const html = await res.text()
+      return parseScoreDataFromHtml(html)
+    } catch (e) {
+      console.error(e)
+      waitTime *= 2
+      await waitFor(waitTime)
+    }
+  }
 }
