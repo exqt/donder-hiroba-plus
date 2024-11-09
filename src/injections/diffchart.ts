@@ -1,20 +1,6 @@
 import { PlaylistsStore } from '../lib/playlist'
-import { ScoreStorage } from '../lib/scores'
 import PlaylistContextMenu from '../components/Common/PlaylistContextMenu.svelte'
 import type { DifficultyType } from '../types'
-
-const INTERVAL_TIME = 500
-
-const insertData = (scoreDataInput: HTMLInputElement, storage: ScoreStorage): boolean => {
-  if (scoreDataInput.value !== '') return false
-
-  const scores = storage.getAllScores()
-  const str = JSON.stringify(scores)
-  scoreDataInput.value = str
-  scoreDataInput.dispatchEvent(new Event('change'))
-
-  return true
-}
 
 const insertContextMenu = (playlistsStore: PlaylistsStore): () => void => {
   let comp: PlaylistContextMenu
@@ -73,19 +59,5 @@ const insertContextMenu = (playlistsStore: PlaylistsStore): () => void => {
 
 export default async (): Promise<void> => {
   const playlistsStore = await PlaylistsStore.getInstance()
-  const storage = await ScoreStorage.getInstance()
-  let contextMenuRemover: (() => void) | undefined
-
-  setInterval(() => {
-    const path = window.location.href.split('/').slice(3).join('/')
-    if (!path.startsWith('diffchart')) return
-
-    const scoreDataInput = document.querySelector('#scoredata_input')
-    if (scoreDataInput === null) return
-
-    if (insertData(scoreDataInput as HTMLInputElement, storage)) {
-      contextMenuRemover?.()
-      contextMenuRemover = insertContextMenu(playlistsStore)
-    }
-  }, INTERVAL_TIME)
+  insertContextMenu(playlistsStore)
 }

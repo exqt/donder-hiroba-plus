@@ -150,7 +150,7 @@
   <!-- Parse Score -->
   <div class="parse-score-wrapper">
     <button disabled={disableUpdate} on:click={updateSongScoreAll}>
-      {i18n.t('Update Song Scores')}
+      Update Donforce
     </button>
     {#if updateStatus === 'updating'}
       <p>Updating...</p>
