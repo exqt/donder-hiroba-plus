@@ -25,6 +25,7 @@
     let lastUpdated: string | null = null
     let scoreDataSorted: Array<{ songName: string, difficulty: string, score: DifficultyScoreData, songNo: string }> = []
     let totalPlayCount: string = '0 / 0 / 0 / 0'
+    let openPlayCount: boolean = false
 
     onMount(async () => {
       await storage.loadFromChromeStorage()
@@ -358,30 +359,31 @@
               }}>
                 Clear Cache
               </button>
-              <span>Total Play Count: {totalPlayCount}</span>
-              <details>
-                <summary>List of Scores</summary>
+
+              <button on:click={() => { openPlayCount = !openPlayCount }}>Play Count (click to expand)</button>
+              {#if openPlayCount}
+                <span>Total Play Count: {totalPlayCount}</span>
                 <table class="play-count-table">
                   <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th style="width: 60px">Diff</th>
-                    <th style="width: 100px">Count</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each scoreDataSorted as score}
                     <tr>
-                      <td style="max-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        ({score.songNo}) {score.songName}
-                      </td>
-                      <td>{score.difficulty}</td>
-                      <td>{score.score.count.play} / {score.score.count.clear} / {score.score.count.fullcombo} / {score.score.count.donderfullcombo}</td>
+                      <th>Name</th>
+                      <th style="width: 60px">Diff</th>
+                      <th style="width: 100px">Count</th>
                     </tr>
-                  {/each}
+                  </thead>
+                  <tbody>
+                    {#each scoreDataSorted as score}
+                      <tr>
+                        <td style="max-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                          ({score.songNo}) {score.songName}
+                        </td>
+                        <td>{score.difficulty}</td>
+                        <td>{score.score.count.play} / {score.score.count.clear} / {score.score.count.fullcombo} / {score.score.count.donderfullcombo}</td>
+                      </tr>
+                    {/each}
                   </tbody>
                 </table>
-              </details>
+              {/if}
             {/if}
         {:else if scene === 'upload'}
             {uploadMessage}
