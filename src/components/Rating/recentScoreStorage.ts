@@ -9,6 +9,12 @@ class RecentScoreStorage {
     this.lastUpdated = null
   }
 
+  async clear (): Promise<void> {
+    this.scoreDataMap = {}
+    this.lastUpdated = 'null'
+    await this.saveToStorage()
+  }
+
   public async loadFromChromeStorage (): Promise<void> {
     const result = await chrome.storage.local.get(['recentScores', 'lastUpdated'])
     if (result.recentScores !== undefined) {
@@ -39,11 +45,15 @@ class RecentScoreStorage {
 
   async mergeMap (scoreDataMap: Record<string, ScoreData>): Promise<void> {
     for (const [songNo, scoreData] of Object.entries(scoreDataMap)) {
+      delete scoreData.difficulty.hard
+      delete scoreData.difficulty.normal
+      delete scoreData.difficulty.easy
       await this.mergeSingle(songNo, scoreData)
     }
+    await this.saveToStorage()
   }
 
-  async mergeSingle (songNo: string, scoreData: ScoreData): Promise<void> {
+  private async mergeSingle (songNo: string, scoreData: ScoreData): Promise<void> {
     if (this.scoreDataMap[songNo] === undefined) {
       this.scoreDataMap[songNo] = scoreData
     } else {
@@ -55,7 +65,6 @@ class RecentScoreStorage {
         }
       }
     }
-    await this.saveToStorage()
   }
 
   getMap (): Record<string, ScoreData> {

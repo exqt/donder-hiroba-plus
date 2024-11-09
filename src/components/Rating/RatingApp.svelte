@@ -23,7 +23,7 @@
     const storage = new RecentScoreStorage()
     let storageLoaded = false
     let lastUpdated: string | null = null
-    let scoreDataSorted: Array<{ songName: string, difficulty: string, score: DifficultyScoreData }> = []
+    let scoreDataSorted: Array<{ songName: string, difficulty: string, score: DifficultyScoreData, songNo: string }> = []
     let totalPlayCount: string = '0 / 0 / 0 / 0'
 
     onMount(async () => {
@@ -39,12 +39,14 @@
       let totalClear = 0
       let totalFullcombo = 0
       let totalDonderfullcombo = 0
-      for (const [, scoreData] of Object.entries(storage.getMap())) {
+      for (const [songNo, scoreData] of Object.entries(storage.getMap())) {
         for (const [difficulty, score] of Object.entries(scoreData.difficulty)) {
+          if (difficulty !== 'oni' && difficulty !== 'ura') continue
           scoreDataSorted.push({
             songName: scoreData.title,
             difficulty,
-            score
+            score,
+            songNo
           })
           totalPlay += score.count.play
           totalClear += score.count.clear
@@ -177,7 +179,10 @@
           const scoreDataMap: Record<string, ScoreData> = {}
           for (const recentScore of recentScoreData) {
             const songNo = songNameToSongNo.get(recentScore.songName)
-            if (songNo === undefined) continue
+            if (songNo === undefined) {
+              console.warn(`songNo not found for ${recentScore.songName}`)
+              continue
+            }
             const score = recentScore.scoreData
             if (scoreDataMap[songNo] === undefined) {
               scoreDataMap[songNo] = {
@@ -228,7 +233,10 @@
           const scoreDataMap: Record<string, ScoreData> = {}
           for (const recentScore of recentScoreData) {
             const songNo = songNameToSongNo.get(recentScore.songName)
-            if (songNo === undefined) continue
+            if (songNo === undefined) {
+              console.warn(`songNo not found for ${recentScore.songName}`)
+              continue
+            }
             const score = recentScore.scoreData
             if (scoreDataMap[songNo] === undefined) {
               scoreDataMap[songNo] = {
@@ -339,9 +347,17 @@
                 Upload
             </button>
             {#if storageLoaded}
+
               <div style="margin-top: 50px;">
                 <span>Last Score Updated: <br> {lastUpdated}</span>
               </div>
+              <button on:click={async () => {
+                await storage.clear()
+                // reload
+                location.reload()
+              }}>
+                Clear Cache
+              </button>
               <span>Total Play Count: {totalPlayCount}</span>
               <details>
                 <summary>List of Scores</summary>
@@ -357,7 +373,7 @@
                   {#each scoreDataSorted as score}
                     <tr>
                       <td style="max-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {score.songName}
+                        ({score.songNo}) {score.songName}
                       </td>
                       <td>{score.difficulty}</td>
                       <td>{score.score.count.play} / {score.score.count.clear} / {score.score.count.fullcombo} / {score.score.count.donderfullcombo}</td>
