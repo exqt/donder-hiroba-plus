@@ -37,7 +37,7 @@ const runHiroba = async (): Promise<void> => {
 }
 
 const runTaikoWiki = async (): Promise<void> => {
-  void diffchart()
+  // void diffchart()
 }
 
 if (window.location.href.includes('taiko.wiki')) {
