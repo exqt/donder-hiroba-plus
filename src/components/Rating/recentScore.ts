@@ -1,6 +1,6 @@
 import { load } from 'cheerio'
 import * as cheerio from 'cheerio'
-import type { Difficulty, ScoreData, ScoreResponseData, DifficultyScoreData, Crown, Badge } from './ratingTypes'
+import type { Difficulty, DifficultyScoreData, Crown, Badge } from './ratingTypes'
 
 const CROWN_MAP: Record<string, Crown> = {
   '01': 'played',
@@ -9,63 +9,64 @@ const CROWN_MAP: Record<string, Crown> = {
   '04': 'donderfull'
 }
 
-const getCrown = (src: string | undefined) => {
-  return src ? CROWN_MAP[src] ?? null : null
+const getCrown = (src: string | undefined): Crown | null => {
+  return src !== undefined ? CROWN_MAP[src] ?? null : null
 }
 
 const BADGE_MAP: Record<string, Badge> = {
-  '8': 'rainbow',
-  '7': 'purple',
-  '6': 'pink',
-  '5': 'gold',
-  '4': 'silver',
-  '3': 'bronze',
-  '2': 'white'
+  8: 'rainbow',
+  7: 'purple',
+  6: 'pink',
+  5: 'gold',
+  4: 'silver',
+  3: 'bronze',
+  2: 'white'
 }
 
-const getBadge = (element: any) => {
-  if (!element?.length) return null
+const getBadge = (element: any): Badge | null => {
+  if (element === undefined || element == null || element.length === 0) return null
   const badgeId = element.attr('src')?.replace('image/sp/640/best_score_rank_', '').replace('_640.png', '')
   return BADGE_MAP[badgeId] ?? null
 }
 
 const diffCodeToDifficulty = (code: string): Difficulty => {
-	if (code === '5') return 'ura'
-	if (code === '4') return 'oni'
-	if (code === '3') return 'hard'
-	if (code === '2') return 'normal'
-	return 'easy'
+  if (code === '5') return 'ura'
+  if (code === '4') return 'oni'
+  if (code === '3') return 'hard'
+  if (code === '2') return 'normal'
+  return 'easy'
 }
 
-export type RecentScoreData = {
+export interface RecentScoreData {
   songName: string
   difficulty: Difficulty
-	scoreData: DifficultyScoreData
+  scoreData: DifficultyScoreData
 }
 
-function parseDifficultyScoreData(body: any): RecentScoreData | null {
+function parseDifficultyScoreData (body: any): RecentScoreData | null {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const $ = load(body)
 
-	const songName = $('.songNameTitleScore h2').text().trim()
+  const songName = $('.songNameTitleScore h2').text().trim()
 
   const diffCode = $('.levelIcon').first().attr('src')?.match(/icon_course02_(\d+)_640\.png/)?.[1]
   const difficulty = diffCodeToDifficulty(diffCode ?? '1')
-	const crownElements  = $('.crownIcon')
+  const crownElements = $('.crownIcon')
   const crownCode = crownElements.first().attr('src')?.match(/crown_(\d+)_640\.png/)?.[1]
   const crown = getCrown(crownCode)
   const badge = getBadge(crownElements.eq(1))
-  
+
   // 점수 파싱
   const score = parseInt($('.scoreScore').text().replace('点', ''), 10)
 
   // 상세 데이터 파싱
   const scoreDataElements = $('.scoreDataArea .playDataScore')
-  
+
   const scoreData: DifficultyScoreData = {
     crown,
     badge,
     score,
-		ranking: 0,
+    ranking: 0,
     good: parseInt(scoreDataElements.eq(0).text(), 10),
     maxCombo: parseInt(scoreDataElements.eq(1).text(), 10),
     ok: parseInt(scoreDataElements.eq(2).text(), 10),
@@ -86,10 +87,10 @@ function parseDifficultyScoreData(body: any): RecentScoreData | null {
   }
 }
 
-function parseScoreDataFromHtml(html: string): RecentScoreData[] {
+function parseScoreDataFromHtml (html: string): RecentScoreData[] {
   const $ = cheerio.load(html)
   const scoreElements = $('.scoreUser')
-  
+
   return scoreElements.map((_, element) => parseDifficultyScoreData(element)).get()
 }
 

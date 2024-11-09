@@ -5,9 +5,9 @@
     import lzutf8 from 'lzutf8'
     import type { ClearData, DifficultyScoreData } from './ratingTypes'
     import { waitFor } from '../../lib/utils'
-    import { onMount } from 'svelte';
-    import { getRecentScoreData, type RecentScoreData } from './recentScore';
-    import RecentScoreStorage from './recentScoreStorage';
+    import { onMount } from 'svelte'
+    import { getRecentScoreData, type RecentScoreData } from './recentScore'
+    import RecentScoreStorage from './recentScoreStorage'
 
     const wikiOrigin = 'https://taiko.wiki'
 
@@ -23,7 +23,7 @@
     const storage = new RecentScoreStorage()
     let storageLoaded = false
     let lastUpdated: string | null = null
-    let scoreDataSorted: {songName: string, difficulty: string, score: DifficultyScoreData}[] = []
+    let scoreDataSorted: Array<{ songName: string, difficulty: string, score: DifficultyScoreData }> = []
     let totalPlayCount: string = '0 / 0 / 0 / 0'
 
     onMount(async () => {
@@ -33,13 +33,13 @@
       updateScoreDataSorted()
     })
 
-    const updateScoreDataSorted = () => {
-      scoreDataSorted = [] 
+    const updateScoreDataSorted = (): void => {
+      scoreDataSorted = []
       let totalPlay = 0
       let totalClear = 0
       let totalFullcombo = 0
       let totalDonderfullcombo = 0
-      for (const [songNo, scoreData] of Object.entries(storage.getMap())) {
+      for (const [, scoreData] of Object.entries(storage.getMap())) {
         for (const [difficulty, score] of Object.entries(scoreData.difficulty)) {
           scoreDataSorted.push({
             songName: scoreData.title,
@@ -55,7 +55,6 @@
       scoreDataSorted.sort((a, b) => b.score.count.play - a.score.count.play)
       totalPlayCount = `${totalPlay} / ${totalClear} / ${totalFullcombo} / ${totalDonderfullcombo}`
     }
-
 
     // ready
     let sendType: 'clear' | 'score' | 'recent' = 'clear'
@@ -105,7 +104,6 @@
     }
 
     async function uploadToWiki (donderData: CardData, clearData: ClearData[], scoreDataMap: Record<string, ScoreData>): Promise<void> {
-
       const data = JSON.stringify({
         donderData,
         clearData,
@@ -126,7 +124,7 @@
       })
 
       await storage.mergeMap(scoreDataMap)
-      updateScoreDataSorted() 
+      updateScoreDataSorted()
     }
 
     // 리팩토링된 send 함수
@@ -151,12 +149,11 @@
         uploadMessage = 'Fetching clear data...'
 
         await hiroba.updateScore(null)
-        let clearData = await hiroba.getClearData(null)
-        
+        const clearData = await hiroba.getClearData(null)
+
         if (sendType === 'clear') {
           uploadMessage = 'Uploading clear data...'
           await uploadToWiki(cardData, clearData, {})
-
         } else if (sendType === 'recent') {
           uploadMessage = 'Fetching recent score data...'
           const songNameToSongNo = new Map<string, string>()
@@ -345,7 +342,7 @@
       table-layout: fixed;
     }
 
-    .play-count-table th, 
+    .play-count-table th,
     .play-count-table td {
       border: 1px solid black;
       padding: 5px;
