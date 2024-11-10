@@ -2,7 +2,7 @@ import mypage_top from './injections/mypage_top'
 import score_list from './injections/score_list'
 import index from './injections/index'
 import favorite_song_select from './injections/favorite_song_select'
-import diffchart from './injections/diffchart'
+// import diffchart from './injections/diffchart'
 import score_detail from './injections/score_detail'
 import select_song from './injections/select_song'
 import i18n from './injections/i18n'
@@ -37,7 +37,7 @@ const runHiroba = async (): Promise<void> => {
 }
 
 const runTaikoWiki = async (): Promise<void> => {
-  void diffchart()
+  // void diffchart()
 }
 
 if (window.location.href.includes('taiko.wiki')) {

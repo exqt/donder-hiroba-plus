@@ -1,7 +1,7 @@
 {
   "name": "donder-hiroba-plus",
   "private": true,
-  "version": "0.2.8.1",
+  "version": "0.2.8.2",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -43,6 +43,7 @@
     "vite": "^5.4.10"
   },
   "dependencies": {
+    "cheerio": "^1.0.0",
     "hangul-js": "^0.2.6",
     "lzutf8": "^0.6.3",
     "node-hiroba": "^1.7.3",
