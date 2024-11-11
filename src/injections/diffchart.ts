@@ -16,7 +16,7 @@ const insertContextMenu = (playlistsStore: PlaylistsStore): () => void => {
     const linkElem = target.closest('a')
     if (linkElem === null) return
 
-    const songNo = linkElem.href.match(/\/(\d+)$/)?.[1]
+    const songNo = linkElem.href.match(/\/(\d+)/)?.[1]
     if (songNo === undefined) return
 
     const titleElem = linkElem.querySelector('.title')
