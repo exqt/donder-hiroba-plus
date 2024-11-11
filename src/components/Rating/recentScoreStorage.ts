@@ -71,7 +71,14 @@ class RecentScoreStorage {
     return this.scoreDataMap
   }
 
+  getCount (): number {
+    return Object.keys(this.scoreDataMap).length
+  }
+
   getLastUpdated (): string | null {
+    if (Object.keys(this.scoreDataMap).length === 0) {
+      return null
+    }
     return this.lastUpdated
   }
 }

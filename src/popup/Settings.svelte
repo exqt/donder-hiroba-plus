@@ -163,7 +163,11 @@
   </div>
 
   <!---->
-  <button on:click={openRatingPage}>taiko.wiki Rating Upload</button>
+  <button on:click={openRatingPage}>
+    taiko.wiki Rating Upload
+    <br>
+    <span style="font-size: 0.8rem;">서열표 색칠, 레이팅 업로드</span>
+  </button>
 
   <!-- Reset -->
   <button class="warning" on:click={reset}>{i18n.t('Reset')}</button>

@@ -26,12 +26,14 @@
     let scoreDataSorted: Array<{ songName: string, difficulty: string, score: DifficultyScoreData, songNo: string }> = []
     let totalPlayCount: string = '0 / 0 / 0 / 0'
     let openPlayCount: boolean = false
+    let disabledRecent: boolean = true
 
     onMount(async () => {
       await storage.loadFromChromeStorage()
       storageLoaded = true
       lastUpdated = storage.getLastUpdated()
       updateScoreDataSorted()
+      disabledRecent = storage.getCount() === 0
     })
 
     const updateScoreDataSorted = (): void => {
@@ -68,11 +70,11 @@
       return wikiUser.logined === true
     }
 
+    let waitTime = 3000
     async function fetchScoreForSong (songNo: string, clearData: ClearData): Promise<ScoreData | null> {
       const response: { songNo: string, body: { oni?: string, ura?: string } } =
         { songNo, body: {} }
 
-      let waitTime = 3000
       while (true) {
         try {
           if (clearData.difficulty.oni === undefined) break
@@ -107,10 +109,12 @@
     }
 
     async function uploadToWiki (donderData: CardData, clearData: ClearData[], scoreDataMap: Record<string, ScoreData>): Promise<void> {
+      await storage.mergeMap(scoreDataMap)
+
       const data = JSON.stringify({
         donderData,
         clearData,
-        scoreData: scoreDataMap
+        scoreData: storage.getMap()
       })
 
       const compressedBody = lzutf8.compress(data, {
@@ -126,7 +130,6 @@
         }
       })
 
-      await storage.mergeMap(scoreDataMap)
       updateScoreDataSorted()
     }
 
@@ -154,15 +157,21 @@
         await hiroba.updateScore(null)
         const clearData = await hiroba.getClearData(null)
 
+        const songNameToSongNos = new Map<string, string[]>()
+        for (const song of clearData) {
+          if (songNameToSongNos.has(song.title)) {
+            songNameToSongNos.get(song.title)?.push(song.songNo)
+            console.log(song.title, songNameToSongNos.get(song.title))
+          } else {
+            songNameToSongNos.set(song.title, [song.songNo])
+          }
+        }
+
         if (sendType === 'clear') {
           uploadMessage = 'Uploading clear data...'
           await uploadToWiki(cardData, clearData, {})
         } else if (sendType === 'recent') {
           uploadMessage = 'Fetching recent score data...'
-          const songNameToSongNo = new Map<string, string>()
-          for (const song of clearData) {
-            songNameToSongNo.set(song.title, song.songNo)
-          }
 
           counts = nRecentPageToFetch
           complete = 0
@@ -179,11 +188,13 @@
 
           const scoreDataMap: Record<string, ScoreData> = {}
           for (const recentScore of recentScoreData) {
-            const songNo = songNameToSongNo.get(recentScore.songName)
-            if (songNo === undefined) {
-              console.warn(`songNo not found for ${recentScore.songName}`)
+            const songNos = songNameToSongNos.get(recentScore.songName)
+            if (songNos === undefined || songNos.length > 1) {
+              console.warn(`multiple or undefined songNos found for ${recentScore.songName}`)
               continue
             }
+            const songNo = songNos[0]
+
             const score = recentScore.scoreData
             if (scoreDataMap[songNo] === undefined) {
               scoreDataMap[songNo] = {
@@ -195,10 +206,18 @@
             scoreDataMap[songNo].difficulty[recentScore.difficulty] = score
           }
 
-          console.log(nRecentPageToFetch)
-          console.log(recentScoreData)
-          console.log(songNameToSongNo)
-          console.log(scoreDataMap)
+          for (const songNos of songNameToSongNos.values()) {
+            if (songNos !== undefined && songNos.length > 1) {
+              for (const songNo of songNos) {
+                const score = await fetchScoreForSong(
+                  songNo, clearData.find(song => song.songNo === songNo)
+                )
+                if (score !== null) {
+                  scoreDataMap[songNo] = score
+                }
+              }
+            }
+          }
 
           await uploadToWiki(cardData, clearData, scoreDataMap)
 
@@ -206,10 +225,6 @@
           scene = 'ready'
         } else if (sendType === 'all') {
           uploadMessage = 'Fetching recent score data...'
-          const songNameToSongNo = new Map<string, string>()
-          for (const song of clearData) {
-            songNameToSongNo.set(song.title, song.songNo)
-          }
 
           complete = 0
           uploadMessage = 'Fetch score data... (0/?)'
@@ -233,11 +248,13 @@
 
           const scoreDataMap: Record<string, ScoreData> = {}
           for (const recentScore of recentScoreData) {
-            const songNo = songNameToSongNo.get(recentScore.songName)
-            if (songNo === undefined) {
-              console.warn(`songNo not found for ${recentScore.songName}`)
+            const songNos = songNameToSongNos.get(recentScore.songName)
+            if (songNos === undefined || songNos.length > 1) {
+              console.warn(`multiple or undefined songNos found for ${recentScore.songName}`)
               continue
             }
+            const songNo = songNos[0]
+
             const score = recentScore.scoreData
             if (scoreDataMap[songNo] === undefined) {
               scoreDataMap[songNo] = {
@@ -249,10 +266,16 @@
             scoreDataMap[songNo].difficulty[recentScore.difficulty] = score
           }
 
-          console.log(nRecentPageToFetch)
-          console.log(recentScoreData)
-          console.log(songNameToSongNo)
-          console.log(scoreDataMap)
+          for (const songNos of songNameToSongNos.values()) {
+            if (songNos !== undefined && songNos.length > 1) {
+              for (const songNo of songNos) {
+                const score = await fetchScoreForSong(songNo, clearData.find(song => song.songNo === songNo))
+                if (score !== null) {
+                  scoreDataMap[songNo] = score
+                }
+              }
+            }
+          }
 
           await uploadToWiki(cardData, clearData, scoreDataMap)
 
@@ -287,8 +310,6 @@
             }
           }
 
-          console.log(scoreDataMap, clearData)
-
           await uploadToWiki(cardData, clearData, scoreDataMap)
         }
 
@@ -313,32 +334,36 @@
             <Profile {cardData} />
             <label>
               <input type="radio" bind:group={sendType} value="clear" />
-              only clear data
+              only clear data (서열표 색칠만)
             </label>
+            <!--
             <label>
               <input type="radio" bind:group={sendType} value="score" />
-              clear data + score data
+              clear data + score data (old method, slow)
             </label>
+            -->
             <label>
               <input type="radio" bind:group={sendType} value="all" />
-              clear data + score data (fast?)
+              clear data + score data (레이팅)
             </label>
-            <label style="text-align: center;">
+            <label class:disabled={disabledRecent} class="recent-score-label" style="text-align: center; background-color: #f0f0f0;">
               <input type="radio" bind:group={sendType} value="recent" />
               clear data + score data <br> (only recent
                 <select bind:value={nRecentPageToFetch}>
-                  <option value={5}>25</option>
-                  <option value={10}>50</option>
-                  <option value={20}>100</option>
-                  <option value={30}>150</option>
-                  <option value={40}>200</option>
-                  <option value={60}>300</option>
-                  <option value={80}>400</option>
-                  <option value={100}>500</option>
+                  <option value={5}>25 (1 hour)</option>
+                  <option value={10}>50 (2 hours)</option>
+                  <option value={20}>100 (4 hours)</option>
+                  <option value={30}>150 (6 hours)</option>
+                  <option value={40}>200 (8 hours)</option>
+                  <option value={60}>300 (12 hours)</option>
+                  <option value={80}>400 (16 hours)</option>
+                  <option value={100}>500 (20 hours)</option>
                 </select>
                 plays)
                 <br>
-                <span style="font-size: 0.8rem;">use this if you recently uploaded scores</span>
+                <span style="font-size: 0.8rem;">much faster, use this if you recently uploaded score data</span>
+                <br>
+                <span style="font-size: 0.8rem;">최근에 레이팅을 업로드한 경우 이걸 선택하세요</span>
             </label>
             <button style="margin-top: 20px; font-size: 1.5rem;"
                 on:click={async () => {
@@ -407,6 +432,11 @@
     .error_display {
         color: red;
         font-weight: bold;
+    }
+
+    .recent-score-label.disabled {
+      pointer-events: none;
+      opacity: 0.5;
     }
 
     .play-count-table {
