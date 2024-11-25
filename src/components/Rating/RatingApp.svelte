@@ -108,13 +108,15 @@
       return parsed ?? null
     }
 
-    async function uploadToWiki (donderData: CardData, clearData: ClearData[], scoreDataMap: Record<string, ScoreData>): Promise<void> {
-      await storage.mergeMap(scoreDataMap)
+    async function uploadToWiki (donderData: CardData, clearData: ClearData[], scoreDataMap?: Record<string, ScoreData>): Promise<void> {
+      if (scoreDataMap !== undefined) {
+        await storage.mergeMap(scoreDataMap)
+      }
 
       const data = JSON.stringify({
         donderData,
         clearData,
-        scoreData: storage.getMap()
+        scoreData: scoreDataMap === undefined ? undefined : storage.getMap()
       })
 
       const compressedBody = lzutf8.compress(data, {
@@ -169,7 +171,7 @@
 
         if (sendType === 'clear') {
           uploadMessage = 'Uploading clear data...'
-          await uploadToWiki(cardData, clearData, {})
+          await uploadToWiki(cardData, clearData)
         } else if (sendType === 'recent') {
           uploadMessage = 'Fetching recent score data...'
 
@@ -209,11 +211,14 @@
           for (const songNos of songNameToSongNos.values()) {
             if (songNos !== undefined && songNos.length > 1) {
               for (const songNo of songNos) {
-                const score = await fetchScoreForSong(
-                  songNo, clearData.find(song => song.songNo === songNo)
-                )
-                if (score !== null) {
-                  scoreDataMap[songNo] = score
+                const songClearData = clearData.find(song => song.songNo === songNo)
+                if (songClearData !== undefined) {
+                  const score = await fetchScoreForSong(
+                    songNo, songClearData
+                  )
+                  if (score !== null) {
+                    scoreDataMap[songNo] = score
+                  }
                 }
               }
             }
@@ -269,9 +274,12 @@
           for (const songNos of songNameToSongNos.values()) {
             if (songNos !== undefined && songNos.length > 1) {
               for (const songNo of songNos) {
-                const score = await fetchScoreForSong(songNo, clearData.find(song => song.songNo === songNo))
-                if (score !== null) {
-                  scoreDataMap[songNo] = score
+                const songClearData = clearData.find(song => song.songNo === songNo)
+                if (songClearData !== undefined) {
+                  const score = await fetchScoreForSong(songNo, songClearData)
+                  if (score !== null) {
+                    scoreDataMap[songNo] = score
+                  }
                 }
               }
             }
