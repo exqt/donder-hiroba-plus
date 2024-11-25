@@ -109,12 +109,9 @@
     }
 
     async function uploadToWiki (donderData: CardData, clearData: ClearData[], scoreDataMap?: Record<string, ScoreData>): Promise<void> {
-      if (scoreDataMap !== undefined) {
-        await storage.mergeMap(scoreDataMap)
-      }
-
       let data
       if (scoreDataMap !== undefined) {
+        await storage.mergeMap(scoreDataMap)
         data = JSON.stringify({
           donderData,
           clearData,
