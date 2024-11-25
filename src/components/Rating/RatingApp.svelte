@@ -113,11 +113,19 @@
         await storage.mergeMap(scoreDataMap)
       }
 
-      const data = JSON.stringify({
-        donderData,
-        clearData,
-        scoreData: scoreDataMap === undefined ? undefined : storage.getMap()
-      })
+      let data
+      if (scoreDataMap !== undefined) {
+        data = JSON.stringify({
+          donderData,
+          clearData,
+          scoreData: storage.getMap()
+        })
+      } else {
+        data = JSON.stringify({
+          donderData,
+          clearData
+        })
+      }
 
       const compressedBody = lzutf8.compress(data, {
         outputEncoding: 'ByteArray'
