@@ -6,7 +6,6 @@
   import DonforceList from './DonforceList.svelte'
   import DonforceTable from './DonforceTable.svelte'
   import Settings from './Settings.svelte'
-  import NotLogined from './NotLogined.svelte'
 
   import { icons } from '../assets'
   import { ScoreStorage } from '../lib/scores'
@@ -60,10 +59,6 @@
 </script>
 
 <main style={`width: ${WIDTH}px; height: ${HEIGHT}px`}>
-  {#if loaded && settingsStorage?.donderInfo?.id === undefined && chrome !== undefined}
-    <NotLogined/>
-  {/if}
-
   <div class="tab-list" style={`height: ${TAB_HEIGHT}px`}>
     {#each tabs as tab, i}
       <button class="tab-item" class:active={currentTabIdx === i} on:click={async () => { await onClickTab(i) }} style={`height: ${TAB_HEIGHT}px`}>
