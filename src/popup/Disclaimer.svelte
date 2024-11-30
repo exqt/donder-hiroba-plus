@@ -40,9 +40,4 @@
     z-index: 10;
     color: white;
   }
-
-  a {
-    color: #2d8fff;
-    text-decoration: underline;
-  }
 </style>
