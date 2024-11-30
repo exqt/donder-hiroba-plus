@@ -13,7 +13,7 @@
   import { SongDB } from '../lib/songDB'
   import { onMount } from 'svelte'
   import I18N from '../lib/i18n'
-  import Disclaimer from './Disclaimer.svelte';
+  import Disclaimer from './Disclaimer.svelte'
 
   interface Tab {
     name: string
@@ -60,7 +60,7 @@
 
   let showDisclaimer = true
   const onAgree = (): void => {
-    console.log('agree') 
+    console.log('agree')
     showDisclaimer = false
   }
 </script>
