@@ -13,6 +13,7 @@
   import { SongDB } from '../lib/songDB'
   import { onMount } from 'svelte'
   import I18N from '../lib/i18n'
+  import Disclaimer from './Disclaimer.svelte';
 
   interface Tab {
     name: string
@@ -56,9 +57,19 @@
     settingsStorage.lastTabIndex = idx
     await settingsStorage.save()
   }
+
+  let showDisclaimer = true
+  const onAgree = (): void => {
+    console.log('agree') 
+    showDisclaimer = false
+  }
 </script>
 
 <main style={`width: ${WIDTH}px; height: ${HEIGHT}px`}>
+  {#if showDisclaimer}
+    <Disclaimer on:agree={onAgree}/>
+  {/if}
+
   <div class="tab-list" style={`height: ${TAB_HEIGHT}px`}>
     {#each tabs as tab, i}
       <button class="tab-item" class:active={currentTabIdx === i} on:click={async () => { await onClickTab(i) }} style={`height: ${TAB_HEIGHT}px`}>
