@@ -8,6 +8,7 @@ import select_song from './injections/select_song'
 import i18n from './injections/i18n'
 import dani from './injections/dani'
 import hash, { hashChangeCallback } from './injections/hash'
+import { isIOS } from '../src/lib/utils'
 
 const runHiroba = async (): Promise<void> => {
   window.addEventListener('hashchange', hashChangeCallback)
@@ -40,8 +41,13 @@ const runTaikoWiki = async (): Promise<void> => {
   void diffchart()
 }
 
-if (window.location.href.includes('taiko.wiki')) {
-  void runTaikoWiki()
-} else {
-  void runHiroba()
+const run = (): void => {
+  if (isIOS()) return
+  if (window.location.href.includes('taiko.wiki')) {
+    void runTaikoWiki()
+  } else {
+    void runHiroba()
+  }
 }
+
+run()
