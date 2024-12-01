@@ -15,3 +15,7 @@ export const genUUID = (): string => {
     return v.toString(16)
   })
 }
+
+export const isIOS = (): boolean => {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent)
+}
