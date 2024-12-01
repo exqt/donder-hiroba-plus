@@ -15,9 +15,3 @@ export const genUUID = (): string => {
     return v.toString(16)
   })
 }
-
-export const openRatingPage = (): void => {
-  const popup = window.open()
-  if (popup === null) return
-  popup.window.location.href = `chrome-extension://${chrome.runtime.id}/rating.html`
-}

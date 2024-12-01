@@ -8,7 +8,6 @@
   import type { SettingsStorage } from '../lib/settings'
   import type { ScoreStorage } from '../lib/scores'
   import { SongDB } from '../lib/songDB'
-  import { openRatingPage } from '../lib/utils'
 
   export let settingsStorage: SettingsStorage
   export let scoreStorage: ScoreStorage
@@ -121,6 +120,8 @@
   })
 
   const version = packageJson.version
+
+  const ratingTabLink = `chrome-extension://${chrome?.runtime?.id}/rating.html`
 </script>
 
 <div class="wrapper">
@@ -162,12 +163,13 @@
     {/if}
   </div>
 
-  <!---->
-  <button on:click={openRatingPage}>
-    taiko.wiki Rating Upload
-    <br>
-    <span style="font-size: 0.8rem;">서열표 색칠, 레이팅 업로드</span>
-  </button>
+  <a href={ratingTabLink} target="_blank">
+    <button>
+      taiko.wiki Rating Upload
+      <br>
+      <span style="font-size: 0.8rem;">서열표 색칠, 레이팅 업로드</span>
+    </button>
+  </a>
 
   <!-- Reset -->
   <button class="warning" on:click={reset}>{i18n.t('Reset')}</button>
