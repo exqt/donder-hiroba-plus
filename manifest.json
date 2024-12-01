@@ -25,5 +25,8 @@
     }
   ],
   "host_permissions": ["https://donderhiroba.jp/*", "*://taiko.wiki/*"],
-  "permissions": ["storage"]
+  "permissions": [
+    "storage",
+    "unlimitedStorage"
+  ]
 }
