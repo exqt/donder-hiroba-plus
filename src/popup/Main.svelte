@@ -50,6 +50,10 @@
     }
 
     loaded = true
+
+    if (settingsStorage.disclaimerAgreed) {
+      showDisclaimer = false
+    }
   })
 
   const onClickTab = async (idx: number): Promise<void> => {
@@ -59,9 +63,10 @@
   }
 
   let showDisclaimer = true
-  const onAgree = (): void => {
-    console.log('agree')
+  const onAgree = async (): Promise<void> => {
     showDisclaimer = false
+    settingsStorage.disclaimerAgreed = true
+    await settingsStorage.save()
   }
 </script>
 

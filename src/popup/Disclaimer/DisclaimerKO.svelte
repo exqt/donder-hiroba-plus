@@ -1,11 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
-  import { SettingsStorage } from '../../lib/settings'
   const dispatchEvent = createEventDispatcher()
   const agree = async (): void => {
-    const settings = await SettingsStorage.getInstance()
-    settings.disclaimerAgreed = true
-    await settings.save()
     dispatchEvent('agree')
   }
 </script>
