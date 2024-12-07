@@ -9,6 +9,7 @@ export class SettingsStorage implements ExtensionSetting {
   language: Language = 'en'
   lastTabIndex: number = 0
   donderInfo: DonderInfo | undefined
+  disclaimerAgreed: boolean = false
 
   private constructor () {}
 
@@ -33,6 +34,7 @@ export class SettingsStorage implements ExtensionSetting {
     this.preferringDifficulty = data?.preferringDifficulty ?? this.preferringDifficulty
     this.language = data?.language ?? this.language
     this.lastTabIndex = data?.lastTabIndex ?? this.lastTabIndex
+    this.disclaimerAgreed = data?.disclaimerAgreed ?? this.disclaimerAgreed
   }
 
   async save (): Promise<void> {
@@ -47,7 +49,8 @@ export class SettingsStorage implements ExtensionSetting {
         donderInfo: this.donderInfo,
         preferringDifficulty: this.preferringDifficulty,
         language: this.language,
-        lastTabIndex: this.lastTabIndex
+        lastTabIndex: this.lastTabIndex,
+        disclaimerAgreed: this.disclaimerAgreed
       }
     })
   }
@@ -63,6 +66,7 @@ export class SettingsStorage implements ExtensionSetting {
     this.language = 'en'
     this.lastTabIndex = 0
     this.donderInfo = {}
+    this.disclaimerAgreed = false
 
     await this.save()
   }
