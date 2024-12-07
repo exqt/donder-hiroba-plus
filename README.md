@@ -1,6 +1,13 @@
 # Donder Hiroba Plus
 [한국어 설명서](/README_ko.md)
 
+> [!WARNING]
+> This is unofficial chrome extension for donderhiroba.jp
+  This extension might violate the <a href="https://donderhiroba.jp/other_agreement.php">terms of service</a> of donderhiroba.jp.
+  Use this extension at your own risk.
+  The developer of this extension is not responsible for any problems caused by using this extension.
+
+
 A Chrome extension that adds useful features to the site [Donder Hiroba](https://donderhiroba.jp/index.php), which allows you to check your information in the game "Taiko no Tatsujin".
 
 Song data are provided by [taiko.wiki](https://taiko.wiki), Thanks!
