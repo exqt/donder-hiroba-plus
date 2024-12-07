@@ -3,6 +3,7 @@ import { processAssetPath } from './lib/utils'
 import crownSilverIcon from './assets/icons/crown-silver.png'
 import crownGoldIcon from './assets/icons/crown-gold.png'
 import crownDonderfullIcon from './assets/icons/crown-donderfull.png'
+import crownPlayedIcon from './assets/icons/crown-played.png'
 import crownNoneIcon from './assets/icons/crown-none.png'
 
 import badge0Icon from './assets/icons/badge-0.png'
@@ -67,6 +68,7 @@ export const icons = {
 
   crowns: {
     none: processAssetPath(crownNoneIcon),
+    played: processAssetPath(crownPlayedIcon),
     silver: processAssetPath(crownSilverIcon),
     gold: processAssetPath(crownGoldIcon),
     donderfull: processAssetPath(crownDonderfullIcon)

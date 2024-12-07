@@ -2,7 +2,6 @@
   import { onMount } from 'svelte'
   import type { DifficultyType, Language } from '../types'
   import { icons } from '../assets'
-  import { parseScores } from '../lib/songs'
   import packageJson from '../../package.json'
   import type I18N from '../lib/i18n'
   import type { SettingsStorage } from '../lib/settings'
@@ -28,6 +27,7 @@
     window.close()
   }
 
+  /*
   let updateStatus = ''
   let updateMessage = ''
   let updateProgress = 0
@@ -92,6 +92,7 @@
       disableUpdate = false
     }
   }
+  */
 
   let preferringDifficulty: DifficultyType
   const updatepreferringDifficulty = async (ev: Event): Promise<void> => {
@@ -149,6 +150,7 @@
   </div>
 
   <!-- Parse Score -->
+  <!--
   <div class="parse-score-wrapper">
     <button disabled={disableUpdate} on:click={updateSongScoreAll}>
       Update Donforce
@@ -162,6 +164,7 @@
       <p>{updateMessage}</p>
     {/if}
   </div>
+  -->
 
   <a href={ratingTabLink} target="_blank">
     <button>
@@ -177,6 +180,12 @@
   <!-- ForceSongDataUpdate -->
   <button class="warning" disabled={disableSongDataUpdate} on:click={forceSongDataUpdate}>{'Force SongData Update'}</button>
   <span></span>
+
+  <a href="https://docs.google.com/forms/d/1Vip2obD-XN8ie6qHEcwBETMFChbh6PxSqxy0O2FqmWc/edit" target="_blank">
+    <button class="info">
+      Help Deskop
+    </button>
+  </a>
 
   <div class="footer">
     <a href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
@@ -226,6 +235,10 @@
   button:disabled {
     background-color: #575757;
     cursor: not-allowed;
+  }
+
+  button.info {
+    background-color: #28a745;
   }
 
   .footer {
