@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Language } from '../types'
   import DisclaimerEn from './Disclaimer/DisclaimerEN.svelte'
+  import DisclaimerJa from './Disclaimer/DisclaimerJA.svelte'
   import DisclaimerKO from './Disclaimer/DisclaimerKO.svelte'
 
   let lang: Language = 'en'
@@ -13,6 +14,7 @@
   <div>
     <button on:click={() => { setLang('en') }}>English</button>
     <button on:click={() => { setLang('ko') }}>한국어</button>
+    <button on:click={() => { setLang('ja') }}>日本語</button>
   </div>
   <div class="content">
     {#if lang === 'en'}
@@ -20,6 +22,9 @@
     {/if}
     {#if lang === 'ko'}
       <DisclaimerKO on:agree/>
+    {/if}
+    {#if lang === 'ja'}
+      <DisclaimerJa on:agree/>
     {/if}
   </div>
 </div>

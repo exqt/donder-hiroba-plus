@@ -13,10 +13,6 @@
   --color1: #cf4844;
 }
 
-body {
-  word-break: keep-all;
-}
-
 a {
   text-decoration: none;
   color: inherit;
