@@ -1,23 +1,34 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import Button from '../components/Common/Button.svelte'
-  import { type ScoreStorage } from '../lib/scores'
   import { images } from '../assets'
-  import { getDanImageURL, getDonderAvatarURL } from '../lib/donder'
-  import type { BadgeType, CrownType, DifficultyType, DonderInfo } from '../types'
+  import { getDanImageURL, getDonderAvatarURL, parseDonderInfo, updateDonderInfo } from '../lib/donder'
+  import type { DifficultyType, DonderInfo } from '../types'
   import type { SettingsStorage } from '../lib/settings'
 
-  export let scoreStorage: ScoreStorage
   export let settingsStorage: SettingsStorage
 
   let donderInfo: DonderInfo = {}
-  let byBadges: Record<BadgeType, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 }
-  let byCrowns: Record<CrownType, number> = { none: 0, silver: 0, gold: 0, donderfull: 0 }
   let scorePanel = images.totalScorePanelOniImage
   let donderAvatarURL = images.mydonPlaceholderImage
   let danImageURL = ''
 
+  const parseTopPage = async (): Promise<void> => {
+    try {
+      const url = 'https://donderhiroba.jp/mypage_top.php'
+      const res = await fetch(url)
+      const text = await res.text()
+      const doc = new DOMParser().parseFromString(text, 'text/html')
+      const donderInfo = parseDonderInfo(doc)
+      await updateDonderInfo(donderInfo)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   onMount(async () => {
+    await parseTopPage()
+
     if (settingsStorage.donderInfo === undefined) {
       return
     }
@@ -29,11 +40,7 @@
       difficulties.push('oni_ura')
     }
 
-    const r = scoreStorage.countBadgesAndCrowns(difficulties)
-    byBadges = r.badges
-    byCrowns = r.crowns
-
-    const diff = settingsStorage.preferringDifficulty ?? 'oni'
+    const diff = settingsStorage.donderInfo.preferredDifficulty ?? 'oni'
     scorePanel = {
       easy: images.totalScorePanelKantanImage,
       normal: images.totalScorePanelFutsuuImage,
@@ -67,19 +74,18 @@
   <img class="avatar-image" src={donderAvatarURL} alt="avatar" />
 
   <div class="total-score" style={`background-image: url(${scorePanel})`}>
-    <span class="total-score-text" style="transform: translate(220px, 18px);">{byBadges[8]}</span>
+    <span class="total-score-text" style="transform: translate(220px, 18px);">{donderInfo?.badgeCounts?.[8] ?? 0}</span>
 
-    <span class="total-score-text" style="transform: translate(56px,  52px);">{byBadges[5]}</span>
-    <span class="total-score-text" style="transform: translate(138px, 52px);">{byBadges[6]}</span>
-    <span class="total-score-text" style="transform: translate(220px, 52px);">{byBadges[7]}</span>
+    <span class="total-score-text" style="transform: translate(56px,  52px);">{donderInfo?.badgeCounts?.[5] ?? 0}</span>
+    <span class="total-score-text" style="transform: translate(138px, 52px);">{donderInfo?.badgeCounts?.[6] ?? 0}</span>
+    <span class="total-score-text" style="transform: translate(220px, 52px);">{donderInfo?.badgeCounts?.[7] ?? 0}</span>
+    <span class="total-score-text" style="transform: translate(56px,  84px);">{donderInfo?.badgeCounts?.[2] ?? 0}</span>
+    <span class="total-score-text" style="transform: translate(138px, 84px);">{donderInfo?.badgeCounts?.[3] ?? 0}</span>
+    <span class="total-score-text" style="transform: translate(220px, 84px);">{donderInfo?.badgeCounts?.[4] ?? 0}</span>
 
-    <span class="total-score-text" style="transform: translate(56px,  84px);">{byBadges[2]}</span>
-    <span class="total-score-text" style="transform: translate(138px, 84px);">{byBadges[3]}</span>
-    <span class="total-score-text" style="transform: translate(220px, 84px);">{byBadges[4]}</span>
-
-    <span class="total-score-text crown" style="transform: translate(56px,  122px);"> {byCrowns.silver}</span>
-    <span class="total-score-text crown" style="transform: translate(138px, 122px);"> {byCrowns.gold}</span>
-    <span class="total-score-text crown" style="transform: translate(220px, 122px);"> {byCrowns.donderfull}</span>
+    <span class="total-score-text crown" style="transform: translate(56px,  122px);"> {donderInfo?.crownCounts?.silver}</span>
+    <span class="total-score-text crown" style="transform: translate(138px, 122px);"> {donderInfo?.crownCounts?.gold}</span>
+    <span class="total-score-text crown" style="transform: translate(220px, 122px);"> {donderInfo?.crownCounts?.donderfull}</span>
   </div>
 
   <div class="hiroba-link-buttons">

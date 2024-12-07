@@ -1,8 +1,10 @@
 import { SettingsStorage } from './settings'
 import { images } from '../assets'
-import type { DonderInfo } from '../types'
+import type { BadgeType, DonderInfo } from '../types'
+import type { Difficulty } from 'node-hiroba/types'
 
-export const parseDonderInfo = (): DonderInfo => {
+export const parseDonderInfo = (doc?: Document): DonderInfo => {
+  doc ??= document
   const mydon = document.querySelector('#mydon_area')
   if (mydon === null) return {}
 
@@ -12,10 +14,44 @@ export const parseDonderInfo = (): DonderInfo => {
   const title = mydon.children[1]?.innerHTML.trim()
   const name = mydon.children[2]?.textContent?.trim()
 
+  const totalScore = mydon.querySelector('.total_score')
+  const panelImage = totalScore?.querySelector('img')
+
+  // <img src="image/sp/640/total_score_image_5.png" style="width: 100%;">
+  // parse score image id
+  const imageSrc = panelImage?.src
+  const imageId = imageSrc?.match(/total_score_image_(\d+)\.png/)?.at(1)
+
+  let diff: Difficulty = 'oni'
+  if (imageId === '1') diff = 'easy'
+  else if (imageId === '2') diff = 'normal'
+  else if (imageId === '3') diff = 'hard'
+  else diff = 'oni'
+
+  const silver = parseInt(mydon.querySelector('.silver_crown_count')?.textContent?.trim() ?? '0') ?? '0'
+  const gold = parseInt(mydon.querySelector('.gold_crown_count')?.textContent?.trim() ?? '0') ?? '0'
+  const donderfull = parseInt(mydon.querySelector('.donderful_crown_count')?.textContent?.trim() ?? '0') ?? '0'
+  const badgeCounts: Partial<Record<BadgeType, number>> = {}
+
+  for (const cnt of totalScore?.querySelectorAll('div') ?? []) {
+    // find class best_rank_score_[id]
+    const rank = cnt.className.match(/best_rank_score_(\d+)/)
+    if (rank === null) continue
+    const rankId = parseInt(rank[1]) as BadgeType
+    badgeCounts[rankId] = parseInt(cnt?.textContent?.trim() ?? '0') ?? '0'
+  }
+
   return {
     id,
     name,
-    title
+    title,
+    preferredDifficulty: diff,
+    crownCounts: {
+      silver,
+      gold,
+      donderfull
+    },
+    badgeCounts
   }
 }
 

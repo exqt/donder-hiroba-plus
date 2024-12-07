@@ -86,7 +86,7 @@
   <div class="tab-content" style={`height: ${HEIGHT - TAB_HEIGHT}px`}>
     {#if loaded}
       {#if currentTabName === 'profile'}
-        <Profile {scoreStorage} {settingsStorage} />
+        <Profile {settingsStorage} />
       {:else if currentTabName === 'donforce-list'}
         <DonforceList {songDB} />
       {:else if currentTabName === 'donforce-table'}
