@@ -40,10 +40,14 @@
   <div class="card" style={`background-color: ${color}`}>
     <span> {title} (#{i + 1}) </span>
     <div class="items">
-      <span> ★ {item.songRating.measureValue.toFixed(1)} </span>
+      <span> {item.songRating.measureValue.toFixed(1)} </span>
       <span class="divider"> | </span>
       <span class="tooltip">
-        💪 {item.songRating.value}
+        {item.songRating.accuracy.toFixed(1)}%
+      </span>
+      <span class="divider"> | </span>
+      <span class="tooltip">
+        {item.songRating.value}
       </span>
       <span class="divider"> | </span>
       {#if item.scoreData}
