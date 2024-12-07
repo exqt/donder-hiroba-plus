@@ -1,10 +1,14 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   const dispatchEvent = createEventDispatcher()
-  const agree = async (): void => {
+  const agree = async (): Promise<void> => {
     dispatchEvent('agree')
   }
 </script>
+
+<span style="font-size: 30px;">
+  ⚠️ Disclaimer
+</span>
 
 <p>
   This is unofficial chrome extension for
@@ -21,3 +25,13 @@
   By clicking the button below, you agree to the above.
 </p>
 <button on:click={agree}>I agree</button>
+
+<style>
+  p {
+    margin: 0;
+    margin-bottom: 8px;
+  }
+  a {
+    color: rgb(159, 159, 255);
+  }
+</style>

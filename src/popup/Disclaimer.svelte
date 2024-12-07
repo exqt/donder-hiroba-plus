@@ -14,19 +14,19 @@
     <button on:click={() => { setLang('en') }}>English</button>
     <button on:click={() => { setLang('ko') }}>한국어</button>
   </div>
-  <div>
+  <div class="content">
     {#if lang === 'en'}
-      <DisclaimerEn />
+      <DisclaimerEn on:agree/>
     {/if}
     {#if lang === 'ko'}
-      <DisclaimerKO />
+      <DisclaimerKO on:agree/>
     {/if}
   </div>
 </div>
 
 <style>
   .wrapper {
-    background-color: #000a;
+    background-color: #000d;
     position: fixed;
     top: 0;
     left: 0;
@@ -39,5 +39,10 @@
     font-size: 24px;
     z-index: 10;
     color: white;
+  }
+
+  .content {
+    margin-top: 24px;
+    width: 80%;
   }
 </style>
