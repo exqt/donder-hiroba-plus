@@ -101,6 +101,7 @@ export interface ExtensionSetting {
   lastTabIndex?: number
   language?: Language
   preferringDifficulty?: DifficultyType
+  disclaimerAgreed?: boolean
 }
 
 export interface FavoriteSong {
