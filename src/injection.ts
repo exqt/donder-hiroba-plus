@@ -9,6 +9,7 @@ import i18n from './injections/i18n'
 import dani from './injections/dani'
 import hash, { hashChangeCallback } from './injections/hash'
 import { isIOS } from '../src/lib/utils'
+import { SettingsStorage } from './lib/settings'
 
 const runHiroba = async (): Promise<void> => {
   window.addEventListener('hashchange', hashChangeCallback)
@@ -41,8 +42,12 @@ const runTaikoWiki = async (): Promise<void> => {
   void diffchart()
 }
 
-const run = (): void => {
+const run = async (): Promise<void> => {
   if (isIOS()) return
+
+  const settings = await SettingsStorage.getInstance()
+  if (!settings.disclaimerAgreed) return
+
   if (window.location.href.includes('taiko.wiki')) {
     void runTaikoWiki()
   } else {
@@ -50,4 +55,4 @@ const run = (): void => {
   }
 }
 
-run()
+void run()
