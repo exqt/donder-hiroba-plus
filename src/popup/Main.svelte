@@ -88,7 +88,7 @@
       {#if currentTabName === 'profile'}
         <Profile {scoreStorage} {settingsStorage} />
       {:else if currentTabName === 'donforce-list'}
-        <DonforceList {settingsStorage} {scoreStorage} {songDB} />
+        <DonforceList {songDB} />
       {:else if currentTabName === 'donforce-table'}
         <DonforceTable/>
       {:else if currentTabName === 'settings'}
