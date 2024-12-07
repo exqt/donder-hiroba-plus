@@ -1,10 +1,14 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   const dispatchEvent = createEventDispatcher()
-  const agree = async (): void => {
+  const agree = async (): Promise<void> => {
     dispatchEvent('agree')
   }
 </script>
+
+<span style="font-size: 36px;">
+  ⚠️ 면책 조항
+</span>
 
 <p>
   이 확장 확장 프로그램은 비공식 크롬 확장 프로그램입니다
@@ -19,3 +23,13 @@
   아래 버튼을 클릭하면 위의 내용에 동의하는 것으로 간주됩니다.
 </p>
 <button on:click={agree}>동의합니다</button>
+
+<style>
+  p {
+    margin: 0;
+    margin-bottom: 8px;
+  }
+  a {
+    color: rgb(159, 159, 255);
+  }
+</style>
