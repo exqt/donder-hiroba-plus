@@ -4,6 +4,9 @@ export interface DonderInfo {
   id?: string
   name?: string
   title?: string
+  crownCounts?: Partial<Record<CrownType, number>>
+  badgeCounts?: Partial<Record<BadgeType, number>>
+  preferredDifficulty?: DifficultyType
 }
 
 export type DifficultyType = typeof DIFFICULTIES[number]
