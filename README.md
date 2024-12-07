@@ -1,20 +1,20 @@
 # Donder Hiroba Plus
-[한국어](/README_ko.md)
+[한국어 설명서](/README_ko.md)
 
 A Chrome extension that adds useful features to the site [Donder Hiroba](https://donderhiroba.jp/index.php), which allows you to check your information in the game "Taiko no Tatsujin".
 
-Song data are provided by [Korean Taiko Wiki](https://taiko.wiki), Thanks!
+Song data are provided by [taiko.wiki](https://taiko.wiki), Thanks!
 
 ## Installation
 
 [>> Download from the Chrome Web Store <<](https://chromewebstore.google.com/detail/donder-hiroba-plus/dmendcaacmlddhgalacgccejbamnncci)
 
-- Supported browsers: [Chrome](https://www.google.com/chrome/), [Naver Whale](https://whale.naver.com/ko/), [Kiwi Browser (mobile)](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser&hl=en&gl=US&pli=1)
+- Supported browsers: [Chrome](https://www.google.com/chrome/), [Naver Whale](https://whale.naver.com/ko/), [Kiwi Browser (mobile)](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser&hl=en&gl=US&pli=1), [Orion Browser by Kagi (iOS, Popup Only)](https://apps.apple.com/us/app/orion-browser-by-kagi/id1484498200)
 
 ## Features
 | ![Profile](.screenshots/profile.png) | ![Rating](.screenshots/rating.png) |
 |:------------------------:|:------------:|
-| [Popup Window](#popup-window) | [Rating System](#rating-system) |
+| [Popup Window](#popup-window) | [taiko.wiki Rating System](#rating-system) |
 
 ![Playlist](.screenshots/playlist.png) | ![Search](.screenshots/search.png)
 |:--------------------------------:|:-------------------------------------:|
@@ -25,29 +25,10 @@ Song data are provided by [Korean Taiko Wiki](https://taiko.wiki), Thanks!
 | [Translation](#translation) | [Integration with Taikowiki Difficulty Chart](#integration-with-taikowiki-difficulty-chart) |
 
 ## Usage
-### Popup Window
-After installation, click the extension icon to open the popup window.
-
-Once the popup window is open, log in to Donder Hiroba so that the extension can access your user information.
-
-- Click the Profile tab to view your user information and buttons to navigate to frequently used pages.
-- Click the Settings tab, then click "Update Song Scores" to parse the score page and store the data in local storage.
-
-### Rating System
-Once you parsed the scores, the extension calculates ratings based on the parsed scores.
-
-- Click the List tab to see your Donforce rating and the top 50 songs that contributed to your Donforce calculation.
-- Click the Table tab to see the Donforce values you can earn by playing specific difficulty songs.
-- Donforce formula: 6.0 * 1.3^(level - 6.0) * (badge) * (crown)
-- Badge: Incomplete 0.0 / 0.5 / 0.6 / 0.7 / 0.8 / 0.9 / 0.95 / 1.0
-- Crown: Incomplete 0.0 / Clear 0.85 / Full Combo 1.0 / Donder Full Combo 1.1
-- For each difficulty played, Donforce is calculated, and your Donforce rating is the average of the top 50 Donforce values.
-- Ratings are calculated per difficulty. You can select the difficulty for which you want to see the rating in the settings.
-- The rating calculation formula and levels may change in the future.
-- Ratings do not accurately reflect your skill. Please treat them as just for fun!
+- Click the extension icon to open the Popup Window
+- Visit [donderhiroba.jp](https://donderhiroba.jp) to use the extention features
 
 ### Detailed Song Search
-
 When visiting the [Score Page](https://donderhiroba.jp/score_list.php), you'll see an additional "Advanced Search Options" button.
 
 - Text - Filter by matching song titles and artists
@@ -59,10 +40,20 @@ When visiting the [Score Page](https://donderhiroba.jp/score_list.php), you'll s
 
 Click the icon in the top right corner of a song to see detailed information and direct links to YouTube, WikiWiki, and Korean Taikowiki.
 
-### Integration with Korean Taikowiki Difficulty Chart
+### Rating System
+> [!NOTE]
+> Donforce has been deprecated and replaced with taiko.wiki Rating System
 
-After 'Song Score Update' in the setting, visit the [Taikowiki Difficulty Chart](https://taiko.wiki/diffchart/clear/10) to see song backgrounds colored based on crown status, and badges displayed in the top right corner.
+> Go to Popup Window > Settings > taiko.wiki Rating Upload
+and upload your data to see your rating.
 
+See [taiko.wiki page](https://taiko.wiki/rating) for more details.
+
+### Integration with taiko.wiki Difficulty Chart
+> Go to Popup Window > Settings > taiko.wiki Rating Upload
+and upload your data to see your colored diffchart.
+
+- Track your Clear/Fullcombo/Donderfull Song in [taiko.wiki diffchart](https://taiko.wiki/diffchart/clear/10)
 - You can also use [Playlist](#playlist) feature to create a playlist from the Taikowiki Difficulty Chart. (Right-click on the song to add it to the playlist)
 
 ### Translation
