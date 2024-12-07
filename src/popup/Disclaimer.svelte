@@ -16,10 +16,10 @@
   </div>
   <div>
     {#if lang === 'en'}
-      <DisclaimerEn on:agree/>
+      <DisclaimerEn />
     {/if}
     {#if lang === 'ko'}
-      <DisclaimerKO on:agree/>
+      <DisclaimerKO />
     {/if}
   </div>
 </div>

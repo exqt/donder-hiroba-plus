@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   const dispatchEvent = createEventDispatcher()
-  const agree = (): void => {
+  const agree = async (): void => {
     dispatchEvent('agree')
   }
 </script>
