@@ -2,24 +2,24 @@
 
   import Switch from '../components/Common/Switch.svelte'
 
-  import { CROWNS, DONFORCE_NUMBER_OF_RECORDS } from '../constants'
   import { icons } from '../assets'
-  import { calculateDonforce } from '../lib/donforce'
-  import type { BadgeType } from '../types'
+  import { getSongRating } from '../lib/rating'
+  import type { Crown } from 'node-hiroba/types'
 
   let stars = 10
   let subStar = 0
   let perSong = false
-  $: divider = perSong ? DONFORCE_NUMBER_OF_RECORDS : 1
+  let accuracy = 95.0
 
-  const crownsExceptNone = CROWNS.filter((crown) => crown !== 'none')
-  const badgeList: BadgeType[] = [8, 7, 6, 5, 4, 3, 2]
+  $: measureValue = stars + subStar / 10
+
+  const CROWNS = ['donderfull', 'gold', 'silver', 'played'] as Crown[]
 </script>
 
 <div class="wrapper">
   <div class="level-button-containers">
     <div class="level-button-container">
-      {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as i}
+      {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
         <button
           class="level-button"
           class:active={stars === i}
@@ -42,34 +42,30 @@
     </div>
   </div>
 
-  <p class="level-text">★ {(stars + subStar / 10).toFixed(1)}</p>
+  <div style="display: flex; align-items: center;">
+    <p class="level-text">Measure: {(stars + subStar / 10).toFixed(1)}</p>
+    <a href="https://taiko.wiki/rating/measure" target="_blank" style="margin-left: 8px;">
+      (?)
+    </a>
+  </div>
 
-  <Switch bind:checked={perSong} label={` / ${DONFORCE_NUMBER_OF_RECORDS}`}/>
+  <Switch bind:checked={perSong} label={' / 50'}/>
 
-  <table>
-    <thead>
-      <tr>
-        <th class="corner-cell"></th>
-        <th class="crown-cell"> <img src={icons.crowns.silver} alt="silver"/> </th>
-        <th class="crown-cell"> <img src={icons.crowns.gold} alt="gold"/> </th>
-        <th class="crown-cell"> <img src={icons.crowns.donderfull} alt="donderfull"/> </th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each badgeList as badge}
-        <tr>
-          <td class="badge-cell">
-            <img src={icons.badges[badge]} alt={`badge-${badge}`}/>
-          </td>
-          {#each crownsExceptNone as crown}
-            <td>
-              {(calculateDonforce(badge, crown, stars + subStar / 10) / divider).toFixed(3)}
-            </td>
-          {/each}
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+  <label for="accuracy">Accuracy: {accuracy.toFixed(1)}%</label>
+  <input type="range" min="60" max="105" step="0.1" bind:value={accuracy} />
+
+  <div class="rating-value-container">
+    {#each CROWNS as crown}
+      {#if crown !== null}
+        <div class="level-item" data-crown={crown}>
+          <img src={icons.crowns[crown]} alt={crown} height="50px" />
+          <span>
+            {getSongRating(accuracy, crown, measureValue) / (perSong ? 50 : 1)}
+          </span>
+        </div>
+      {/if}
+    {/each}
+  </div>
 </div>
 
 <style>
@@ -98,8 +94,8 @@
     color: white;
     border: none;
     transition: all 0.1s ease-in-out;
-    width: 25px;
-    height: 25px;
+    width: 23px;
+    height: 23px;
   }
 
   .level-button.active {
@@ -110,37 +106,43 @@
     background-color: #555;
   }
 
-  table {
-    border-collapse: collapse;
+  .rating-value-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
-  thead {
-    height: 50px;
+  .level-item {
+    display: flex;
+    align-items: center;
+    margin: 4px 24px;
+    padding: 8px 36px;
+    background-color: #0003;
+    border-radius: 12px;
   }
 
-  th {
-    height: 40px;
+  .level-item img {
+    margin-right: 24px;
   }
 
-  td, th {
-    border: 1px solid black;
-    text-align: center;
+  .level-item span {
+    font-size: 1.5em;
+    width: 100px;
   }
 
-  td {
-    padding: 0px 4px;
+  .level-item[data-crown="donderfull"] {
+    background: linear-gradient(45deg,#ffb3ba,#ffdfba,#ffffba,#baffc9,#bae1ff)
   }
 
-  .corner-cell {
-    border: none;
+  .level-item[data-crown="gold"] {
+   background-color: #ffe972;
   }
 
-  .crown-cell > img {
-    width: 44px;
-    margin: 0px 8px;
+  .level-item[data-crown="silver"] {
+    background-color: #C0C0C0;
   }
 
-  .badge-cell > img {
-    height: 40px;
+  input[type="range"] {
+    width: 100%;
   }
 </style>

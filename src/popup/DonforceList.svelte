@@ -1,49 +1,108 @@
 <script lang="ts">
-  import { type ScoreStorage } from '../lib/scores'
   import { onMount } from 'svelte'
-  import { SongDB } from '../lib/songDB'
-  import { getDonforceTopK } from '../lib/donforce'
-  import { DIFFICULTY_TO_INDEX, DIFFICULTY_COLORS, DONFORCE_NUMBER_OF_RECORDS } from '../constants'
-  import type { DifficultyType, DonforceItem, SongScore } from '../types'
+  import RatingItem from '../components/Popup/RatingItem.svelte'
+  import { DIFFICULTY_COLORS, DIFFICULTY_TO_INDEX } from '../constants'
+  import { type SongDB } from '../lib/songDB'
   import { getSongDetailLink } from '../lib/songs'
-  import DonforceItemComponent from '../components/Popup/DonforceItemComponent.svelte'
-  import type { SettingsStorage } from '../lib/settings'
-  import { Analyzer } from '../lib/analyzer'
 
-  export let scoreStorage: ScoreStorage
-  export let settingsStorage: SettingsStorage
-  export let songDB: SongDB
-  let analyzer: Analyzer
-
-  let scores: SongScore[] = []
-  let items: DonforceItem[] = []
-
-  let totalDonforce = 0
-  let diffs: DifficultyType[] = []
-
-  onMount(async () => {
-    songDB = await SongDB.getInstance()
-    analyzer = await Analyzer.getInstance()
-    scores = scoreStorage.getAllScores()
-
-    diffs = [settingsStorage.preferringDifficulty ?? 'oni']
-    if (diffs[0] === 'oni') diffs.push('oni_ura')
-
-    items = getDonforceTopK(scores, songDB, analyzer, diffs, DONFORCE_NUMBER_OF_RECORDS)
-    totalDonforce = items.reduce((acc, item) => acc + item.donforce, 0) / DONFORCE_NUMBER_OF_RECORDS
-  })
-
-  const loadAll = (): void => {
-    items = getDonforceTopK(scores, songDB, analyzer, diffs, scores.length)
+  interface UserRatingData {
+    currentRating: number
+    currentExp: number | null
+    ratingDataWithScoreData: Array<{
+      songNo: number
+      difficulty: 'oni' | 'ura'
+      songRating: {
+        value: number
+        accuracy: number
+        measureValue: number
+      }
+      scoreData: {
+        crown: 'played' | 'silver' | 'gold' | 'donderfull'
+        badge: 'rainbow' | 'purple' | 'pink' | 'gold' | 'silver' | 'bronze' | 'white' | null
+        score: number
+        ranking: number
+        good: number
+        ok: number
+        bad: number
+        maxCombo: number
+        roll: number
+        count: {
+          play: number
+          clear: number
+          fullcombo: number
+          donderfullcombo: number
+        }
+      } | null
+    }>
   }
+
+  let userRatingData: UserRatingData
+  let status = 'loading'
+
+  const getData = async (): Promise<void> => {
+    try {
+      const url = 'https://taiko.wiki/api/user/rating'
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      })
+      const data = await response.json()
+      userRatingData = data
+      status = 'success'
+    } catch (e) {
+      console.error(e)
+      status = `failed (${e as any})`
+    }
+  }
+
+  onMount(getData)
+
+  export let songDB: SongDB
 </script>
 
 <div class="wrapper">
+  {#if status === 'loading'}
+    <span>Loading...</span>
+  {:else if status === 'failed'}
+    <span>Failed to get data</span>
+  {/if}
+
   <div class="top">
-    <span class="top-text">DONFORCE 💪: {totalDonforce.toFixed(3)}</span>
+    <a href="https://taiko.wiki/rating/me" target="_blank">
+      <span class="top-text">taiko.wiki rating</span>
+    </a>
   </div>
 
+  {#if userRatingData}
+    <div class="current-rating">
+      <span>Current Rating: {userRatingData?.currentRating}</span>
+      <span>Current Exp: {userRatingData?.currentExp}</span>
+    </div>
+  {/if}
+
+  {#if userRatingData?.ratingDataWithScoreData}
   <div class="score-container">
+    {#each userRatingData.ratingDataWithScoreData as item, i (item.songNo + item.difficulty)}
+      {@const diff = item.difficulty === 'ura' ? 'oni_ura' : 'oni'}
+      {@const color = DIFFICULTY_COLORS[DIFFICULTY_TO_INDEX[diff]]}
+      {@const link = getSongDetailLink(item.songNo.toString(), diff)}
+      {@const songData = songDB.getSongData(item.songNo.toString())}
+      {@const title = songData?.title ?? ''}
+      {#if item !== null}
+        <RatingItem
+          {item}
+          {i}
+          {link}
+          {color}
+          {title}
+        />
+      {/if}
+    {/each}
+
+    <!--
     {#each items as item, i (item.songNo + item.difficulty)}
       {@const color = DIFFICULTY_COLORS[DIFFICULTY_TO_INDEX[item.difficulty]]}
       {@const songData = songDB.getSongData(item.songNo)}
@@ -55,7 +114,9 @@
     {#if items.length !== scores.length}
       <button on:click={loadAll}>Load All</button>
     {/if}
+    -->
   </div>
+  {/if}
 </div>
 
 <style>
@@ -78,5 +139,19 @@
     flex-direction: column;
     flex-grow: 1;
     overflow: auto; /* Add this if you want .score-container to be scrollable when its content overflows */
+  }
+
+  .current-rating {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .current-rating span {
+    margin: 4px 12px;
+    padding: 4px;
+    color: aliceblue;
+    background-color: #0004;
+    border-radius: 4px;
+    margin-right: 12px;
   }
 </style>
