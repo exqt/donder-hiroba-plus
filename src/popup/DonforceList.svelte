@@ -38,6 +38,7 @@
 
   let userRatingData: UserRatingData
   let status = 'loading'
+  let message = ''
 
   const getData = async (): Promise<void> => {
     try {
@@ -49,16 +50,28 @@
         },
         credentials: 'include'
       })
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Unauthorized access - 401')
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+      }
+
       const data = await response.json()
       userRatingData = data
       status = 'success'
     } catch (e) {
       console.error(e)
-      status = `failed (${e as any})`
+      status = 'failed'
+      message = e instanceof Error ? e.message : 'Unknown error'
     }
   }
 
-  onMount(getData)
+  onMount(async () => {
+    await getData()
+  })
 
   export let songDB: SongDB
 </script>
@@ -68,6 +81,7 @@
     <span>Loading...</span>
   {:else if status === 'failed'}
     <span>Failed to get data</span>
+    <span>{message}</span>
   {/if}
 
   <div class="top">
