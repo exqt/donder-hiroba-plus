@@ -8,6 +8,7 @@
     import { onMount } from 'svelte'
     import { getRecentScoreData, type RecentScoreData } from './recentScore'
     import RecentScoreStorage from './recentScoreStorage'
+    import { DIFFICULTY_COLORS } from '../../constants'
 
     const wikiOrigin = 'https://taiko.wiki'
 
@@ -16,24 +17,20 @@
     // message
     let message: string = ''
     let uploadMessage: string = ''
-    let counts: number = 0
     let complete: number = 0
 
-    let nRecentPageToFetch: number = 20
     const storage = new RecentScoreStorage()
     let storageLoaded = false
     let lastUpdated: string | null = null
     let scoreDataSorted: Array<{ songName: string, difficulty: string, score: DifficultyScoreData, songNo: string }> = []
     let totalPlayCount: string = '0 / 0 / 0 / 0'
     let openPlayCount: boolean = false
-    let disabledRecent: boolean = true
 
     onMount(async () => {
       await storage.loadFromChromeStorage()
       storageLoaded = true
       lastUpdated = storage.getLastUpdated()
       updateScoreDataSorted()
-      disabledRecent = storage.getCount() === 0
     })
 
     const updateScoreDataSorted = (): void => {
@@ -61,7 +58,6 @@
       totalPlayCount = `${totalPlay} / ${totalClear} / ${totalFullcombo} / ${totalDonderfullcombo}`
     }
 
-    // ready
     let sendType: 'clear' | 'score' | 'all' | 'recent' = 'clear'
 
     // 새로운 유틸리티 함수들
@@ -163,6 +159,7 @@
 
         await hiroba.updateScore(null)
         const clearData = await hiroba.getClearData(null)
+        const prevScoreDataMap = { ...storage.getMap() }
 
         const songNameToSongNos = new Map<string, string[]>()
         for (const song of clearData) {
@@ -177,62 +174,6 @@
         if (sendType === 'clear') {
           uploadMessage = 'Uploading clear data...'
           await uploadToWiki(cardData, clearData)
-        } else if (sendType === 'recent') {
-          uploadMessage = 'Fetching recent score data...'
-
-          counts = nRecentPageToFetch
-          complete = 0
-          uploadMessage = `Fetch score data... (0/${counts})`
-
-          const recentScoreData: RecentScoreData[] = []
-          await Promise.all(
-            Array.from({ length: nRecentPageToFetch }, (_, i) => i + 1).map(async (page) => {
-              recentScoreData.push(...(await getRecentScoreData(page)))
-              complete++
-              uploadMessage = `Fetch score data... (${complete}/${counts})`
-            })
-          )
-
-          const scoreDataMap: Record<string, ScoreData> = {}
-          for (const recentScore of recentScoreData) {
-            const songNos = songNameToSongNos.get(recentScore.songName)
-            if (songNos === undefined || songNos.length > 1) {
-              console.warn(`multiple or undefined songNos found for ${recentScore.songName}`)
-              continue
-            }
-            const songNo = songNos[0]
-
-            const score = recentScore.scoreData
-            if (scoreDataMap[songNo] === undefined) {
-              scoreDataMap[songNo] = {
-                title: recentScore.songName,
-                songNo,
-                difficulty: {}
-              }
-            }
-            scoreDataMap[songNo].difficulty[recentScore.difficulty] = score
-          }
-
-          for (const songNos of songNameToSongNos.values()) {
-            if (songNos !== undefined && songNos.length > 1) {
-              for (const songNo of songNos) {
-                const songClearData = clearData.find(song => song.songNo === songNo)
-                if (songClearData !== undefined) {
-                  const score = await fetchScoreForSong(
-                    songNo, songClearData
-                  )
-                  if (score !== null) {
-                    scoreDataMap[songNo] = score
-                  }
-                }
-              }
-            }
-          }
-
-          await uploadToWiki(cardData, clearData, scoreDataMap)
-
-          message = 'Upload completed'
-          scene = 'ready'
         } else if (sendType === 'all') {
           uploadMessage = 'Fetching recent score data...'
 
@@ -245,22 +186,49 @@
           complete++
           uploadMessage = `Fetch score data... (${complete}/?)`
 
-          // parse until fetched page is same as first page
-          while (true) {
+          let shouldStop = false
+          while (!shouldStop) {
             const nextPage = await getRecentScoreData(complete + 1)
-            if (nextPage[0].songName === firstPage[0].songName &&
-              nextPage[0].difficulty === firstPage[0].difficulty
-            ) break
+
+            // termniate condtion 1: no more data
+            for (let i = 0; i < nextPage.length; i++) {
+              if (nextPage[i].songName === firstPage[i].songName &&
+                nextPage[i].difficulty === firstPage[i].difficulty
+              ) {
+                shouldStop = true
+                break
+              }
+            }
+
+            // termniate condtion 2: already uploaded
+            for (const item of nextPage) {
+              const songNos = songNameToSongNos.get(item.songName)
+              if (songNos === undefined || songNos.length > 1) {
+                continue
+              }
+              const scoreData = prevScoreDataMap[songNos[0]]
+
+              if (item.scoreData.count.play ===
+              scoreData?.difficulty?.[item.difficulty]?.count.play) {
+                shouldStop = true
+                break
+              }
+            }
+
             recentScoreData.push(...nextPage)
             complete++
             uploadMessage = `Fetch score data... (${complete}/?)`
           }
 
+          const seenDuplicatedSongNames = new Set<string>()
           const scoreDataMap: Record<string, ScoreData> = {}
           for (const recentScore of recentScoreData) {
             const songNos = songNameToSongNos.get(recentScore.songName)
-            if (songNos === undefined || songNos.length > 1) {
-              console.warn(`multiple or undefined songNos found for ${recentScore.songName}`)
+            if (songNos === undefined) {
+              continue
+            }
+            if (songNos.length > 1) {
+              seenDuplicatedSongNames.add(recentScore.songName)
               continue
             }
             const songNo = songNos[0]
@@ -276,8 +244,11 @@
             scoreDataMap[songNo].difficulty[recentScore.difficulty] = score
           }
 
-          for (const songNos of songNameToSongNos.values()) {
+          for (const [songName, songNos] of songNameToSongNos.entries()) {
             if (songNos !== undefined && songNos.length > 1) {
+              if (!seenDuplicatedSongNames.has(songName)) {
+                break
+              }
               for (const songNo of songNos) {
                 const songClearData = clearData.find(song => song.songNo === songNo)
                 if (songClearData !== undefined) {
@@ -294,36 +265,6 @@
 
           message = 'Upload completed'
           scene = 'ready'
-        } else if (sendType === 'score') {
-          uploadMessage = 'Updating score...'
-
-          const scoresToFetch: Array<Promise<ScoreData | null>> = []
-          for (const song of clearData) {
-            // if (song.songNo.length >= 3 || song.songNo >= '30') continue // for debug
-            if (song.difficulty.oni !== undefined || song.difficulty.ura !== undefined) {
-              scoresToFetch.push(fetchScoreForSong(song.songNo, song))
-            }
-          }
-
-          counts = scoresToFetch.length
-          complete = 0
-          uploadMessage = `Fetch score data... (0/${counts})`
-
-          const scoreData = await Promise.all(scoresToFetch.map(async (promise) => {
-            const result = await promise
-            complete++
-            uploadMessage = `Fetch score data... (${complete}/${counts})`
-            return result
-          }))
-
-          const scoreDataMap: Record<string, ScoreData> = {}
-          for (const score of scoreData) {
-            if (score !== null) {
-              scoreDataMap[score.songNo] = score
-            }
-          }
-
-          await uploadToWiki(cardData, clearData, scoreDataMap)
         }
 
         message = 'Upload completed'
@@ -359,25 +300,6 @@
               <input type="radio" bind:group={sendType} value="all" />
               clear data + score data (레이팅)
             </label>
-            <label class:disabled={disabledRecent} class="recent-score-label" style="text-align: center; background-color: #f0f0f0;">
-              <input type="radio" bind:group={sendType} value="recent" />
-              clear data + score data <br> (only recent
-                <select bind:value={nRecentPageToFetch}>
-                  <option value={5}>25 (1 hour)</option>
-                  <option value={10}>50 (2 hours)</option>
-                  <option value={20}>100 (4 hours)</option>
-                  <option value={30}>150 (6 hours)</option>
-                  <option value={40}>200 (8 hours)</option>
-                  <option value={60}>300 (12 hours)</option>
-                  <option value={80}>400 (16 hours)</option>
-                  <option value={100}>500 (20 hours)</option>
-                </select>
-                plays)
-                <br>
-                <span style="font-size: 0.8rem;">much faster, use this if you recently uploaded score data</span>
-                <br>
-                <span style="font-size: 0.8rem;">최근에 레이팅을 업로드한 경우 이걸 선택하세요</span>
-            </label>
             <button style="margin-top: 20px; font-size: 1.5rem;"
                 on:click={async () => {
                   await send(cardData, sendType)
@@ -400,6 +322,7 @@
 
               <button on:click={() => { openPlayCount = !openPlayCount }}>Play Count (click to expand)</button>
               {#if openPlayCount}
+                <span>Count: {scoreDataSorted.length}</span>
                 <span>Total Play Count: {totalPlayCount}</span>
                 <table class="play-count-table">
                   <thead>
@@ -410,12 +333,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {#each scoreDataSorted as score}
+                    {#each scoreDataSorted as score, i}
                       <tr>
                         <td style="max-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                          ({score.songNo}) {score.songName}
+                          <a href={`https://donderhiroba.jp/score_detail.php?song_no=${score.songNo}&level=${score.difficulty === 'oni' ? 4 : 5}`} target="_blank">
+                            ({score.songNo}) {score.songName}
+                          </a>
                         </td>
-                        <td>{score.difficulty}</td>
+                        <td
+                          style={`color: ${DIFFICULTY_COLORS[score.difficulty === 'oni' ? 3 : 4]}; font-weight: bold;`}
+                        >{score.difficulty}</td>
                         <td>{score.score.count.play} / {score.score.count.clear} / {score.score.count.fullcombo} / {score.score.count.donderfullcombo}</td>
                       </tr>
                     {/each}
@@ -445,11 +372,6 @@
     .error_display {
         color: red;
         font-weight: bold;
-    }
-
-    .recent-score-label.disabled {
-      pointer-events: none;
-      opacity: 0.5;
     }
 
     .play-count-table {
