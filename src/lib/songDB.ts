@@ -124,7 +124,7 @@ export class SongDB {
 
   public async shouldFetchSongData (): Promise<boolean> {
     const now = (new Date()).getTime()
-    const CHECK_INTERVAL = 1000 * 60 * 60 // 1 hour
+    const CHECK_INTERVAL = 1000 * 60 * 60 * 24 // 1 day
 
     const storage = this.getStorage()
     // should check if it's been a day since last check
