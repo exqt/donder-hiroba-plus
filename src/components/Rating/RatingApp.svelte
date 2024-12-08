@@ -196,11 +196,10 @@
                 nextPage[i].difficulty === firstPage[i].difficulty
               ) {
                 shouldStop = true
-                break
               }
             }
 
-            // termniate condtion 2: already uploaded
+            // termniate condtion 2: no more plays
             for (const item of nextPage) {
               const songNos = songNameToSongNos.get(item.songName)
               if (songNos === undefined || songNos.length > 1) {
@@ -211,7 +210,6 @@
               if (item.scoreData.count.play ===
               scoreData?.difficulty?.[item.difficulty]?.count.play) {
                 shouldStop = true
-                break
               }
             }
 
@@ -219,6 +217,11 @@
             complete++
             uploadMessage = `Fetch score data... (${complete}/?)`
           }
+
+          const nextPage = await getRecentScoreData(complete + 1)
+          recentScoreData.push(...nextPage)
+          complete++
+          uploadMessage = `Fetch score data... (${complete}/?)`
 
           const seenDuplicatedSongNames = new Set<string>()
           const scoreDataMap: Record<string, ScoreData> = {}
