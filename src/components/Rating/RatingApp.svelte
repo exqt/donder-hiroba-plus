@@ -9,6 +9,7 @@
     import { getRecentScoreData, type RecentScoreData } from './recentScore'
     import RecentScoreStorage from './recentScoreStorage'
     import { DIFFICULTY_COLORS } from '../../constants'
+    import { clearTop50RatingCache } from '../../lib/rating'
 
     const wikiOrigin = 'https://taiko.wiki'
 
@@ -264,6 +265,7 @@
             }
           }
 
+          await clearTop50RatingCache()
           await uploadToWiki(cardData, clearData, scoreDataMap)
 
           message = 'Upload completed'

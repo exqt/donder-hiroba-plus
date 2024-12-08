@@ -45,3 +45,83 @@ export function getCompensated (accuracy: number): number {
 
   return compensated
 }
+
+export interface UserRatingData {
+  currentRating: number
+  currentExp: number | null
+  ratingDataWithScoreData: Array<{
+    songNo: number
+    difficulty: 'oni' | 'ura'
+    songRating: {
+      value: number
+      accuracy: number
+      measureValue: number
+    }
+    scoreData: {
+      crown: 'played' | 'silver' | 'gold' | 'donderfull'
+      badge: 'rainbow' | 'purple' | 'pink' | 'gold' | 'silver' | 'bronze' | 'white' | null
+      score: number
+      ranking: number
+      good: number
+      ok: number
+      bad: number
+      maxCombo: number
+      roll: number
+      count: {
+        play: number
+        clear: number
+        fullcombo: number
+        donderfullcombo: number
+      }
+    } | null
+  }>
+}
+
+export const getTop50Rating = async (): Promise<UserRatingData> => {
+  // get cache from local storage
+
+  let { top50ratingScores, top50RatingLastUpdated } =
+    await chrome.storage.local.get(['top50ratingScores', 'top50RatingLastUpdated'])
+
+  if (top50ratingScores !== undefined && top50RatingLastUpdated !== undefined) {
+    const lastUpdated = new Date(top50RatingLastUpdated as number)
+    const now = new Date()
+    const diff = now.getTime() - lastUpdated.getTime()
+    const diffHours = diff / (1000 * 60 * 60)
+    if (diffHours < 24) {
+      console.log('returning cached top50ratingScores', top50ratingScores)
+      return top50ratingScores
+    }
+  }
+
+  const url = 'https://taiko.wiki/api/user/rating'
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  })
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error('Unauthorized access - 401')
+    } else {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+  }
+
+  const data = await response.json()
+  top50ratingScores = data
+  const lastUpdated = (new Date()).getTime()
+  await chrome.storage.local.set({
+    top50ratingScores,
+    top50RatingLastUpdated: lastUpdated
+  })
+
+  return top50ratingScores
+}
+
+export const clearTop50RatingCache = async (): Promise<void> => {
+  await chrome.storage.local.remove(['top50ratingScores', 'top50RatingLastUpdated'])
+}

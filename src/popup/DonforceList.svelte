@@ -4,37 +4,7 @@
   import { DIFFICULTY_COLORS, DIFFICULTY_TO_INDEX } from '../constants'
   import { type SongDB } from '../lib/songDB'
   import { getSongDetailLink } from '../lib/songs'
-
-  interface UserRatingData {
-    currentRating: number
-    currentExp: number | null
-    ratingDataWithScoreData: Array<{
-      songNo: number
-      difficulty: 'oni' | 'ura'
-      songRating: {
-        value: number
-        accuracy: number
-        measureValue: number
-      }
-      scoreData: {
-        crown: 'played' | 'silver' | 'gold' | 'donderfull'
-        badge: 'rainbow' | 'purple' | 'pink' | 'gold' | 'silver' | 'bronze' | 'white' | null
-        score: number
-        ranking: number
-        good: number
-        ok: number
-        bad: number
-        maxCombo: number
-        roll: number
-        count: {
-          play: number
-          clear: number
-          fullcombo: number
-          donderfullcombo: number
-        }
-      } | null
-    }>
-  }
+  import { clearTop50RatingCache, getTop50Rating, type UserRatingData } from '../lib/rating'
 
   let userRatingData: UserRatingData
   let status = 'loading'
@@ -42,24 +12,7 @@
 
   const getData = async (): Promise<void> => {
     try {
-      const url = 'https://taiko.wiki/api/user/rating'
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      })
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Unauthorized access - 401')
-        } else {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-      }
-
-      const data = await response.json()
+      const data = await getTop50Rating()
       userRatingData = data
       status = 'success'
     } catch (e) {
@@ -88,6 +41,10 @@
     <a href="https://taiko.wiki/rating/me" target="_blank">
       <span class="top-text">taiko.wiki rating</span>
     </a>
+    <button on:click={async () => {
+      await clearTop50RatingCache()
+      await getData()
+    }}>Refresh</button>
   </div>
 
   {#if userRatingData}
