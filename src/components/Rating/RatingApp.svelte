@@ -192,12 +192,17 @@
             const nextPage = await getRecentScoreData(complete + 1)
 
             // termniate condtion 1: no more data
+            let allSame = true
             for (let i = 0; i < nextPage.length; i++) {
-              if (nextPage[i].songName === firstPage[i].songName &&
-                nextPage[i].difficulty === firstPage[i].difficulty
+              if (nextPage[i].songName !== firstPage[i].songName ||
+                nextPage[i].difficulty !== firstPage[i].difficulty
               ) {
-                shouldStop = true
+                allSame = false
+                break
               }
+            }
+            if (allSame) {
+              shouldStop = true
             }
 
             // termniate condtion 2: no more plays
