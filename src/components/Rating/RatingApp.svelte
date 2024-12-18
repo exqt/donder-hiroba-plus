@@ -256,8 +256,9 @@
           for (const [songName, songNos] of songNameToSongNos.entries()) {
             if (songNos !== undefined && songNos.length > 1) {
               if (!seenDuplicatedSongNames.has(songName)) {
-                break
+                continue
               }
+              
               for (const songNo of songNos) {
                 const songClearData = clearData.find(song => song.songNo === songNo)
                 if (songClearData !== undefined) {
