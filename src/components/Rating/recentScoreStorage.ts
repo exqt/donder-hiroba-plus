@@ -3,10 +3,17 @@ import type { ScoreData } from './ratingTypes'
 class RecentScoreStorage {
   private scoreDataMap: Record<string, ScoreData> = {}
   private lastUpdated: string | null = null
+  private readonly donderId: string = ''
+  private recentScoresByUser: string
+  private lastUpdatedByUser: string
 
-  constructor () {
+  constructor (donderId: string = '') {
     this.scoreDataMap = {}
     this.lastUpdated = null
+    this.donderId = donderId
+
+    this.recentScoresByUser = `recentScores-${this.donderId}`
+    this.lastUpdatedByUser = `lastUpdated-${this.donderId}`
   }
 
   async clear (): Promise<void> {
@@ -16,7 +23,13 @@ class RecentScoreStorage {
   }
 
   public async loadFromChromeStorage (): Promise<void> {
-    const result = await chrome.storage.local.get(['recentScores', 'lastUpdated'])
+    let result = await chrome.storage.local.get([`recentScores-${this.donderId}`, `lastUpdated-${this.donderId}`])
+    if (result.recentScores === undefined) {
+      result = await chrome.storage.local.get(['recentScores', 'lastUpdated'])
+      this.recentScoresByUser = 'recentScores'
+      this.lastUpdatedByUser = 'lastUpdated'
+    }
+
     if (result.recentScores !== undefined) {
       this.scoreDataMap = result.recentScores
     }
@@ -38,8 +51,8 @@ class RecentScoreStorage {
 
   private async saveToStorage (): Promise<void> {
     await chrome.storage.local.set({
-      recentScores: this.scoreDataMap,
-      lastUpdated: this.formatDate(new Date())
+      [this.recentScoresByUser]: this.scoreDataMap,
+      [this.lastUpdatedByUser]: this.formatDate(new Date())
     })
   }
 

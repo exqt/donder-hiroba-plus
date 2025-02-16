@@ -19,16 +19,30 @@
     let message: string = ''
     let uploadMessage: string = ''
     let complete: number = 0
+    let notlogined = false
 
-    const storage = new RecentScoreStorage()
+    let storage: RecentScoreStorage
     let storageLoaded = false
     let lastUpdated: string | null = null
     let scoreDataSorted: Array<{ songName: string, difficulty: string, score: DifficultyScoreData, songNo: string }> = []
     let totalPlayCount: string = '0 / 0 / 0 / 0'
     let openPlayCount: boolean = false
+    let cardData: CardData | null = null
 
     onMount(async () => {
+      try {
+        cardData = await hiroba.getCurrentLogin(null)
+      } catch (err) {
+        console.warn(err)
+        notlogined = true
+        message = 'Failed to get card data'
+        return
+      }
+
+      cardData = await hiroba.getCurrentLogin(null)
+      storage = new RecentScoreStorage(cardData.taikoNumber.toString())
       await storage.loadFromChromeStorage()
+
       storageLoaded = true
       lastUpdated = storage.getLastUpdated()
       updateScoreDataSorted()
@@ -105,7 +119,7 @@
       return parsed ?? null
     }
 
-    async function uploadToWiki (donderData: CardData, clearData: ClearData[], scoreDataMap?: Record<string, ScoreData>): Promise<void> {
+    async function uploadToWiki (donderData: CardData | null, clearData: ClearData[], scoreDataMap?: Record<string, ScoreData>): Promise<void> {
       let data
       if (scoreDataMap !== undefined) {
         await storage.mergeMap(scoreDataMap)
@@ -138,7 +152,7 @@
     }
 
     // 리팩토링된 send 함수
-    async function send (cardData: CardData, sendType: 'clear' | 'score' | 'all' | 'recent'): Promise<void> {
+    async function send (cardData: CardData | null, sendType: 'clear' | 'score' | 'all' | 'recent'): Promise<void> {
       if (!confirm(`Send your donderhiroba datas to ${wikiOrigin}. It will be deleted together when you delete your account. Do you agree?`)) {
         alert('Canceled.')
         message = ''
@@ -258,7 +272,6 @@
               if (!seenDuplicatedSongNames.has(songName)) {
                 continue
               }
-              
               for (const songNo of songNos) {
                 const songClearData = clearData.find(song => song.songNo === songNo)
                 if (songClearData !== undefined) {
@@ -289,9 +302,11 @@
 </script>
 
 <div class="container">
-    {#await hiroba.getCurrentLogin(null)}
+    {#if notlogined}
+        <div class="error_display">Not Logined</div>
+    {:else if cardData === null}
         Loading...
-    {:then cardData}
+    {:else}
         {#if scene === 'ready'}
             {#if message}
                 <div class="error_display">{message}</div>
@@ -364,9 +379,7 @@
         {:else if scene === 'upload'}
             {uploadMessage}
         {/if}
-    {:catch}
-        <div class="error_display">Not Logined</div>
-    {/await}
+    {/if}
 </div>
 
 <style>
