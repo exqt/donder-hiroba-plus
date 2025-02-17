@@ -29,7 +29,7 @@
   onMount(async () => {
     await parseTopPage()
 
-    if (settingsStorage.donderInfo === undefined) {
+    if (settingsStorage?.donderInfo === undefined) {
       return
     }
     donderInfo = settingsStorage.donderInfo
@@ -59,11 +59,11 @@
 <div class="wrapper">
   <div class="donder-info" style={`background-image: url(${images.titlePlate})`}>
     <div style="height: 20px;text-align: center;position:relative;z-index:1;font-weight: bold;text-shadow: 0 0 0px #000;">
-      {donderInfo.title}
+      {donderInfo?.title ?? ''}
     </div>
     <div style="width:270px;height:23px;margin-left:10px;margin-right:10px;text-align:center;position:relative;z-index:1;display:flex;">
       <div style="width:135px;text-align:center;font-weight: bold;font-size: 12px;text-shadow: 0 0 0px #000;margin-top: 3px;">
-        {donderInfo.name}
+        {donderInfo?.name ?? ''}
       </div>
       <div style="width:135px;text-align:center">
         <img src={danImageURL} style="height:21px;margin:1px 0;" alt="danlabel">
@@ -83,9 +83,9 @@
     <span class="total-score-text" style="transform: translate(138px, 84px);">{donderInfo?.badgeCounts?.[3] ?? 0}</span>
     <span class="total-score-text" style="transform: translate(220px, 84px);">{donderInfo?.badgeCounts?.[4] ?? 0}</span>
 
-    <span class="total-score-text crown" style="transform: translate(56px,  122px);"> {donderInfo?.crownCounts?.silver}</span>
-    <span class="total-score-text crown" style="transform: translate(138px, 122px);"> {donderInfo?.crownCounts?.gold}</span>
-    <span class="total-score-text crown" style="transform: translate(220px, 122px);"> {donderInfo?.crownCounts?.donderfull}</span>
+    <span class="total-score-text crown" style="transform: translate(56px,  122px);"> {donderInfo?.crownCounts?.silver ?? 0}</span>
+    <span class="total-score-text crown" style="transform: translate(138px, 122px);"> {donderInfo?.crownCounts?.gold ?? 0}</span>
+    <span class="total-score-text crown" style="transform: translate(220px, 122px);"> {donderInfo?.crownCounts?.donderfull ?? 0}</span>
   </div>
 
   <div class="hiroba-link-buttons">

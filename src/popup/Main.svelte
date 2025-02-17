@@ -51,8 +51,8 @@
 
     loaded = true
 
-    if (settingsStorage.disclaimerAgreed) {
-      showDisclaimer = false
+    if (!settingsStorage.disclaimerAgreed) {
+      showDisclaimer = true
     }
   })
 
@@ -62,7 +62,7 @@
     await settingsStorage.save()
   }
 
-  let showDisclaimer = true
+  let showDisclaimer = false
   const onAgree = async (): Promise<void> => {
     showDisclaimer = false
     settingsStorage.disclaimerAgreed = true
