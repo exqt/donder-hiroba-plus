@@ -73,7 +73,7 @@
       totalPlayCount = `${totalPlay} / ${totalClear} / ${totalFullcombo} / ${totalDonderfullcombo}`
     }
 
-    let sendType: 'clear' | 'score' | 'all' | 'recent' = 'clear'
+    let sendType: 'clear' | 'score' | 'all' | 'recent' = 'all'
 
     // 새로운 유틸리티 함수들
     async function checkWikiLogin (): Promise<boolean> {
