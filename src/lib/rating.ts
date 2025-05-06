@@ -18,10 +18,10 @@ export const getCrownBonus = (crown: Crown): number => {
       return 1
     }
     case ('gold'): {
-      return 1.1
+      return 1.05
     }
     case ('donderfull'): {
-      return 1.15
+      return 1.1
     }
     default: {
       return 0
@@ -37,7 +37,7 @@ export function getCompensated (accuracy: number): number {
     compensated = Math.exp(Math.log(400001) / 600000 * multiplied) - 1
   } else if (multiplied < 750000) {
     compensated = (5 / 3) * (multiplied - 600000) + 400000
-  } else if (multiplied < 950000) {
+  } else if (multiplied <= 950000) {
     compensated = (3 / 2) * (multiplied - 750000) + 650000
   } else {
     compensated = (150000 / Math.log(16)) * Math.log((multiplied - 950000) / 10000 + 1) + 950000

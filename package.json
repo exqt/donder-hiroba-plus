@@ -1,7 +1,7 @@
 {
   "name": "donder-hiroba-plus",
   "private": true,
-  "version": "0.2.9.5",
+  "version": "0.2.9.6",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -46,7 +46,7 @@
     "cheerio": "^1.0.0",
     "hangul-js": "^0.2.6",
     "lzutf8": "^0.6.3",
-    "node-hiroba": "^1.7.3",
+    "node-hiroba": "^1.7.7",
     "svelte-lazy": "^1.2.7",
     "svelte-spa-router": "^4.0.1"
   }

@@ -52,7 +52,7 @@
   <Switch bind:checked={perSong} label={' / 50'}/>
 
   <label for="accuracy">Accuracy: {accuracy.toFixed(1)}%</label>
-  <input type="range" min="60" max="105" step="0.1" bind:value={accuracy} />
+  <input type="range" min="75" max="101" step="0.1" bind:value={accuracy} />
 
   <div class="rating-value-container">
     {#each CROWNS as crown}
