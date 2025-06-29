@@ -6,10 +6,11 @@ export const getAccuracy = (difficultyScoreData: DifficultyScoreData, maxCombo: 
 
 export function getSongRating (accuracy: number, crown: Crown, measureValue: number): number {
   const compensatedAccuracy = getCompensated(accuracy)
-  return Math.round(measureValue * compensatedAccuracy * getCrownBonus(crown) / 1000)
+  return Math.round(measureValue * compensatedAccuracy * getCrownBonus(crown, accuracy) / 1000)
 }
 
-export const getCrownBonus = (crown: Crown): number => {
+export const getCrownBonus = (crown: Crown, acc: number): number => {
+  if (acc < 85) return 0.7
   switch (crown) {
     case ('played'): {
       return 0.7
