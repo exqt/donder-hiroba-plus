@@ -1,5 +1,6 @@
 import { DIFFICULTIES } from '../constants'
 import type { BadgeType, CrownType, DifficultyType, SongScore } from '../types'
+import { parseScores } from './songs'
 
 const STORAGE_KEY = 'scoresByNo'
 
@@ -95,5 +96,50 @@ export class ScoreStorage {
     }
 
     return { badges, crowns }
+  }
+}
+
+export const updateSongScoreAllForLocal = async (): Promise<void> => {
+  const scoreStorage = await ScoreStorage.getInstance()
+  try {
+    // get tckt
+    const mypage = await fetch('https://donderhiroba.jp/mypage_top.php')
+    const mypageDoc = new DOMParser().parseFromString(await mypage.text(), 'text/html')
+    const tckt = mypageDoc.getElementById('content')?.querySelector('#_tckt')?.textContent
+    if (tckt === undefined || tckt === null) {
+      alert('server error')
+      return
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const res = await fetch('https://donderhiroba.jp/ajax/update_score.php', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'x-requested-with': 'XMLHttpRequest'
+      },
+      credentials: 'include',
+      body: `_tckt=${tckt}`
+    })
+
+    // visit every genre page
+    const docs = []
+    for (let i = 1; i <= 8; i++) {
+      const url = `https://donderhiroba.jp/score_list.php?genre=${i}`
+      const response = await fetch(url)
+      const text = await response.text()
+      const doc = new DOMParser().parseFromString(text, 'text/html')
+      docs.push(doc)
+    }
+
+    docs.forEach((doc) => {
+      const scores = parseScores(doc)
+      scores.forEach((score) => { scoreStorage.putScore(score) })
+    })
+    await scoreStorage.save()
+    alert('Song scores updated successfully!')
+  } catch (e) {
+    console.error(e)
+    alert('Failed to update song scores. Please try again later.')
   }
 }

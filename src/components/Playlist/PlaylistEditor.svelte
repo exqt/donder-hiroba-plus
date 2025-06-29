@@ -6,7 +6,7 @@
 
   import type { FavoriteSong, Language } from '../../types'
   import FavoriteSongs from './FavoriteSongs.svelte'
-  import { ScoreStorage } from '../../lib/scores'
+  import { ScoreStorage, updateSongScoreAllForLocal } from '../../lib/scores'
   import PlaylistContainer from './PlaylistContainer.svelte'
   import { genUUID } from '../../lib/utils'
   import { SettingsStorage } from '../../lib/settings'
@@ -74,6 +74,19 @@
     language = settingsStorage.language
   })
 
+  let isUpdating = false
+
+  const updateScore = async (): Promise<void> => {
+    isUpdating = true
+    try {
+      await updateSongScoreAllForLocal()
+    } catch (e) {
+    } finally {
+      window.location.reload()
+      isUpdating = false
+    }
+  }
+
 </script>
 
 <div class="wrapper">
@@ -83,6 +96,13 @@
   <div class="button-container">
     <Button on:click={decodePlaylist}>
       Decode Base64
+    </Button>
+    <Button on:click={updateScore} disabled={isUpdating}>
+      {#if isUpdating}
+        Updating...
+      {:else}
+        Update Scores
+      {/if}
     </Button>
   </div>
   {#if playlists}

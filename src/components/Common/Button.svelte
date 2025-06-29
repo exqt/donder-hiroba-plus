@@ -1,8 +1,9 @@
 <script lang="ts">
   export let active = false
+  export let disabled = false
 </script>
 
-<button class:active on:click>
+<button class:active on:click disabled={disabled}>
   <slot></slot>
 </button>
 
