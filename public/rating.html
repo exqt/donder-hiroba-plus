@@ -13,6 +13,14 @@
                     border: 1px solid #555 !important;
                 }
             }
+            /* ignore scrollbar width */
+            body::-webkit-scrollbar {
+                width: 0px;
+                background: transparent; /* make scrollbar transparent */
+            }
+            html, body {
+                overflow-y: scroll; /* Always show vertical scrollbar */
+            }
         </style>
     </head>
     <body>

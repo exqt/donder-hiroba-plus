@@ -3,7 +3,6 @@
   import { icons } from '../../assets'
 
   export let scoreDataSorted: SortedScoreData[]
-  export let totalPlayCount: string
   export let lastUpdated: string | null
   export let onClearCache: () => Promise<void>
 
@@ -25,7 +24,17 @@
 
   {#if openPlayCount}
     <span>Total Song Count: {scoreDataSorted.length}</span>
-    <span>Total Play Count: {totalPlayCount}</span>
+    <span>Total Play Count </span>
+    <div>
+        <img class="icon" src={icons.crowns.played} alt="Played" title="Played" />
+        {scoreDataSorted.reduce((acc, score) => acc + score.score.count.play, 0)}
+        <img class="icon" src={icons.crowns.silver} alt="Clear" title="Clear" />
+        {scoreDataSorted.reduce((acc, score) => acc + score.score.count.clear, 0)}
+        <img class="icon" src={icons.crowns.gold} alt="Full Combo" title="Full Combo" />
+        {scoreDataSorted.reduce((acc, score) => acc + score.score.count.fullcombo, 0)}
+        <img class="icon" src={icons.crowns.donderfull} alt="Donder Full" title="Donder Full" />
+        {scoreDataSorted.reduce((acc, score) => acc + score.score.count.donderfullcombo, 0)}
+    </div>
 
     <table class="play-count-table">
       <thead>
@@ -97,6 +106,12 @@
   .play-count-table th img {
     width: 20px;
     height: 20px;
+    vertical-align: middle;
+  }
+
+  .icon {
+    width: 30px;
+    height: 30px;
     vertical-align: middle;
   }
 </style>

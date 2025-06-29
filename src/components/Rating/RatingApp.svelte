@@ -19,7 +19,6 @@
     let storageLoaded = false
     let lastUpdated: string | null = null
     let scoreDataSorted: SortedScoreData[] = []
-    let totalPlayCount: string = '0 / 0 / 0 / 0'
     let cardData: CardData | null = null
     let sendType: 'clear' | 'score' | 'all' | 'recent' = 'all'
 
@@ -47,7 +46,6 @@
     const updateScoreData = (): void => {
       const result = updateScoreDataSorted(storage)
       scoreDataSorted = result.scoreDataSorted
-      totalPlayCount = result.totalPlayCount
     }
 
     async function handleUpload (): Promise<void> {
@@ -119,7 +117,6 @@
             {#if storageLoaded}
               <ScoreDataTable
                 {scoreDataSorted}
-                {totalPlayCount}
                 {lastUpdated}
                 onClearCache={handleClearCache}
               />
