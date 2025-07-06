@@ -26,7 +26,13 @@ const insertContextMenu = (playlistsStore: PlaylistsStore): void => {
       if (songNo === undefined) return
 
       const diffFromParam = url.searchParams.get('diff')
-      const diff: DifficultyType = (diffFromParam === 'ura' || diffFromParam === 'oni_ura') ? 'oni_ura' : 'oni'
+      let diff: DifficultyType = 'oni'; // or another appropriate default value
+
+      if (diffFromParam === 'ura' || diffFromParam === 'oni_ura') diff = 'oni_ura'
+      else if (diffFromParam === 'oni') diff = 'oni'
+      else if (diffFromParam === 'hard') diff = 'hard'
+      else if (diffFromParam === 'normal') diff = 'normal'
+      else if (diffFromParam === 'easy') diff = 'easy'
 
       const mouseEvent = ev as MouseEvent
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
