@@ -47,6 +47,26 @@
       }
     }
   })
+
+  // score-detail 접기 상태
+  import { writable } from 'svelte/store'
+  const SCORE_DETAIL_COLLAPSE_KEY = 'scoreDetailCollapsed'
+  function getInitialCollapsed() {
+    if (typeof window === 'undefined') return false
+    const v = window.localStorage.getItem(SCORE_DETAIL_COLLAPSE_KEY)
+    return v === 'true'
+  }
+  const scoreDetailCollapsedStore = writable(getInitialCollapsed())
+  scoreDetailCollapsedStore.subscribe(v => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(SCORE_DETAIL_COLLAPSE_KEY, v ? 'true' : 'false')
+    }
+  })
+
+  const onClickScoreDetailToggle = (e: MouseEvent) => {
+    e.stopPropagation()
+    scoreDetailCollapsedStore.update(v => !v)
+  }
 </script>
 
 <div class="context-menu" style="top: {y}px; left: {x}px">
@@ -59,44 +79,59 @@
           <span>Open in New Tab</span>
         </button>
       </a>
-      <!-- 여기에 만들어 줘 -->
-      {#if score}
-      <div class="score-details">
-        <div class="score-item score-total">
-          <span>{score.score}点</span>
-        </div>
-        <div class="score-grid">
-          <div class="score-item"><span style="color: orange">良</span><span>{score.good}</span></div>
-          <div class="score-item"><span style="color: orange">最大コンボ</span><span>{score.maxCombo}</span></div>
-          <div class="score-item"><span style="color: gray">可</span><span>{score.ok}</span></div>
-          <div class="score-item"><span style="color: orange">連打数</span><span>{score.roll}</span></div>
-          <div class="score-item"><span style="color: blue">不可</span><span>{score.bad}</span></div>
-          <div class="score-item"></div>
-          <div class="score-item">
-            <img src={icons.crowns.played} alt="played" class="crown-icon" title="플레이 횟수" />
-            <span>{score.count.play}</span>
-          </div>
-          <div class="score-item">
-            <img src={icons.crowns.silver} alt="clear" class="crown-icon" title="클리어 횟수" />
-            <span>{score.count.clear}</span>
-          </div>
-          <div class="score-item">
-            <img src={icons.crowns.gold} alt="fullcombo" class="crown-icon" title="풀콤보" />
-            <span>{score.count.fullcombo}</span>
-          </div>
-          <div class="score-item">
-            <img src={icons.crowns.donderfull} alt="donderfullcombo" class="crown-icon" title="돈다풀콤보" />
-            <span>{score.count.donderfullcombo}</span>
-          </div>
-        </div>
-      </div>
-      {/if}
       <a href={hirobaLink} target="_blank" rel="noopener noreferrer">
         <button class="item">
           <span>🔗</span>
           <span>Score on Donder Hiroba</span>
         </button>
       </a>
+      {#if score}
+      <div class="score-details">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div class="score-detail-header" on:click={onClickScoreDetailToggle}>
+          <span class="score-detail-toggle">
+            {#if $scoreDetailCollapsedStore}
+              ▼
+            {:else}
+              ▲
+            {/if}
+          </span>
+          <span>Score Details</span>
+        </div>
+        {#if !$scoreDetailCollapsedStore}
+        <div>
+          <div class="score-item score-total">
+            <span>{score.score}点</span>
+          </div>
+          <div class="score-grid">
+            <div class="score-item"><span style="color: orange">良</span><span>{score.good}</span></div>
+            <div class="score-item"><span style="color: orange">最大コンボ</span><span>{score.maxCombo}</span></div>
+            <div class="score-item"><span style="color: gray">可</span><span>{score.ok}</span></div>
+            <div class="score-item"><span style="color: orange">連打数</span><span>{score.roll}</span></div>
+            <div class="score-item"><span style="color: blue">不可</span><span>{score.bad}</span></div>
+            <div class="score-item"></div>
+            <div class="score-item">
+              <img src={icons.crowns.played} alt="played" class="crown-icon" title="플레이 횟수" />
+              <span>{score.count.play}</span>
+            </div>
+            <div class="score-item">
+              <img src={icons.crowns.silver} alt="clear" class="crown-icon" title="클리어 횟수" />
+              <span>{score.count.clear}</span>
+            </div>
+            <div class="score-item">
+              <img src={icons.crowns.gold} alt="fullcombo" class="crown-icon" title="풀콤보" />
+              <span>{score.count.fullcombo}</span>
+            </div>
+            <div class="score-item">
+              <img src={icons.crowns.donderfull} alt="donderfullcombo" class="crown-icon" title="돈다풀콤보" />
+              <span>{score.count.donderfullcombo}</span>
+            </div>
+          </div>
+        </div>
+        {/if}
+      </div>
+      {/if}
     </div>
     {/if}
     <div class="item-container">
@@ -153,6 +188,19 @@
     padding: 5px;
     border-top: 1px solid #0002;
     border-bottom: 1px solid #0002;
+  }
+
+  .score-detail-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .score-detail-toggle {
+    font-size: 12px;
+    margin-right: 0.2em;
+    color: #888;
   }
 
   .score-total {
