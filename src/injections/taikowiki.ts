@@ -1,8 +1,9 @@
 import { PlaylistsStore } from '../lib/playlist'
 import PlaylistContextMenu from '../components/Common/PlaylistContextMenu.svelte'
-import type { DifficultyType } from '../types'
+import RecentScoreStorage from '../components/Rating/recentScoreStorage'
+import type { Difficulty } from 'node-hiroba/types'
 
-const insertContextMenu = (playlistsStore: PlaylistsStore): void => {
+const insertContextMenu = (playlistsStore: PlaylistsStore, recentScoreStorage: RecentScoreStorage): void => {
   let comp: PlaylistContextMenu
 
   const removeContextMenu = (): void => {
@@ -26,9 +27,9 @@ const insertContextMenu = (playlistsStore: PlaylistsStore): void => {
       if (songNo === undefined) return
 
       const diffFromParam = url.searchParams.get('diff')
-      let diff: DifficultyType = 'oni'; // or another appropriate default value
+      let diff: Difficulty = 'oni'; // or another appropriate default value
 
-      if (diffFromParam === 'ura' || diffFromParam === 'oni_ura') diff = 'oni_ura'
+      if (diffFromParam === 'ura' || diffFromParam === 'oni_ura') diff = 'ura'
       else if (diffFromParam === 'oni') diff = 'oni'
       else if (diffFromParam === 'hard') diff = 'hard'
       else if (diffFromParam === 'normal') diff = 'normal'
@@ -40,6 +41,7 @@ const insertContextMenu = (playlistsStore: PlaylistsStore): void => {
         target: document.body,
         props: {
           playlists: playlistsStore,
+          recentScores: recentScoreStorage,
           difficulty: diff,
           songNo,
           x: mouseEvent.pageX,
@@ -68,11 +70,13 @@ const insertContextMenu = (playlistsStore: PlaylistsStore): void => {
 
 export default async (): Promise<void> => {
   const playlistsStore = await PlaylistsStore.getInstance()
+  const recentScoreStore = new RecentScoreStorage()
+  await recentScoreStore.loadFromChromeStorage()
 
   const runInterval = () => {
     let executionCount = 0
     const intervalId = setInterval(() => {
-      insertContextMenu(playlistsStore)
+      insertContextMenu(playlistsStore, recentScoreStore)
       executionCount++
       if (executionCount >= 5) {
         clearInterval(intervalId)

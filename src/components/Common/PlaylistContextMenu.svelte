@@ -1,11 +1,16 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { DIFFICULTY_TO_INDEX } from '../../constants'
   import type { PlaylistsStore } from '../../lib/playlist'
-  import type { DifficultyType } from '../../types'
+  import type RecentScoreStorage from '../Rating/recentScoreStorage'
+    import type { DifficultyScoreData, ScoreData } from 'node-hiroba/types';
+    import type { Difficulty } from '../Rating/ratingTypes';
+  import { icons } from '../../assets'
 
   export let songNo: string
-  export let difficulty: DifficultyType = 'oni'
+  export let difficulty: Difficulty = 'oni'
   export let playlists: PlaylistsStore
+  export let recentScores: RecentScoreStorage
   export let x: number
   export let y: number
   export let wikiLink: string | undefined
@@ -29,6 +34,19 @@
   wikiLink ??= `https://taiko.wiki/song/${songNo}?diff=${difficulty}`
   const hirobaLink = `https://donderhiroba.jp/score_detail.php?song_no=${songNo}&level=${DIFFICULTY_TO_INDEX[difficulty] + 1}`
   const isWiki = window?.location?.hostname === 'taiko.wiki'
+  let score: DifficultyScoreData | null = null
+
+  onMount(() => {
+    let recentScoreData = recentScores.getSongScoreData(songNo);
+    if (recentScoreData !== null) {
+      let _score = recentScoreData.difficulty[difficulty];
+      if (_score !== null || _score === undefined) {
+        score = _score as DifficultyScoreData;
+      } else {
+        score = null;
+      }
+    }
+  })
 </script>
 
 <div class="context-menu" style="top: {y}px; left: {x}px">
@@ -41,6 +59,38 @@
           <span>Open in New Tab</span>
         </button>
       </a>
+      <!-- 여기에 만들어 줘 -->
+      {#if score}
+      <div class="score-details">
+        <div class="score-item score-total">
+          <span>{score.score}点</span>
+        </div>
+        <div class="score-grid">
+          <div class="score-item"><span style="color: orange">良</span><span>{score.good}</span></div>
+          <div class="score-item"><span style="color: orange">最大コンボ</span><span>{score.maxCombo}</span></div>
+          <div class="score-item"><span style="color: gray">可</span><span>{score.ok}</span></div>
+          <div class="score-item"><span style="color: orange">連打数</span><span>{score.roll}</span></div>
+          <div class="score-item"><span style="color: blue">不可</span><span>{score.bad}</span></div>
+          <div class="score-item"></div>
+          <div class="score-item">
+            <img src={icons.crowns.played} alt="played" class="crown-icon" title="플레이 횟수" />
+            <span>{score.count.play}</span>
+          </div>
+          <div class="score-item">
+            <img src={icons.crowns.silver} alt="clear" class="crown-icon" title="클리어 횟수" />
+            <span>{score.count.clear}</span>
+          </div>
+          <div class="score-item">
+            <img src={icons.crowns.gold} alt="fullcombo" class="crown-icon" title="풀콤보" />
+            <span>{score.count.fullcombo}</span>
+          </div>
+          <div class="score-item">
+            <img src={icons.crowns.donderfull} alt="donderfullcombo" class="crown-icon" title="돈다풀콤보" />
+            <span>{score.count.donderfullcombo}</span>
+          </div>
+        </div>
+      </div>
+      {/if}
       <a href={hirobaLink} target="_blank" rel="noopener noreferrer">
         <button class="item">
           <span>🔗</span>
@@ -99,6 +149,31 @@
     border-bottom: 4px solid #0002;
   }
 
+  .score-details {
+    padding: 5px;
+    border-top: 1px solid #0002;
+    border-bottom: 1px solid #0002;
+  }
+
+  .score-total {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 10px;
+  }
+
+  .score-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+  }
+
   .invisible {
     visibility: hidden;
   }
@@ -127,6 +202,13 @@
     margin-left: auto;
     text-align: right;
     float: right;
+  }
+
+  .crown-icon {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: middle;
+    margin-right: 0.3em;
   }
 
   @media (prefers-color-scheme: light) {

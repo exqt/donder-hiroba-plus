@@ -88,6 +88,13 @@ class RecentScoreStorage {
     return Object.keys(this.scoreDataMap).length
   }
 
+  getSongScoreData (songNo: string): ScoreData | null {
+    if (this.scoreDataMap[songNo] === undefined) {
+      return null
+    }
+    return this.scoreDataMap[songNo]
+  }
+
   getLastUpdated (): string | null {
     if (Object.keys(this.scoreDataMap).length === 0) {
       return null
