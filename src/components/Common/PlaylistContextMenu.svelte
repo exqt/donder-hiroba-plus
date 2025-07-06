@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount } from 'svelte'
   import { DIFFICULTY_TO_INDEX } from '../../constants'
   import type { PlaylistsStore } from '../../lib/playlist'
   import type RecentScoreStorage from '../Rating/recentScoreStorage'
-    import type { DifficultyScoreData, ScoreData } from 'node-hiroba/types';
-    import type { Difficulty } from '../Rating/ratingTypes';
+  import type { DifficultyScoreData } from 'node-hiroba/types'
+  import type { Difficulty } from '../Rating/ratingTypes'
   import { icons } from '../../assets'
 
   export let songNo: string
   export let difficulty: Difficulty = 'oni'
   export let playlists: PlaylistsStore
-  export let recentScores: RecentScoreStorage
+  export let recentScores: RecentScoreStorage | undefined
   export let x: number
   export let y: number
-  export let wikiLink: string | undefined
+  export let wikiLink: string | undefined | null
 
   const onClickItem = async (idx: number): Promise<void> => {
     const playlist = $playlists[idx]
@@ -37,13 +37,14 @@
   let score: DifficultyScoreData | null = null
 
   onMount(() => {
-    let recentScoreData = recentScores.getSongScoreData(songNo);
+    if (recentScores == null) return
+    const recentScoreData = recentScores.getSongScoreData(songNo)
     if (recentScoreData !== null) {
-      let _score = recentScoreData.difficulty[difficulty];
+      const _score = recentScoreData.difficulty[difficulty]
       if (_score !== null || _score === undefined) {
-        score = _score as DifficultyScoreData;
+        score = _score as DifficultyScoreData
       } else {
-        score = null;
+        score = null
       }
     }
   })
@@ -51,7 +52,7 @@
   // score-detail 접기 상태
   import { writable } from 'svelte/store'
   const SCORE_DETAIL_COLLAPSE_KEY = 'scoreDetailCollapsed'
-  function getInitialCollapsed() {
+  function getInitialCollapsed (): boolean {
     if (typeof window === 'undefined') return false
     const v = window.localStorage.getItem(SCORE_DETAIL_COLLAPSE_KEY)
     return v === 'true'
@@ -63,7 +64,7 @@
     }
   })
 
-  const onClickScoreDetailToggle = (e: MouseEvent) => {
+  const onClickScoreDetailToggle = (e: MouseEvent): void => {
     e.stopPropagation()
     scoreDetailCollapsedStore.update(v => !v)
   }

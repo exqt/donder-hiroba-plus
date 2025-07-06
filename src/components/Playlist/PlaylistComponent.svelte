@@ -55,6 +55,7 @@
   }
 
   const tckt: string = getContext('tckt')
+  let errorMessage: string | null = null
   const onExport = async (): Promise<void> => {
     if (!confirm('Are you sure you want to export this playlist?')) {
       return
@@ -66,7 +67,8 @@
       await updateFavoriteSongList(songNoList, tckt)
     } catch (e) {
       console.error(e)
-      alert('Failed to save favorite songs')
+      errorMessage = e instanceof Error ? e.message : 'An unknown error occurred'
+      alert(`Failed to export playlist: ${errorMessage}\nPossible reasons:\n- Server is in maintenance (01:30 - 07:00 JST)\n- Contains locked songs that you don't have\n- Session expired\n- Network error`)
       return
     }
 

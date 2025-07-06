@@ -64,6 +64,10 @@ export const updateFavoriteSongList = async (songNoList: string[], tckt: string)
   })
 
   console.log(res)
+
+  if (res.status > 399) {
+    throw new Error(`Failed to update favorite song list: ${res.status}`)
+  }
 }
 
 export const parseCurrentFavoriteSongList = (): FavoriteSong[] => {

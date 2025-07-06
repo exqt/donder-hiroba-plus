@@ -89,6 +89,8 @@
     <PlaylistContextMenu
       {songNo}
       {playlists}
+      wikiLink={null}
+      recentScores={undefined}
       x={0}
       y={0}
     />
