@@ -114,12 +114,6 @@
   <button class="warning" disabled={disableSongDataUpdate} on:click={forceSongDataUpdate}>{'Force SongData Update'}</button>
   <span></span>
 
-  <a href="https://docs.google.com/forms/d/1Vip2obD-XN8ie6qHEcwBETMFChbh6PxSqxy0O2FqmWc/edit" target="_blank">
-    <button class="info">
-      Help Deskop
-    </button>
-  </a>
-
   <div class="footer">
     <a href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
       <img class="icon" src={icons.github} alt="github"/>
@@ -168,10 +162,6 @@
   button:disabled {
     background-color: #575757;
     cursor: not-allowed;
-  }
-
-  button.info {
-    background-color: #28a745;
   }
 
   .footer {
