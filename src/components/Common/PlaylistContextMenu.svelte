@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { DIFFICULTY_TO_INDEX } from '../../constants'
   import type { PlaylistsStore } from '../../lib/playlist'
   import type RecentScoreStorage from '../Rating/recentScoreStorage'
   import type { DifficultyScoreData } from 'node-hiroba/types'
@@ -8,6 +7,7 @@
   import { icons } from '../../assets'
 
   export let songNo: string
+  export let title: string
   export let difficulty: Difficulty = 'oni'
   export let playlists: PlaylistsStore
   export let recentScores: RecentScoreStorage | undefined
@@ -31,8 +31,15 @@
     })
   }
 
+  const diffStrs = ['かんたん', 'ふつう', 'むずかしい', 'おに 表', 'おに 裏']
+  const DIFFICULTIES = ['easy', 'normal', 'hard', 'oni', 'ura'] as const
+  const DIFFICULTY_TO_INDEX = Object.fromEntries(DIFFICULTIES.map((difficulty, index) => [difficulty, index]))
+
+  const diffIndex = DIFFICULTY_TO_INDEX[difficulty] + 1
   wikiLink ??= `https://taiko.wiki/song/${songNo}?diff=${difficulty}`
-  const hirobaLink = `https://donderhiroba.jp/score_detail.php?song_no=${songNo}&level=${DIFFICULTY_TO_INDEX[difficulty] + 1}`
+  const hirobaLink = `https://donderhiroba.jp/score_detail.php?song_no=${songNo}&level=${diffIndex}`
+  const youtubeLink = `https://www.youtube.com/results?search_query=太鼓の達人+${title}+${diffStrs[diffIndex - 1]}`
+
   const isWiki = window?.location?.hostname === 'taiko.wiki'
   let score: DifficultyScoreData | null = null
 
@@ -84,6 +91,12 @@
         <button class="item">
           <span>🔗</span>
           <span>Score on Donder Hiroba</span>
+        </button>
+      </a>
+      <a href={youtubeLink} target="_blank" rel="noopener noreferrer">
+        <button class="item">
+          <span>🔗</span>
+          <span>Search on YouTube</span>
         </button>
       </a>
       {#if score}

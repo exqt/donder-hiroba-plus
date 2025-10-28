@@ -17,6 +17,8 @@ const insertContextMenu = (playlistsStore: PlaylistsStore, recentScoreStorage: R
     const linkElem = target.closest('a')
     if (linkElem === null) return
 
+    const title = linkElem.querySelector('.title')?.textContent?.trim() || ''
+
     try {
       const url = new URL(linkElem.href)
       if (url.origin !== 'https://taiko.wiki' || !url.pathname.startsWith('/song/')) {
@@ -41,6 +43,7 @@ const insertContextMenu = (playlistsStore: PlaylistsStore, recentScoreStorage: R
         target: document.body,
         props: {
           playlists: playlistsStore,
+          title: title,
           recentScores: recentScoreStorage,
           difficulty: diff,
           songNo,

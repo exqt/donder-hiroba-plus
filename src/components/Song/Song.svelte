@@ -88,6 +88,7 @@
   {#if showPlaylistAction && playlists}
     <PlaylistContextMenu
       {songNo}
+      {title}
       {playlists}
       wikiLink={null}
       recentScores={undefined}
