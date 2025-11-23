@@ -86,7 +86,6 @@ export class UploadService {
   ): Promise<void> {
     let data
 
-
     const fetchDani = async (cardData: CardData & { summary?: Summary }) => {
       const daniPass = await DonderHiroba.func.getDaniPass({ taikoNo: cardData.taikoNumber });
       const REGULAR_DAN = ["senpo", "jiho", "chiuken", "fukusho", "taisho", "beginner", "10kyu", "9kyu", "8kyu", "7kyu", "6kyu", "5kyu", "4kyu", "3kyu", "2kyu", "1kyu", "1dan", "2dan", "3dan", "4dan", "5dan", "6dan", "7dan", "8dan", "9dan", "10dan", "kuroto", "meijin", "chojin", "tatsujin"] as const;
@@ -160,11 +159,9 @@ export class UploadService {
       }
     }
 
-    console.log(data)
-
     await fetch('https://rating.taiko.wiki/api/v1/rating/upload', {
         method: 'post',
-        body: lzutf8.compress(JSON.stringify(data), { outputEncoding: 'Base64' }),
+        body: lzutf8.compress(data, { outputEncoding: 'Base64' }),
         credentials: 'include',
         headers: {
             'content-type': 'application/json'
