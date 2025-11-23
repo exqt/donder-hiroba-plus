@@ -9,6 +9,7 @@
     import { onMount } from 'svelte'
     import { UploadService } from './services/UploadService'
     import { updateScoreDataSorted, type SortedScoreData } from './services/ScoreDataService'
+    import { DonderHiroba, type Summary } from 'hiroba-js'
 
     let scene: 'ready' | 'upload' = 'ready'
     let message: string = ''
@@ -19,14 +20,14 @@
     let storageLoaded = false
     let lastUpdated: string | null = null
     let scoreDataSorted: SortedScoreData[] = []
-    let cardData: CardData | null = null
+    let cardData: CardData & { summary?: Summary } | null = null
     let sendType: 'clear' | 'score' | 'all' | 'recent' = 'all'
 
     const uploadService = new UploadService()
 
     onMount(async () => {
       try {
-        cardData = await hiroba.getCurrentLogin(null)
+        cardData = await DonderHiroba.func.getCurrentLogin().catch(() => null)
       } catch (err) {
         console.warn(err)
         notlogined = true
@@ -49,7 +50,7 @@
     }
 
     async function handleUpload (): Promise<void> {
-      if (!confirm('Send your donderhiroba datas to https://taiko.wiki. It will be deleted together when you delete your account. Do you agree?')) {
+      if (!confirm('Send your donderhiroba datas to https://rating.taiko.wiki. It will be deleted together when you delete your account. Do you agree?')) {
         alert('Canceled.')
         message = ''
         uploadMessage = ''

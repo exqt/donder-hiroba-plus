@@ -1,11 +1,35 @@
 import hiroba, { parse } from 'node-hiroba'
-import type { CardData, ScoreData } from 'node-hiroba/types'
 import lzutf8 from 'lzutf8'
 import type { ClearData } from '../ratingTypes'
 import { waitFor } from '../../../lib/utils'
 import { getRecentScoreData, type RecentScoreData } from '../recentScore'
 import type RecentScoreStorage from '../recentScoreStorage'
 import { clearTop50RatingCache } from '../../../lib/rating'
+import { DonderHiroba, type DaniNo, type CardData, type ScoreData, type Summary, type Difficulty } from 'hiroba-js'
+
+type TaikoProfile = {
+  taikoNo: string;
+  nickname: string;
+  crown: {
+    donderfull: number;
+    gold: number;
+    silver: number;
+  };
+  badge: {
+    rainbow: number;
+    purple: number;
+    pink: number;
+    gold: number;
+    silver: number;
+    bronze: number;
+    white: number;
+  };
+  dani: {
+    dan: "5kyu" | "4kyu" | "3kyu" | "2kyu" | "1kyu" | "1dan" | "2dan" | "3dan" | "4dan" | "5dan" | "6dan" | "7dan" | "8dan" | "9dan" | "10dan" | "kuroto" | "meijin" | "chojin" | "tatsujin";
+    type: "gold" | "red";
+    frame: "gold" | "silver" | "rainbow";
+  } | null;
+}
 
 export class UploadService {
   private readonly wikiOrigin = 'https://taiko.wiki'
@@ -15,6 +39,7 @@ export class UploadService {
     const wikiUser = await (await fetch(this.wikiOrigin + '/api/user', { credentials: 'include' })).json()
     return wikiUser.logined === true
   }
+
 
   async fetchScoreForSong (songNo: string, clearData: ClearData): Promise<ScoreData | null> {
     const response: { songNo: string, body: { oni?: string, ura?: string } } =
@@ -55,36 +80,95 @@ export class UploadService {
 
   async uploadToWiki (
     storage: RecentScoreStorage,
-    donderData: CardData | null,
+    cardData: CardData & { summary?: Summary } | null,
     clearData: ClearData[],
     scoreDataMap?: Record<string, ScoreData>
   ): Promise<void> {
     let data
+
+
+    const fetchDani = async (cardData: CardData & { summary?: Summary }) => {
+      const daniPass = await DonderHiroba.func.getDaniPass({ taikoNo: cardData.taikoNumber });
+      const REGULAR_DAN = ["senpo", "jiho", "chiuken", "fukusho", "taisho", "beginner", "10kyu", "9kyu", "8kyu", "7kyu", "6kyu", "5kyu", "4kyu", "3kyu", "2kyu", "1kyu", "1dan", "2dan", "3dan", "4dan", "5dan", "6dan", "7dan", "8dan", "9dan", "10dan", "kuroto", "meijin", "chojin", "tatsujin"] as const;
+      for (let i = 19; i >= 1; i--) {
+        const danino = i as DaniNo;
+        const pass = daniPass[danino];
+        if (!pass) continue;
+        const dani = {
+          dan: REGULAR_DAN[i + 10],
+          type: pass.pass,
+          frame: pass.frame === "donderfull" ? 'rainbow' : pass.frame
+        };
+        return dani as TaikoProfile['dani'];
+      }
+      return null;
+    }
+
+    if (cardData === null) {
+      alert('Donder Hiroba data is required to upload to Taiko.wiki rating.')
+      return;
+    }
+
+    const dani = await fetchDani(cardData);
+
+    const taikoProfile: TaikoProfile = {
+      nickname: cardData.nickname,
+      taikoNo: cardData.taikoNumber,
+      crown: cardData.summary?.crown ?? {
+        donderfull: 0,
+        gold: 0,
+        silver: 0
+      },
+      badge: cardData.summary?.badge ?? {
+        rainbow: 0,
+        purple: 0,
+        pink: 0,
+        gold: 0,
+        silver: 0,
+        bronze: 0,
+        white: 0
+      },
+      dani
+    }
+
     if (scoreDataMap !== undefined) {
       await storage.mergeMap(scoreDataMap)
       data = JSON.stringify({
-        donderData,
+        taikoProfile,
         clearData,
         scoreData: storage.getMap()
       })
     } else {
       data = JSON.stringify({
-        donderData,
+        taikoProfile,
         clearData
       })
     }
 
-    const compressedBody = lzutf8.compress(data, {
-      outputEncoding: 'ByteArray'
-    }) as Uint8Array
-
-    await fetch(this.wikiOrigin + '/api/user/donder', {
-      credentials: 'include',
-      method: 'POST',
-      body: compressedBody,
-      headers: {
-        'Content-Type': 'application/json'
+    if (scoreDataMap !== undefined) {
+      for (const song of clearData) {
+        let scoreData = scoreDataMap[song.songNo]
+        const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'oni', 'ura']
+        for (const diff of difficulties) {
+          if (scoreData?.difficulty[diff] !== undefined) {
+            scoreData.difficulty[diff] = {
+              ...scoreData.difficulty[diff],
+              ranking: 0
+            }
+          }
+        }
       }
+    }
+
+    console.log(data)
+
+    await fetch('https://rating.taiko.wiki/api/v1/rating/upload', {
+        method: 'post',
+        body: lzutf8.compress(JSON.stringify(data), { outputEncoding: 'Base64' }),
+        credentials: 'include',
+        headers: {
+            'content-type': 'application/json'
+        }
     })
   }
 
@@ -103,7 +187,7 @@ export class UploadService {
 
   async sendAllData (
     storage: RecentScoreStorage,
-    cardData: CardData | null,
+    cardData: CardData & { summary?: Summary } | null,
     onProgress: (message: string) => void
   ): Promise<void> {
     onProgress('Fetching clear data...')
