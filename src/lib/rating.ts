@@ -95,7 +95,7 @@ export const getTop50Rating = async (): Promise<UserRatingData> => {
     }
   }
 
-  const url = 'https://taiko.wiki/api/user/rating'
+  const url = 'https://rating.taiko.wiki/api/private/my-rating'
   const response = await fetch(url, {
     method: 'GET',
     headers: {

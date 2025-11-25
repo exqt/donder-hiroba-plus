@@ -38,7 +38,7 @@
   {/if}
 
   <div class="top">
-    <a href="https://taiko.wiki/rating/me" target="_blank">
+    <a href="https://rating.taiko.wiki/myrating" target="_blank">
       <span class="top-text">taiko.wiki rating</span>
     </a>
     <button on:click={async () => {

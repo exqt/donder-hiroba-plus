@@ -1,5 +1,4 @@
 <script lang="ts">
-    import hiroba from 'node-hiroba'
     import Profile from './RatingProfile.svelte'
     import UploadControls from './UploadControls.svelte'
     import ScoreDataTable from './ScoreDataTable.svelte'
@@ -35,7 +34,13 @@
         return
       }
 
-      cardData = await hiroba.getCurrentLogin(null)
+      cardData = await DonderHiroba.func.getCurrentLogin().catch(() => null)
+      if (cardData === null) {
+        notlogined = true
+        message = 'Not Logined'
+        return
+      }
+
       storage = new RecentScoreStorage(cardData.taikoNumber.toString())
       await storage.loadFromChromeStorage()
 
