@@ -7,6 +7,7 @@
   import type { SettingsStorage } from '../lib/settings'
   import type { ScoreStorage } from '../lib/scores'
   import { SongDB } from '../lib/songDB'
+  import browser from 'webextension-polyfill'
 
   export let settingsStorage: SettingsStorage
   export let scoreStorage: ScoreStorage
@@ -54,8 +55,7 @@
   })
 
   const version = packageJson.version
-
-  const ratingTabLink = `chrome-extension://${chrome?.runtime?.id}/rating.html`
+  const ratingTabLink = browser.runtime.getURL('rating.html')
 </script>
 
 <div class="wrapper">
