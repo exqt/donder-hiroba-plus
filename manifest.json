@@ -28,5 +28,13 @@
   "permissions": [
     "storage",
     "unlimitedStorage"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@donderhirobaplus.exqt",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
 }
