@@ -1,5 +1,5 @@
 {
-  "(称号をはずす)": "(Change Title)",
+  "(称号をはずす)": "(Remove Title)",
   "(称号を選択してください)": "(Select Title)",
   "8ビット太鼓": "8-bit Taiko",
   "[お知らせ]": "[Notice]",
@@ -255,7 +255,6 @@
   "称号編集": "Edit Title",
   "自分の履歴": "My History",
   "自分の情報の公開範囲を設定できます。くわしくは": "Decide whether your profile should be public. Selecting \"Set\" will hide your profile to everybody except your friends. For more information, please read ",
-  "自慢のマイどんちゃん": "My Don-chan",
   "表示しない": "Do Not Display",
   "表示しない（デフォルト）": "Do Not Display (Default)",
   "表示する": "Display",
