@@ -88,7 +88,7 @@
   })
 </script>
 
-<div class="wrapper" style={`padding-top: ${titlePlateExtraTop}px;`}>
+<div class="wrapper" style={`padding-top: ${titlePlateExtraTop - 13}px;`}>
   <div class="donder-info">
     <img class="title-plate-image" src={titlePlateURL} alt="" aria-hidden="true">
     <div class="donder-info-content">
