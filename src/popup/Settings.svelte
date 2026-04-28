@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import type { DifficultyType, Language } from '../types'
-  import { icons } from '../assets'
+  import { icons, images } from '../assets'
   import packageJson from '../../package.json'
   import type I18N from '../lib/i18n'
   import type { SettingsStorage } from '../lib/settings'
@@ -114,6 +114,10 @@
   <button class="warning" disabled={disableSongDataUpdate} on:click={forceSongDataUpdate}>{'Force SongData Update'}</button>
   <span></span>
 
+  <a class="buy-me-a-coffee-link" href="https://buymeacoffee.com/exqt" target="_blank" rel="noreferrer">
+    <img class="buy-me-a-coffee-image" src={images.buyMeACoffee} alt="Buy me a coffee" />
+  </a>
+
   <div class="footer">
     <a href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
       <img class="icon" src={icons.github} alt="github"/>
@@ -184,5 +188,16 @@
     width: 16px;
     height: 16px;
     margin-right: 4px;
+  }
+
+  .buy-me-a-coffee-link {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0;
+  }
+
+  .buy-me-a-coffee-image {
+    width: 160px;
+    height: 38px;
   }
 </style>
