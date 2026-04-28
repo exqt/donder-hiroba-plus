@@ -56,6 +56,7 @@
 
   const version = packageJson.version
   const ratingTabLink = browser.runtime.getURL('rating.html')
+  const showBuyMeACoffee = false
 
   const dismissBuyMeACoffee = async (): Promise<void> => {
     settingsStorage.buyMeACoffeeDismissed = true
@@ -119,7 +120,7 @@
   <button class="warning" disabled={disableSongDataUpdate} on:click={forceSongDataUpdate}>{'Force SongData Update'}</button>
   <span></span>
 
-  {#if !settingsStorage.buyMeACoffeeDismissed}
+  {#if showBuyMeACoffee && !settingsStorage.buyMeACoffeeDismissed}
     <a
       class="buy-me-a-coffee-link"
       href="https://buymeacoffee.com/exqt"
