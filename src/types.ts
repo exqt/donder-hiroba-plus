@@ -105,6 +105,7 @@ export interface ExtensionSetting {
   language?: Language
   preferringDifficulty?: DifficultyType
   disclaimerAgreed?: boolean
+  buyMeACoffeeDismissed?: boolean
 }
 
 export interface FavoriteSong {

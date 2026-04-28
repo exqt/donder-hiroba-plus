@@ -56,6 +56,11 @@
 
   const version = packageJson.version
   const ratingTabLink = browser.runtime.getURL('rating.html')
+
+  const dismissBuyMeACoffee = async (): Promise<void> => {
+    settingsStorage.buyMeACoffeeDismissed = true
+    await settingsStorage.save()
+  }
 </script>
 
 <div class="wrapper">
@@ -114,9 +119,17 @@
   <button class="warning" disabled={disableSongDataUpdate} on:click={forceSongDataUpdate}>{'Force SongData Update'}</button>
   <span></span>
 
-  <a class="buy-me-a-coffee-link" href="https://buymeacoffee.com/exqt" target="_blank" rel="noreferrer">
-    <img class="buy-me-a-coffee-image" src={images.buyMeACoffee} alt="Buy me a coffee" />
-  </a>
+  {#if !settingsStorage.buyMeACoffeeDismissed}
+    <a
+      class="buy-me-a-coffee-link"
+      href="https://buymeacoffee.com/exqt"
+      target="_blank"
+      rel="noreferrer"
+      on:click={dismissBuyMeACoffee}
+    >
+      <img class="buy-me-a-coffee-image" src={images.buyMeACoffee} alt="Buy me a coffee" />
+    </a>
+  {/if}
 
   <div class="footer">
     <a href="https://github.com/exqt/donder-hiroba-plus" target="_blank">
