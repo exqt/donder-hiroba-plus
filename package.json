@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
+    "generate:analyzer-data": "node scripts/generateAnalyzerData.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "version": "node -p \"require('./package.json').version\"",
