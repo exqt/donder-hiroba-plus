@@ -1,5 +1,5 @@
 export const WIDTH = 300
-export const HEIGHT = 540
+export const HEIGHT = 580
 
 export const DIFFICULTY_COLORS = [
   '#ff2703',
