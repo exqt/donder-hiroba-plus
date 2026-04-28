@@ -96,7 +96,7 @@
         {donderInfo?.title ?? ''}
       </div>
       <div style="width:270px;height:23px;margin-left:10px;margin-right:10px;text-align:center;position:relative;z-index:1;display:flex;">
-        <div style="width:135px;text-align:center;font-weight: bold;font-size: 12px;text-shadow: 0 0 0px #000;margin-top: 3px;">
+        <div style="width:135px;text-align:center;font-weight: bold;font-size: 16px;text-shadow: 0 0 0px #000;margin-top: 3px;">
           {donderInfo?.name ?? ''}
         </div>
         <div style="width:135px;text-align:center">
