@@ -1,40 +1,40 @@
-import type { KisekaeReqData } from "hiroba-js";
+import type { KisekaeReqData } from 'hiroba-js'
 
-const STORAGE_KEY = 'closet';
+const STORAGE_KEY = 'closet'
 
 export class Closet {
-  private static instance?: Closet;
-  static async getInstance() {
-    if (this.instance) {
-      return this.instance;
+  private static instance: Closet | null = null
+  static async getInstance (): Promise<Closet> {
+    if (this.instance !== null) {
+      return this.instance
     }
 
-    this.instance = new Closet();
-    await this.instance.load();
-    return this.instance;
+    this.instance = new Closet()
+    await this.instance.load()
+    return this.instance
   }
 
-  presets: KisekaeReqData[] = [];
+  presets: KisekaeReqData[] = []
 
-  private async load() {
+  private async load (): Promise<void> {
     const storage = chrome?.storage?.local
     if (storage === undefined) {
       return
     }
 
-    const data = (await storage.get(STORAGE_KEY))[STORAGE_KEY] as KisekaeReqData[];
+    const data = (await storage.get(STORAGE_KEY))[STORAGE_KEY] as KisekaeReqData[]
     if (Array.isArray(data)) {
-      this.presets = [...data];
+      this.presets = [...data]
     }
   }
 
-  async save() {
+  async save (): Promise<void> {
     const storage = chrome?.storage?.local
     if (storage === undefined) {
       console.warn('storage is not available')
       return
     }
 
-    await storage.set({ [STORAGE_KEY]: this.presets });
+    await storage.set({ [STORAGE_KEY]: this.presets })
   }
 }
