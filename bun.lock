@@ -6,7 +6,7 @@
       "dependencies": {
         "cheerio": "^1.0.0",
         "hangul-js": "^0.2.6",
-        "hiroba-js": "^2.3.2",
+        "hiroba-js": "2.4.0",
         "lzutf8": "^0.6.3",
         "node-hiroba": "^1.7.7",
         "svelte-lazy": "^1.2.7",
@@ -1305,7 +1305,7 @@
 
     "he": ["he@1.2.0", "", { "bin": { "he": "bin/he" } }, "sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw=="],
 
-    "hiroba-js": ["hiroba-js@2.3.2", "", { "dependencies": { "cheerio": "^1.0.0-rc.12", "fs": "^0.0.1-security", "jimp": "^1.6.0", "node-html-parser": "^7.0.1", "npm": "^11.4.2", "set-cookie-parser": "^2.7.1" } }, "sha512-puzK9UGlGNr23I4E+CpKssmc4jYrLwZSY5vs6LUc3bDpV6k2/+lS/5tCsH0lSPCmZFBlAuzFHHWVaWeNuOYtOg=="],
+    "hiroba-js": ["hiroba-js@2.4.0", "", { "dependencies": { "cheerio": "^1.0.0-rc.12", "fs": "^0.0.1-security", "jimp": "^1.6.0", "node-html-parser": "^7.0.1", "npm": "^11.4.2", "set-cookie-parser": "^2.7.1" } }, "sha512-b7IT56VAEetajWDfa7+GkCJpWXBr4k0eDqmwM3DtG1GlaaRqShKmBItRiVnkA071cJBhmItZYCv3rbGA+9dzlw=="],
 
     "hosted-git-info": ["hosted-git-info@2.8.9", "", {}, "sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw=="],
 
