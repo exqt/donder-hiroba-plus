@@ -34,10 +34,12 @@
     font-size: 32px;
     justify-content: center;
     margin-bottom: 4px;
+    width: 100%;
   }
 
   #song-search-input {
-    flex-grow: 1;
+    width: 100%;
+    flex: 1 1 auto;
   }
 
   button {

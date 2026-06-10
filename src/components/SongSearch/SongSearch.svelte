@@ -189,5 +189,7 @@
     background-color: #e92;
     padding: 8px;
     margin-bottom: 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
 </style>

@@ -43,6 +43,7 @@ import totalScorePanelOniImage from './assets/images/total_score_image_5.png'
 import mydonPlaceholderImage from './assets/images/mydon_placeholder.png'
 import titlePlate from './assets/images/titleplate.png'
 import danPlaceholderImage from './assets/images/dan_placeholder.png'
+import buyMeACoffeeImage from './assets/images/buymeacoffee.png'
 
 import githubMarkIcon from './assets/icons/github-mark.svg'
 
@@ -96,5 +97,6 @@ export const images = {
   totalScorePanelOniImage: processAssetPath(totalScorePanelOniImage),
   mydonPlaceholderImage: processAssetPath(mydonPlaceholderImage),
   titlePlate: processAssetPath(titlePlate),
-  danPlaceholderImage: processAssetPath(danPlaceholderImage)
+  danPlaceholderImage: processAssetPath(danPlaceholderImage),
+  buyMeACoffee: processAssetPath(buyMeACoffeeImage)
 }

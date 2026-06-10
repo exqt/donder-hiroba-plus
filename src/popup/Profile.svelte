@@ -8,10 +8,27 @@
 
   export let settingsStorage: SettingsStorage
 
+  const myTitlePlate = 'https://donderhiroba.jp/imgsrc_titleplate.php'
+  const fallBackTitlePlate = images.titlePlate
+  const titlePlateWidth = 290
+  const titlePlateBaseHeight = 46
+
   let donderInfo: DonderInfo = {}
   let scorePanel = images.totalScorePanelOniImage
   let donderAvatarURL = images.mydonPlaceholderImage
   let danImageURL = ''
+  let titlePlateURL = myTitlePlate
+  let titlePlateExtraTop = 0
+
+  const updateTitlePlateMetrics = (width: number, height: number): void => {
+    if (width === 0 || height === 0) {
+      titlePlateExtraTop = 0
+      return
+    }
+
+    const scaledHeight = titlePlateWidth * (height / width)
+    titlePlateExtraTop = Math.max(0, Math.ceil(scaledHeight - titlePlateBaseHeight))
+  }
 
   const parseTopPage = async (): Promise<void> => {
     try {
@@ -53,20 +70,38 @@
     img.onload = () => { donderAvatarURL = img.src }
     img.src = getDonderAvatarURL(donderInfo.id)
     danImageURL = getDanImageURL(donderInfo.id)
+
+    const titlePlateImg = new Image()
+    titlePlateImg.onload = () => {
+      updateTitlePlateMetrics(titlePlateImg.naturalWidth, titlePlateImg.naturalHeight)
+    }
+    titlePlateImg.onerror = () => {
+      titlePlateURL = fallBackTitlePlate
+
+      const fallbackTitlePlateImg = new Image()
+      fallbackTitlePlateImg.onload = () => {
+        updateTitlePlateMetrics(fallbackTitlePlateImg.naturalWidth, fallbackTitlePlateImg.naturalHeight)
+      }
+      fallbackTitlePlateImg.src = fallBackTitlePlate
+    }
+    titlePlateImg.src = myTitlePlate
   })
 </script>
 
-<div class="wrapper">
-  <div class="donder-info" style={`background-image: url(${images.titlePlate})`}>
-    <div style="height: 20px;text-align: center;position:relative;z-index:1;font-weight: bold;text-shadow: 0 0 0px #000;">
-      {donderInfo?.title ?? ''}
-    </div>
-    <div style="width:270px;height:23px;margin-left:10px;margin-right:10px;text-align:center;position:relative;z-index:1;display:flex;">
-      <div style="width:135px;text-align:center;font-weight: bold;font-size: 12px;text-shadow: 0 0 0px #000;margin-top: 3px;">
-        {donderInfo?.name ?? ''}
+<div class="wrapper" style={`padding-top: ${titlePlateExtraTop - 13}px;`}>
+  <div class="donder-info">
+    <img class="title-plate-image" src={titlePlateURL} alt="" aria-hidden="true">
+    <div class="donder-info-content">
+      <div style="height: 20px;text-align: center;position:relative;top:2px;z-index:1;font-weight: bold;text-shadow: 0 0 0px #000;">
+        {donderInfo?.title ?? ''}
       </div>
-      <div style="width:135px;text-align:center">
-        <img src={danImageURL} style="height:21px;margin:1px 0;" alt="danlabel">
+      <div style="width:270px;height:23px;margin-left:10px;margin-right:10px;text-align:center;position:relative;z-index:1;display:flex;">
+        <div style="width:135px;text-align:center;font-weight: bold;font-size: 16px;text-shadow: 0 0 0px #000;margin-top: 3px;">
+          {donderInfo?.name ?? ''}
+        </div>
+        <div style="width:135px;text-align:center">
+          <img src={danImageURL} style="height:21px;margin:3px 0 0;" alt="danlabel">
+        </div>
       </div>
     </div>
   </div>
@@ -115,11 +150,30 @@
   }
 
   .donder-info {
+    position: relative;
     width: 290px;
     height: 46px;
     margin-top: 8px;
-    background-size: contain;
-    background-repeat: no-repeat;
+    overflow: visible;
+  }
+
+  .title-plate-image {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .donder-info-content {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+    height: 46px;
     padding-top: 2px;
   }
 

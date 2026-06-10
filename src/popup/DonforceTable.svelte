@@ -17,6 +17,7 @@
 </script>
 
 <div class="wrapper">
+  <h2>Taiko.wiki Rating Calculator</h2>
   <div class="level-button-containers">
     <div class="level-button-container">
       {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as i}
