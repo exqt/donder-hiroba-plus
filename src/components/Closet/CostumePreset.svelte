@@ -47,6 +47,17 @@
       </Button>
       <Button
         on:click={() => {
+          preset.costume.kigurumi = 0
+          preset.costume.head = 0
+          preset.costume.body = 0
+          preset.costume.face = 0
+          preset.costume.petitCharacter = 0
+        }}
+      >
+        <div style="width:80px;">Reset</div>
+      </Button>
+      <Button
+        on:click={() => {
           if (confirm('Are you sure?')) {
             remove()
           }

@@ -179,6 +179,7 @@
         </div>
       {/each}
     </div>
+    <Button on:click={() => { preset.costume[costumeSection] = 0 }}>Reset</Button>
   {/if}
 </div>
 
