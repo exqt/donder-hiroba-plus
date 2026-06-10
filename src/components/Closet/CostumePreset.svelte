@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { KisekaeReqData } from 'hiroba-js'
+  import { DonderHiroba, type KisekaeReqData } from 'hiroba-js'
   import Button from '../Common/Button.svelte'
+  import CostumeEditor from './CostumeEditor.svelte'
 
   export let preset: KisekaeReqData
   export let parts: number[][]
-  export let save: () => any
   export let remove: () => any
 
   let editorOpened = false
@@ -31,7 +31,13 @@
       <img src={costumeUrl} alt="costume" />
     </div>
     <div class="right">
-      <Button><div style="width:80px;">Apply</div></Button>
+      <Button
+        on:click={async () => {
+          await DonderHiroba.func.changeKisekae({ kisekae: preset }).then(() => { alert('Applied successfully.') })
+        }}
+      >
+        <div style="width:80px;">Apply</div>
+      </Button>
       <Button
         on:click={() => {
           editorOpened = !editorOpened
@@ -50,9 +56,7 @@
       </Button>
     </div>
   </div>
-  {#if editorOpened}
-    ㅎㅇ
-  {/if}
+  <CostumeEditor bind:preset {parts} show={editorOpened} />
 </div>
 
 <style>

@@ -1,20 +1,23 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { getContext, onMount } from 'svelte'
   import { Closet } from '../../lib/closet'
   import Button from '../Common/Button.svelte'
   import CostumePreset from './CostumePreset.svelte'
   import type { KisekaeReqData } from 'hiroba-js'
+  import type { Writable } from 'svelte/store'
 
+  const title: Writable<string> = getContext('title')
   let parts: number[][] = []
   let presets: KisekaeReqData[] = []
-  let closet: Closet
-  $: updateCloset(presets).catch(() => {})
+  let closet: Closet | null = null
+  $: updateCloset(presets)?.catch(() => {})
 
   onMount(async () => {
+    title.set('Closet++')
     parts = await fetchCostumeParts()
     closet = await Closet.getInstance()
-    console.log(closet.presets)
     presets = [...closet.presets]
+    window.scrollTo(0, 0)
   })
 
   async function fetchCostumeParts (): Promise<number[][]> {
@@ -47,7 +50,7 @@
   }
 
   async function addPreset (): Promise<void> {
-    presets.push({
+    presets = [...presets, {
       color: {
         body: 1,
         face: 0,
@@ -60,11 +63,11 @@
         face: 0,
         petitCharacter: 0
       }
-    })
-    presets = presets
+    }]
   }
 
   async function updateCloset (presets: KisekaeReqData[]): Promise<void> {
+    if (closet === null) return
     closet.presets = [...presets]
     await closet.save()
   }
@@ -76,9 +79,6 @@
       <CostumePreset
         bind:preset
         {parts}
-        save={async () => {
-          await closet?.save()
-        }}
         remove={() => {
           presets = presets.filter((_, i) => i !== index)
         }}
@@ -97,5 +97,6 @@
     width: 100%;
     max-width: 300px;
     row-gap: 10px;
+    margin-top: 5px;
   }
 </style>

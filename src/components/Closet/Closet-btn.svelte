@@ -20,7 +20,7 @@
     on:click={openPopup}
 >
     <div class="text">
-        Closet+
+        Closet++
     </div>
 </div>
 
