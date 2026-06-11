@@ -10,6 +10,7 @@ import dani from './injections/dani'
 import hash, { hashChangeCallback } from './injections/hash'
 import { isIOS } from '../src/lib/utils'
 import { SettingsStorage } from './lib/settings'
+import mypage_kisekae_favorite_save from './injections/mypage_kisekae_favorite_save'
 
 const runHiroba = async (): Promise<void> => {
   window.addEventListener('hashchange', hashChangeCallback)
@@ -28,7 +29,8 @@ const runHiroba = async (): Promise<void> => {
     'favorite_song_select.php': favorite_song_select,
     'score_detail.php': score_detail,
     'select_song.php': select_song,
-    'dan_detail.php': dani
+    'dan_detail.php': dani,
+    'mypage_kisekae_favorite_save.php': mypage_kisekae_favorite_save
   }
 
   if (page.startsWith('#')) {

@@ -5,11 +5,13 @@
     import { setContext } from 'svelte'
     import TrainingAdd from '../Training/pages/add/TrainingAdd.svelte'
     import TrainingEdit from '../Training/pages/edit/TrainingEdit.svelte'
+    import Closet from '../Closet/Closet.svelte'
 
     const routes = {
       '/training': Training,
       '/training/add': TrainingAdd,
-      '/training/edit/:hash': TrainingEdit
+      '/training/edit/:hash': TrainingEdit,
+      '/closet': Closet
     }
 
     const title = writable<string>('')
@@ -35,5 +37,7 @@
         display:flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
+        max-width: 300px;
     }
 </style>

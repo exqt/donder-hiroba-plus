@@ -17,7 +17,7 @@ const insertContextMenu = (playlistsStore: PlaylistsStore, recentScoreStorage: R
     const linkElem = target.closest('a')
     if (linkElem === null) return
 
-    const title = linkElem.querySelector('.title')?.textContent?.trim() || ''
+    const title = linkElem?.querySelector('.title')?.textContent?.trim?.() ?? ''
 
     try {
       const url = new URL(linkElem.href)
@@ -29,7 +29,7 @@ const insertContextMenu = (playlistsStore: PlaylistsStore, recentScoreStorage: R
       if (songNo === undefined) return
 
       const diffFromParam = url.searchParams.get('diff')
-      let diff: Difficulty = 'oni'; // or another appropriate default value
+      let diff: Difficulty = 'oni' // or another appropriate default value
 
       if (diffFromParam === 'ura' || diffFromParam === 'oni_ura') diff = 'ura'
       else if (diffFromParam === 'oni') diff = 'oni'
@@ -43,7 +43,7 @@ const insertContextMenu = (playlistsStore: PlaylistsStore, recentScoreStorage: R
         target: document.body,
         props: {
           playlists: playlistsStore,
-          title: title,
+          title,
           recentScores: recentScoreStorage,
           difficulty: diff,
           songNo,
@@ -76,7 +76,7 @@ export default async (): Promise<void> => {
   const recentScoreStore = new RecentScoreStorage()
   await recentScoreStore.loadFromChromeStorage()
 
-  const runInterval = () => {
+  const runInterval = (): void => {
     let executionCount = 0
     const intervalId = setInterval(() => {
       insertContextMenu(playlistsStore, recentScoreStore)
