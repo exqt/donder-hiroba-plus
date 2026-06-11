@@ -1,7 +1,7 @@
 <script lang="ts">
   import { DonderHiroba, type KisekaeReqData } from 'hiroba-js'
   import Button from '../Common/Button.svelte'
-  import CostumeEditor from './CostumeEditor.svelte'
+  import PresetEditor from './PresetEditor.svelte'
 
   export let preset: KisekaeReqData
   export let parts: number[][]
@@ -67,7 +67,7 @@
       </Button>
     </div>
   </div>
-  <CostumeEditor bind:preset {parts} show={editorOpened} />
+  <PresetEditor bind:preset {parts} show={editorOpened} />
 </div>
 
 <style>

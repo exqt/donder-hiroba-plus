@@ -19,6 +19,7 @@
     'kigurumi'
   $: costumeSectionIndex = getCostumeSectionIndex(costumeSection)
   $: groupedParts = getGroupedParts(costumeSectionIndex)
+  $: resetKigurumi(costumeSection, preset.costume[costumeSection])
 
   function getCostumeSectionIndex (
     costumeSection: 'kigurumi' | 'head' | 'body' | 'face' | 'petitCharacter'
@@ -32,6 +33,17 @@
     ) as Record<number, number[]> & { length: number }
     grouped.length = Object.keys(grouped).length
     return Array.from(grouped as Record<number, number[]> & { length: number })
+  }
+
+  function resetKigurumi (costumeSection: 'kigurumi' | 'head' | 'body' | 'face' | 'petitCharacter', part: number): void {
+    if (costumeSection === 'kigurumi' && part !== 0) {
+      preset.costume.head = 0
+      preset.costume.body = 0
+      preset.costume.face = 0
+      preset.costume.petitCharacter = 0
+    } else if (costumeSection !== 'kigurumi' && part !== 0) {
+      preset.costume.kigurumi = 0
+    }
   }
 
   const colors = [
